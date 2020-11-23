@@ -141,9 +141,8 @@ android{
 }
 //...
 
-apply from: 'https://raw.githubusercontent.com/mallumoSK/navigation/main/ksp-config.gradle'
-
-apply from: 'https://raw.githubusercontent.com/mallumoSK/navigation/main/ksp-navigation.gradle'
+apply from: 'https://raw.githubusercontent.com/mallumoSK/navigation/master/ksp-config.gradle'
+apply from: 'https://raw.githubusercontent.com/mallumoSK/navigation/master/ksp-navigation.gradle'
 
 dependencies {
     implementation "tk.mallumo:navigation:x.y.z"
