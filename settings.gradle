@@ -1,0 +1,27 @@
+pluginManagement {
+    resolutionStrategy {
+        eachPlugin {
+            if ("kotlin-ksp".equals(requested.id.id)) {
+                useModule("org.jetbrains.kotlin:kotlin-ksp:${requested.version}")
+            }
+            if ("org.jetbrains.kotlin.kotlin-ksp".equals(requested.id.id)) {
+                useModule("org.jetbrains.kotlin:kotlin-ksp:${requested.version}")
+            }
+            if ("org.jetbrains.kotlin.ksp".equals(requested.id.id)) {
+                useModule("org.jetbrains.kotlin:kotlin-ksp:${requested.version}")
+            }
+        }
+    }
+    repositories {
+        gradlePluginPortal()
+        maven {
+            url = "https://dl.bintray.com/kotlin/kotlin-eap"
+        }
+        google()
+    }
+}
+rootProject.name = "navigation"
+include ':app'
+//include ':compose-test'
+include ':navigation'
+include ':navigation-ksp'

@@ -1,0 +1,2 @@
+
+ksp.arg("NavigationSrcOut", "${projectDir.absolutePath}/src/main/ksp")
