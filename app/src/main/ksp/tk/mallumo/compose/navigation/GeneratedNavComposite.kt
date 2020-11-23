@@ -34,6 +34,9 @@ object ImplNoteUtils {
             "tk.sample.app.SecondFrameUI" ->
                 composite(navigationViewModel, node) { tk.sample.app.SecondFrameUI() }
 
+            "tk.sample.app.ThirdFrameUI" ->
+                composite(navigationViewModel, node) { tk.sample.app.ThirdFrameUI() }
+
         }
 
     }
@@ -61,12 +64,13 @@ object ImplNoteUtils {
     }
 
 
+
     private fun buildArgsItem(node: ImplNode): Any? = when (node.frameID) {
 
-        "tk.sample.app.MenuFrameUI" -> tk.sample.app.MenuFrameArgs().fill(node.args)
+        "tk.sample.app.MenuFrameUI" -> tk.sample.app.ArgsMenuFrame().fill(node.args)
 
 
-        "tk.sample.app.SecondFrameUI" -> tk.sample.app.SecondFrameArgs().fill(node.args)
+        "tk.sample.app.SecondFrameUI" -> tk.sample.app.ArgsSecondFrame().fill(node.args)
 
 
         else -> null
@@ -75,10 +79,10 @@ object ImplNoteUtils {
     private fun saveArgsItem(node: ImplNode, argsItem: Any?) {
         when (argsItem) {
 
-            is tk.sample.app.MenuFrameArgs -> node.args = argsItem.asBundle()
+            is tk.sample.app.ArgsMenuFrame -> node.args = argsItem.asBundle()
 
 
-            is tk.sample.app.SecondFrameArgs -> node.args = argsItem.asBundle()
+            is tk.sample.app.ArgsSecondFrame -> node.args = argsItem.asBundle()
 
 
         }

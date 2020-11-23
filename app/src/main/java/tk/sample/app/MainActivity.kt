@@ -2,66 +2,90 @@ package tk.sample.app
 
 import android.os.Bundle
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.material.Button
-import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.setContent
-import androidx.compose.ui.unit.dp
 import tk.mallumo.compose.navigation.*
 import tk.mallumo.just.files.style.SampleTheme
-import kotlin.random.Random
 
 class MainActivity : NavigationActivity() {
 
-    override fun startupNode(): Node = Node.MenuFrameUI
+    // pass frame node, which will be opened on app first startup
+    override fun startupNode(): Node = Node.MenuFrameUI //generated value
+
+    // this is default implementation but you can change :)
+    override fun startupArgs(): Bundle = intent.extras ?: Bundle()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             SampleTheme {
-                NavigationContent()
+                NavigationContent()  //generated method
             }
         }
     }
 }
 
-data class MenuFrameArgs(var valueX: String = "")
+// you can use bundle as arguments
+// BUT binding into object is safer way :)
+data class ArgsMenuFrame(var valueX: String = "")
 
 @Composable
-@ComposableNavNode(MenuFrameArgs::class)
+@ComposableNavNode(ArgsMenuFrame::class) // declaration frame node + arguments
 fun MenuFrameUI() {
-    val nav = NavigationAmbient.current
-    val newItemValue = remember { Random(50).nextInt(200, 300) }
-    val args = remember { nav.bundledArgs<MenuFrameArgs>() }
+    val nav = NavigationAmbient.current // navigation between frames
+    val args = remember { // read arguments
+        // map bundle args into data-class of ArgsMenuFrame
+        nav.bundledArgs<ArgsMenuFrame>()
+    }
 
     Column {
         Text(text = "valueX = ${args.valueX}")
-        Button(onClick = { nav.navTo_SecondFrameUI(SecondFrameArgs("1")) }) {
-            Text(text = "navigate to secnd frame")
-        }
-        Divider(Modifier.preferredSize(20.dp))
         Button(onClick = {
-            args.valueX = newItemValue.toString()
-            nav.navTo_SecondFrameUI(SecondFrameArgs("2"))
+            //open second frame by passing arguments
+            nav.navTo_SecondFrameUI(ArgsSecondFrame("1"))
+            //alternative options:
+            // nav.navTo_SecondFrameUI() // no arguments
+            // nav.navTo_SecondFrameUI(bundleOf("item" to "1")) // arguments as bundle
         }) {
-            Text(text = "change valueX to '${newItemValue}' and navigate to second frame")
+            Text(text = "navigate to second frame")
         }
     }
 }
 
-data class SecondFrameArgs(var item: String = "")
+data class ArgsSecondFrame(var item: String = "")
 
 @Composable
-@ComposableNavNode(SecondFrameArgs::class)
+@ComposableNavNode(ArgsSecondFrame::class)
 fun SecondFrameUI() {
     val nav = NavigationAmbient.current
-    val args = remember { nav.bundledArgs<SecondFrameArgs>() }
+    val args = remember { // read arguments
+        // map bundle args into data-class of ArgsSecondFrame
+        nav.bundledArgs<ArgsSecondFrame>()
+    }
     Column {
+        // call of args by mapped object
         Text(text = "bundledArgs CONTENT:  ${args.item}")
+
+        // direct call of args
         Text(text = "nav args CONTENT:  ${nav.args.getString("item")}")
+
+        Button(onClick = {
+            //open third frame with no arguments
+            nav.navTo_ThirdFrameUI()
+        }) {
+            Text(text = "navigate to secnd frame")
+        }
+    }
+}
+
+
+@Composable
+@ComposableNavNode
+fun ThirdFrameUI() {
+    Column {
+        Text(text = "third frame")
     }
 }
