@@ -87,16 +87,21 @@ fun SecondFrameUI() {
         // call of args by mapped object
         Text(text = "bundledArgs CONTENT:  ${args.item}")
 
+        Spacer(modifier = Modifier.preferredSize(20.dp))
+
         // direct call of args
         Text(text = "nav args CONTENT:  ${nav.args.getString("item")}")
 
+        Spacer(modifier = Modifier.preferredSize(20.dp))
+
         Button(onClick = {
-            //open third frame with no arguments
-            //and clear stack (remove MenuFrameUI and SecondFrameUI)
+            //up navigation
             nav.up()
         }) {
             Text(text = "up")
         }
+
+        Spacer(modifier = Modifier.preferredSize(20.dp))
 
         Button(onClick = {
             //open third frame with no arguments

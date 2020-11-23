@@ -2,11 +2,15 @@ package tk.sample.app
 
 import android.os.Bundle
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.setContent
+import androidx.compose.ui.unit.dp
 import tk.mallumo.compose.navigation.*
 import tk.mallumo.just.files.style.SampleTheme
 
@@ -69,16 +73,21 @@ fun SecondFrameUI() {
         // call of args by mapped object
         Text(text = "bundledArgs CONTENT:  ${args.item}")
 
+        Spacer(modifier = Modifier.preferredSize(20.dp))
+
         // direct call of args
         Text(text = "nav args CONTENT:  ${nav.args.getString("item")}")
 
+        Spacer(modifier = Modifier.preferredSize(20.dp))
+
         Button(onClick = {
-            //open third frame with no arguments
-            //and clear stack (remove MenuFrameUI and SecondFrameUI)
+            //up navigation
             nav.up()
         }) {
             Text(text = "up")
         }
+
+        Spacer(modifier = Modifier.preferredSize(20.dp))
 
         Button(onClick = {
             //open third frame with no arguments
