@@ -40,6 +40,13 @@ class Navigation constructor(
     val nodeIdentifier: String,
     private val bundledCallback: () -> Any?
 ) {
+    companion object {
+        val preview
+            get() = Navigation(ImplNavigationViewModel(), Bundle(), "-") {
+                null
+            }
+    }
+
     fun up(stack: Int = 1): Boolean = navigationViewModel.up(stack)
 
     fun navigateTo(node: Node, args: Bundle = Bundle(), clearTop: Boolean) {
