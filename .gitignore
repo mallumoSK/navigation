@@ -11,3 +11,4 @@ local.properties
 /gradle/wrapper/
 /secure-ksp.gradle
 /secure.gradle
+/secure-android.gradle

@@ -5,7 +5,7 @@ plugins {
 group = "tk.mallumo"
 version = "0.0.1"
 
-apply from: "../secure.gradle"
+apply from: "../secure-android.gradle"
 
 android {
     compileSdkVersion 30
