@@ -74,9 +74,18 @@ fun SecondFrameUI() {
 
         Button(onClick = {
             //open third frame with no arguments
-            nav.navTo_ThirdFrameUI()
+            //and clear stack (remove MenuFrameUI and SecondFrameUI)
+            nav.up()
         }) {
-            Text(text = "navigate to secnd frame")
+            Text(text = "up")
+        }
+
+        Button(onClick = {
+            //open third frame with no arguments
+            //and clear stack (remove MenuFrameUI and SecondFrameUI)
+            nav.navTo_ThirdFrameUI(clearTop = true)
+        }) {
+            Text(text = "navigate to third frame + clear top")
         }
     }
 }
