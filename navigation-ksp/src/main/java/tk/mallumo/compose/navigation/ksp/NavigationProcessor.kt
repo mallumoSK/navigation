@@ -165,7 +165,7 @@ class NavigationProcessor : SymbolProcessor {
             )
         ) { append(bundled) }
 
-        codeWriter.write(true)
+        codeWriter.write(false)
     }
 
 }
