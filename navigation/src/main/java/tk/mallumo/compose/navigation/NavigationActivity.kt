@@ -26,7 +26,7 @@ abstract class NavigationActivity : AppCompatActivity() {
 
 
     override fun onBackPressed() {
-        if (!navigationViewModel.up()) super.onBackPressed()
+        if (!navigationViewModel.back()) super.onBackPressed()
     }
 
     abstract fun startupNode(): Node

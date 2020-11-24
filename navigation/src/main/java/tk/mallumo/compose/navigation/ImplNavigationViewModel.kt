@@ -17,14 +17,25 @@ class ImplNavigationViewModel : ViewModel() {
     private val implViewModelsToRelease = MutableSharedFlow<String>()
     internal val viewModelsToRelease = implViewModelsToRelease.asSharedFlow()
 
+    private val backNavigationConsumers = hashMapOf<String, (() -> Boolean)>()
+
     val current by lazy {
         mutableStateOf(nodes.last())
     }
 
+    fun back(): Boolean =
+        if (backNavigationConsumers.values.any { consumer -> consumer() }) {
+            false
+        } else {
+            up(1)
+        }
+
     fun up(stack: Int = 1): Boolean {
         if (nodes.size <= stack) return false
         repeat(stack) {
-            nodeViewModelRelease(nodes.removeLast())
+            val removedNode = nodes.removeLast()
+            nodeViewModelRelease(removedNode)
+            unregisterActiveNavigation(removedNode.identifier)
         }
         current.value = nodes.last()
         return true
@@ -33,7 +44,10 @@ class ImplNavigationViewModel : ViewModel() {
     fun navigateTo(node: Node, args: Bundle = Bundle(), clearTop: Boolean) {
         ImplNode(node.id, args).also {
             if (clearTop) {
-                nodes.forEach { stackNode -> nodeViewModelRelease(stackNode) }
+                nodes.forEach { stackNode ->
+                    unregisterActiveNavigation(stackNode.identifier)
+                    nodeViewModelRelease(stackNode)
+                }
                 nodes.clear()
             }
             nodes.add(it)
@@ -63,4 +77,14 @@ class ImplNavigationViewModel : ViewModel() {
                 }
             }
     }
+
+    fun registerActiveNavigation(nodeIdentifier: String, consumer: () -> Boolean) {
+        backNavigationConsumers[nodeIdentifier] = consumer
+    }
+
+    private fun unregisterActiveNavigation(nodeIdentifier: String) {
+        backNavigationConsumers.remove(nodeIdentifier)
+    }
+
+
 }

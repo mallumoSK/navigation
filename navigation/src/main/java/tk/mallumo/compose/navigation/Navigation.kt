@@ -16,36 +16,50 @@ data class Node(val id: String) {
 
 @Composable
 fun <VM : ViewModel> navigationViewModel(
-    modelClass: KClass<VM>,
-    factory: ViewModelProvider.Factory? = null
+        modelClass: KClass<VM>,
+        factory: ViewModelProvider.Factory? = null
 ): VM {
 
     val nodeID = NavigationAmbient.current.nodeIdentifier
     val viewModelKey = "$nodeID${modelClass.qualifiedName}"
 
     viewModel(ImplNavigationViewModel::class.java)
-        .nodeViewModelRegister(viewModelKey)
+            .nodeViewModelRegister(viewModelKey)
 
     return viewModel(
-        modelClass = modelClass.java,
-        key = viewModelKey,
-        factory = factory
+            modelClass = modelClass.java,
+            key = viewModelKey,
+            factory = factory
     )
 }
 
 
 class Navigation constructor(
-    private val navigationViewModel: ImplNavigationViewModel,
-    val args: Bundle,
-    val nodeIdentifier: String,
-    private val bundledCallback: () -> Any?
+        private val navigationViewModel: ImplNavigationViewModel,
+        val args: Bundle,
+        val nodeIdentifier: String,
+        private val bundledCallback: () -> Any?
 ) {
+
+    /**
+     * if this function return true, it means back press is consumed inside compose layout
+     * Default = false
+     */
+    var consumeBackNavigation = { false }
+
     companion object {
         val preview
             get() = Navigation(ImplNavigationViewModel(), Bundle(), "-") {
                 null
             }
     }
+
+    init {
+        navigationViewModel.registerActiveNavigation(nodeIdentifier) {
+            consumeBackNavigation()
+        }
+    }
+
 
     fun up(stack: Int = 1): Boolean = navigationViewModel.up(stack)
 
