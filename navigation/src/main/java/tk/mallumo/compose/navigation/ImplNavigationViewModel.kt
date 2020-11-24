@@ -25,7 +25,7 @@ class ImplNavigationViewModel : ViewModel() {
 
     fun back(): Boolean =
         if (backNavigationConsumers.values.any { consumer -> consumer() }) {
-            false
+            true
         } else {
             up(1)
         }
