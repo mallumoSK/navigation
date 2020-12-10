@@ -1,8 +1,10 @@
+
 @file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
 package tk.mallumo.layout.inflater
 
 import java.io.File
+import java.security.MessageDigest
 
 /**
  * Class provides writing generated classes,logs, ... into files
@@ -14,8 +16,8 @@ import java.io.File
  * @see CodeWriter.write
  */
 class CodeWriter(
-    private val directory: File,
-    private val rootPackage: String
+        private val directory: File,
+        private val rootPackage: String
 ) {
 
     /**
@@ -42,10 +44,10 @@ class CodeWriter(
      * @see CodeWriter.rootPackage
      */
     private inner class BuilderEntry(
-        val packageName: String,
-        val fileName: String,
-        val builder: StringBuilder = StringBuilder(),
-        val imports: HashSet<String> = hashSetOf()
+            val packageName: String,
+            val fileName: String,
+            val builder: StringBuilder = StringBuilder(),
+            val imports: HashSet<String> = hashSetOf()
     ) {
 
         /**
@@ -55,9 +57,9 @@ class CodeWriter(
          * @see CodeWriter.directory
          */
         fun file(directory: File): File =
-            File("${directory.absolutePath}/${packageName.replace(".", "/")}/$fileName").also {
-                if (!it.parentFile.exists()) it.parentFile.mkdirs()
-            }
+                File("${directory.absolutePath}/${packageName.replace(".", "/")}/$fileName").also {
+                    if (!it.parentFile.exists()) it.parentFile.mkdirs()
+                }
 
         /**
          * Write generated sources ''BuilderEntry.fileSource'' into target file ''BuilderEntry.file''
@@ -68,8 +70,21 @@ class CodeWriter(
          * @see BuilderEntry.file
          */
         fun write(kspDir: File) {
-            file(kspDir).writeText(fileSource)
+            val hash = hashString(fileSource)
+            file(kspDir).apply {
+                if (!exists() || readLine() != "//HASH $hash") {
+                    writeText("//HASH ${hash}\n\n${fileSource}")
+                }
+            }
+
         }
+
+        private fun hashString(input: String, type: String = "SHA-1") =
+                MessageDigest
+                        .getInstance(type)
+                        .digest(input.toByteArray())
+                        .map { String.format("%02X", it) }
+                        .joinToString(separator = "")
 
         /**
          * Join whole sources into one string
@@ -110,10 +125,10 @@ $builder"""
      * @see BuilderEntry
      */
     fun add(
-        packageName: String,
-        fileName: String,
-        imports: List<String> = listOf(),
-        body: StringBuilder.() -> Unit
+            packageName: String,
+            fileName: String,
+            imports: List<String> = listOf(),
+            body: StringBuilder.() -> Unit
     ) {
         with(getBuilderEntry(packageName, fileName)) {
             this.imports.addAll(imports)
@@ -138,7 +153,7 @@ $builder"""
 
         if (deleteOld) {
             oldFiles.filter { old -> newFile.none { new -> old.absolutePath == new.absolutePath } }
-                .forEach { it.delete() }
+                    .forEach { it.delete() }
         }
 
         generated.forEach { entry ->
