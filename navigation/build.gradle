@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
 }
 group = "tk.mallumo"
-version = "0.0.5"
+version = "0.0.6"
 
 apply from: "../secure-android.gradle"
 
@@ -11,7 +11,7 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        minSdkVersion 25
+        minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
