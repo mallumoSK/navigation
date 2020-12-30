@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tk.mallumo.compose.navigation
 
 import android.os.Bundle
@@ -8,7 +10,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlin.reflect.KClass
 
-val NavigationAmbient = ambientOf<Navigation> { error("Unexpected error") }
+@Deprecated(message ="Old type of declaration",
+    replaceWith = ReplaceWith("AmbientNavigation", "tk.mallumo.compose.navigation.AmbientNavigation"))
+val NavigationAmbient get() = AmbientNavigation
+
+val AmbientNavigation = ambientOf<Navigation> { error("Unexpected error") }
 
 data class Node(val id: String) {
     companion object
@@ -20,7 +26,7 @@ fun <VM : ViewModel> navigationViewModel(
         factory: ViewModelProvider.Factory? = null
 ): VM {
 
-    val nodeID = NavigationAmbient.current.nodeIdentifier
+    val nodeID = AmbientNavigation.current.nodeIdentifier
     val viewModelKey = "$nodeID${modelClass.qualifiedName}"
 
     viewModel(ImplNavigationViewModel::class.java)
