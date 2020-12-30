@@ -14,6 +14,9 @@ data class PropertyTypeHolder(
     val propertyName: String,
     val qualifiedName: String
 ) {
+    override fun toString(): String {
+        return "$qualifiedName : $propertyName"
+    }
     companion object {
         /**
          * object types which Bundle supports directly

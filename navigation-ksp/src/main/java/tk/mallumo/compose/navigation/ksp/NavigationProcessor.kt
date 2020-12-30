@@ -1,13 +1,9 @@
 package tk.mallumo.compose.navigation.ksp
 
-import org.jetbrains.kotlin.ksp.getAllSuperTypes
-import org.jetbrains.kotlin.ksp.getDeclaredProperties
-import org.jetbrains.kotlin.ksp.isAbstract
 import org.jetbrains.kotlin.ksp.processing.CodeGenerator
 import org.jetbrains.kotlin.ksp.processing.KSPLogger
 import org.jetbrains.kotlin.ksp.processing.Resolver
 import org.jetbrains.kotlin.ksp.processing.SymbolProcessor
-import org.jetbrains.kotlin.ksp.symbol.KSClassDeclaration
 import org.jetbrains.kotlin.ksp.symbol.KSFunctionDeclaration
 import tk.mallumo.layout.inflater.CodeWriter
 import java.io.File
@@ -60,29 +56,14 @@ class NavigationProcessor : SymbolProcessor {
 
     override fun process(resolver: Resolver) {
         val nodes = buildNavNodes(resolver)
-        val args = buildNavArgs(nodes)
-        generate(nodes, args)
-    }
+        val hash = nodes.joinToString("\n") { it.hash() }
+        if(hash != codeWriter.readTmpFile("hash.tmp")){
+            generate(nodes)
+            write(hash)
+        }
 
-    private fun buildNavArgs(nodes: List<NavNode>) =
-        nodes.mapNotNull { it.args }
-            .associateBy({ it }, { current -> // map all properties to annotated class
-                current.getAllSuperTypes() // find parents of annotated class
-                    .map { it.declaration }
-                    .filterIsInstance<KSClassDeclaration>()
-                    .plusElement(current)
-                    .map { property ->
-                        property.getDeclaredProperties() // find all properties of class
-                            .asSequence()
-                            .filter { !it.isAbstract() }
-                            .filter { it.getter != null }
-                            .filter { it.setter != null }
-                            .filter { it.extensionReceiver == null }
-                            .map { PropertyTypeHolder.get(it) } // get only usable properties
-                            .filterNotNull()
-                    }
-                    .flatten()
-            })
+
+    }
 
     private fun buildNavNodes(resolver: Resolver): List<NavNode> {
         return resolver.getSymbolsWithAnnotation(composableNavNodeNameFull)
@@ -92,8 +73,7 @@ class NavigationProcessor : SymbolProcessor {
 
 
     private fun generate(
-        nodes: List<NavNode>,
-        args: Map<KSClassDeclaration, Sequence<PropertyTypeHolder>>
+        nodes: List<NavNode>
     ) {
         bundled = StringBuilder()
         argsConstructor = StringBuilder()
@@ -112,16 +92,19 @@ class NavigationProcessor : SymbolProcessor {
         }
 
         bundled.apply {
-            args.entries.forEach {
-                CodeGen.generateBundleFill(it, this)
-                CodeGen.generateAsBundle(it, this)
+            nodes.asSequence()
+                .filterNot { it.args == null }
+                .map { it.args!! to it.argsProperties!! }
+                .forEach {
+                    CodeGen.generateBundleFill(it, this)
+                    CodeGen.generateAsBundle(it, this)
+                }
             }
-        }
 
     }
 
 
-    override fun finish() {
+     private fun write(hash: String) {
         codeWriter.add(
             basePackage,
             fileName = "GeneratedNavNodeExt.kt",
@@ -165,7 +148,11 @@ class NavigationProcessor : SymbolProcessor {
             )
         ) { append(bundled) }
 
-        codeWriter.write(false)
+         codeWriter.write(deleteOld = true)
+         codeWriter.writeTmpFile("hash.tmp", hash)
     }
 
+    override fun finish() {
+
+    }
 }

@@ -137,13 +137,13 @@ $navFunExt
      * @param entry prepared properties which will be used for generating
      */
     fun generateBundleFill(
-        entry: Map.Entry<KSClassDeclaration, Sequence<PropertyTypeHolder>>,
+        entry: Pair<KSClassDeclaration, Sequence<PropertyTypeHolder>>,
         builder: StringBuilder
     ) {
         builder.apply {
-            val fullName = entry.key.qualifiedName!!.asString()
+            val fullName = entry.first.qualifiedName!!.asString()
             append("fun $fullName.fill(bundle: Bundle): $fullName {")
-            entry.value.forEach {
+            entry.second.forEach {
                 val fieldName = it.propertyName
                 this += when (it.qualifiedName) {
                     "kotlin.Boolean" -> "\t$fieldName = bundle.getBoolean(\"$fieldName\", $fieldName)"
@@ -182,12 +182,12 @@ $navFunExt
      * @param entry prepared properties which will be used for generating
      */
     fun generateAsBundle(
-        entry: Map.Entry<KSClassDeclaration, Sequence<PropertyTypeHolder>>,
+        entry: Pair<KSClassDeclaration, Sequence<PropertyTypeHolder>>,
         builder: StringBuilder
     ) {
         builder.apply {
-            append("\nfun ${entry.key.qualifiedName!!.asString()}.asBundle() = bundleOf(")
-            entry.value.forEach {
+            append("\nfun ${entry.first.qualifiedName!!.asString()}.asBundle() = bundleOf(")
+            entry.second.forEach {
                 it.propertyName.let { fieldName ->
                     this += "\t\"$fieldName\" to $fieldName,"
                 }

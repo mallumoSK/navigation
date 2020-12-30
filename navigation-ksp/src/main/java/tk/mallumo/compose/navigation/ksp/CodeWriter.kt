@@ -16,8 +16,8 @@ import java.security.MessageDigest
  * @see CodeWriter.write
  */
 class CodeWriter(
-        private val directory: File,
-        private val rootPackage: String
+    private val directory: File,
+    private val rootPackage: String
 ) {
 
     /**
@@ -44,10 +44,10 @@ class CodeWriter(
      * @see CodeWriter.rootPackage
      */
     private inner class BuilderEntry(
-            val packageName: String,
-            val fileName: String,
-            val builder: StringBuilder = StringBuilder(),
-            val imports: HashSet<String> = hashSetOf()
+        val packageName: String,
+        val fileName: String,
+        val builder: StringBuilder = StringBuilder(),
+        val imports: HashSet<String> = hashSetOf()
     ) {
 
         /**
@@ -57,9 +57,9 @@ class CodeWriter(
          * @see CodeWriter.directory
          */
         fun file(directory: File): File =
-                File("${directory.absolutePath}/${packageName.replace(".", "/")}/$fileName").also {
-                    if (!it.parentFile.exists()) it.parentFile.mkdirs()
-                }
+            File("${directory.absolutePath}/${packageName.replace(".", "/")}/$fileName").also {
+                if (!it.parentFile.exists()) it.parentFile.mkdirs()
+            }
 
         /**
          * Write generated sources ''BuilderEntry.fileSource'' into target file ''BuilderEntry.file''
@@ -80,11 +80,11 @@ class CodeWriter(
         }
 
         private fun hashString(input: String, type: String = "SHA-1") =
-                MessageDigest
-                        .getInstance(type)
-                        .digest(input.toByteArray())
-                        .map { String.format("%02X", it) }
-                        .joinToString(separator = "")
+            MessageDigest
+                .getInstance(type)
+                .digest(input.toByteArray())
+                .map { String.format("%02X", it) }
+                .joinToString(separator = "")
 
         /**
          * Join whole sources into one string
@@ -125,10 +125,10 @@ $builder"""
      * @see BuilderEntry
      */
     fun add(
-            packageName: String,
-            fileName: String,
-            imports: List<String> = listOf(),
-            body: StringBuilder.() -> Unit
+        packageName: String,
+        fileName: String,
+        imports: List<String> = listOf(),
+        body: StringBuilder.() -> Unit
     ) {
         with(getBuilderEntry(packageName, fileName)) {
             this.imports.addAll(imports)
@@ -137,6 +137,7 @@ $builder"""
 
     }
 
+    private val libDirectory get() = File("${directory.absolutePath}/${rootPackage.replace(".", "/")}")
     /**
      * This function must be called after all code is generated and ready for writing,
      *
@@ -146,18 +147,30 @@ $builder"""
      * * write new files
      */
     fun write(deleteOld: Boolean) {
-        val libDirectory = File("${directory.absolutePath}/${rootPackage.replace(".", "/")}")
         val oldFiles = libDirectory.walkTopDown().filter { it.isFile }.toList()
         val generated = builders.values.map { it.values }.flatten()
         val newFile = generated.map { it.file(directory) }
 
         if (deleteOld) {
             oldFiles.filter { old -> newFile.none { new -> old.absolutePath == new.absolutePath } }
-                    .forEach { it.delete() }
+                .forEach { it.delete() }
         }
 
         generated.forEach { entry ->
             entry.write(directory)
         }
+    }
+
+    fun writeTmpFile(name:String, body:String) {
+        File(libDirectory, name).writeText(body)
+    }
+
+    fun readTmpFile(name:String):String =try {
+        File(libDirectory, name).readText()
+    }catch (e:Exception){""}
+
+    fun filesInDirectory(): List<File> {
+        return File("${directory.absolutePath}/${rootPackage.replace(".", "/")}")
+            .listFiles()?.toList()?: listOf()
     }
 }
