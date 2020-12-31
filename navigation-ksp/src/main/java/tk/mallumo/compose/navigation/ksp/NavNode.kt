@@ -1,11 +1,10 @@
 package tk.mallumo.compose.navigation.ksp
 
-import org.jetbrains.kotlin.ksp.getAllSuperTypes
-import org.jetbrains.kotlin.ksp.getDeclaredProperties
-import org.jetbrains.kotlin.ksp.isAbstract
-import org.jetbrains.kotlin.ksp.symbol.KSClassDeclaration
-import org.jetbrains.kotlin.ksp.symbol.KSFunctionDeclaration
-import org.jetbrains.kotlin.ksp.symbol.KSType
+import com.google.devtools.ksp.getDeclaredProperties
+import com.google.devtools.ksp.isAbstract
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import com.google.devtools.ksp.symbol.KSType
 
 class NavNode(
     declaration: KSFunctionDeclaration,
@@ -46,7 +45,7 @@ class NavNode(
         }
     }
 
-    fun hash(): String {
-       return "$fullName-${args?.qualifiedName?.asString()}-${argsProperties?.joinToString { it.toString() }}"
+    override fun toString(): String {
+        return "$fullName-${args?.qualifiedName?.asString()}-${argsProperties?.joinToString { it.toString() }}"
     }
 }

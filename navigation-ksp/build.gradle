@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "tk.mallumo"
-version = "0.0.3"
+version = "0.1.0"
 
 apply from: "../secure-ksp.gradle"
 
@@ -15,5 +15,5 @@ java {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-symbol-processing-api:$ksp_version"
+    implementation 'com.google.devtools.ksp:symbol-processing:1.4.20-dev-experimental-20201222'
 }

@@ -1,3 +1,5 @@
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+
 package tk.mallumo.compose.navigation
 
 import android.os.Bundle

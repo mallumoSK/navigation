@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package tk.mallumo.compose.navigation
 
 import android.os.Bundle
@@ -59,7 +61,6 @@ class ImplNavigationViewModel : ViewModel() {
         nodes.add(ImplNode(startupNode.id, startupArgs))
     }
 
-
     fun nodeViewModelRegister(viewModelKey: String) {
         viewModels.add(viewModelKey)
     }
@@ -85,6 +86,4 @@ class ImplNavigationViewModel : ViewModel() {
     private fun unregisterActiveNavigation(nodeIdentifier: String) {
         backNavigationConsumers.remove(nodeIdentifier)
     }
-
-
 }

@@ -1,10 +1,12 @@
 package tk.mallumo.compose.navigation.ksp
 
-import org.jetbrains.kotlin.ksp.processing.CodeGenerator
-import org.jetbrains.kotlin.ksp.processing.KSPLogger
-import org.jetbrains.kotlin.ksp.processing.Resolver
-import org.jetbrains.kotlin.ksp.processing.SymbolProcessor
-import org.jetbrains.kotlin.ksp.symbol.KSFunctionDeclaration
+
+import com.google.devtools.ksp.processing.CodeGenerator
+import com.google.devtools.ksp.processing.KSPLogger
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import tk.mallumo.compose.navigation.ksp.HashUtils.sha1
 import tk.mallumo.layout.inflater.CodeWriter
 import java.io.File
 
@@ -27,13 +29,13 @@ class NavigationProcessor : SymbolProcessor {
     }
 
 
-    lateinit var bundled: StringBuilder
-    lateinit var argsConstructor: StringBuilder
-    lateinit var argsDestructor: StringBuilder
+    private lateinit var bundled: StringBuilder
+    private lateinit var argsConstructor: StringBuilder
+    private lateinit var argsDestructor: StringBuilder
 
-    lateinit var navNodeExt: StringBuilder
-    lateinit var navFunExt: StringBuilder
-    lateinit var navCompositeDeclaration: StringBuilder
+    private lateinit var navNodeExt: StringBuilder
+    private lateinit var navFunExt: StringBuilder
+    private lateinit var navCompositeDeclaration: StringBuilder
 
 
     override fun init(
@@ -56,13 +58,13 @@ class NavigationProcessor : SymbolProcessor {
 
     override fun process(resolver: Resolver) {
         val nodes = buildNavNodes(resolver)
-        val hash = nodes.joinToString("\n") { it.hash() }
-        if(hash != codeWriter.readTmpFile("hash.tmp")){
-            generate(nodes)
-            write(hash)
+        if (nodes.isNotEmpty()) {
+            val hash = nodes.joinToString("\n") { it.toString().sha1() }
+            if (hash != codeWriter.readTmpFile("hash.tmp")) {
+                generate(nodes)
+                write(hash)
+            }
         }
-
-
     }
 
     private fun buildNavNodes(resolver: Resolver): List<NavNode> {
@@ -99,12 +101,10 @@ class NavigationProcessor : SymbolProcessor {
                     CodeGen.generateBundleFill(it, this)
                     CodeGen.generateAsBundle(it, this)
                 }
-            }
-
+        }
     }
 
-
-     private fun write(hash: String) {
+    private fun write(hash: String) {
         codeWriter.add(
             basePackage,
             fileName = "GeneratedNavNodeExt.kt",
@@ -128,6 +128,7 @@ class NavigationProcessor : SymbolProcessor {
                 "androidx.compose.animation.Crossfade",
                 "androidx.compose.material.MaterialTheme",
                 "androidx.compose.material.Surface",
+                "android.annotation.SuppressLint"
             )
         ) {
             append(
@@ -148,8 +149,8 @@ class NavigationProcessor : SymbolProcessor {
             )
         ) { append(bundled) }
 
-         codeWriter.write(deleteOld = true)
-         codeWriter.writeTmpFile("hash.tmp", hash)
+        codeWriter.write(deleteOld = true)
+        codeWriter.writeTmpFile("hash.tmp", hash)
     }
 
     override fun finish() {

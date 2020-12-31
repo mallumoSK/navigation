@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.setContent
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tk.mallumo.compose.navigation.*
 import tk.mallumo.just.files.style.SampleTheme
@@ -25,7 +26,7 @@ class MainActivity : NavigationActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SampleTheme {
+            SampleTheme(darkTheme = true) {
                 NavigationContent()  //generated method
             }
         }
@@ -36,10 +37,16 @@ class MainActivity : NavigationActivity() {
 // BUT binding into object is safer way :)
 data class ArgsMenuFrame(var valueX: String = "")
 
+//@Composable
+//@ComposableNavNode
+//fun XFrameUI() {
+//
+//}
+
 @Composable
 @ComposableNavNode(ArgsMenuFrame::class) // declaration frame node + arguments
 fun MenuFrameUI() {
-    val nav = NavigationAmbient.current // navigation between frames
+    val nav = AmbientNavigation.current // navigation between frames
     val args = remember { // read arguments
         // map bundle args into data-class of ArgsMenuFrame
         nav.bundledArgs<ArgsMenuFrame>()
@@ -59,12 +66,12 @@ fun MenuFrameUI() {
     }
 }
 
-data class ArgsSecondFrame(var item: String = "")
+data class ArgsSecondFrame(var item: String = "",var item2: String = "")
 
 @Composable
 @ComposableNavNode(ArgsSecondFrame::class)
 fun SecondFrameUI() {
-    val nav = NavigationAmbient.current
+    val nav = AmbientNavigation.current
     val args = remember { // read arguments
         // map bundle args into data-class of ArgsSecondFrame
         nav.bundledArgs<ArgsSecondFrame>()
@@ -105,5 +112,13 @@ fun SecondFrameUI() {
 fun ThirdFrameUI() {
     Column {
         Text(text = "third frame")
+    }
+}
+
+@Preview
+@Composable
+fun PreviewThirdFrameUI() {
+    SampleTheme {
+        ThirdFrameUI()
     }
 }

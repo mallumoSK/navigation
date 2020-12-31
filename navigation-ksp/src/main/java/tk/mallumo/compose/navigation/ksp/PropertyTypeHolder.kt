@@ -1,8 +1,7 @@
 package tk.mallumo.compose.navigation.ksp
 
-
-import org.jetbrains.kotlin.ksp.symbol.KSClassDeclaration
-import org.jetbrains.kotlin.ksp.symbol.KSPropertyDeclaration
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 
 /**
  * This class holding info about property for speedup processing
@@ -17,6 +16,7 @@ data class PropertyTypeHolder(
     override fun toString(): String {
         return "$qualifiedName : $propertyName"
     }
+
     companion object {
         /**
          * object types which Bundle supports directly
@@ -61,8 +61,8 @@ data class PropertyTypeHolder(
         fun get(prop: KSPropertyDeclaration): PropertyTypeHolder? {
 
             val name = prop.simpleName.asString()
-            val declaration = prop.type?.resolve()?.declaration
-            val typeName = declaration?.qualifiedName?.asString() ?: return null
+            val declaration = prop.type.resolve().declaration
+            val typeName = declaration.qualifiedName?.asString() ?: return null
 
             return when {
                 typeName in directTypes -> {
@@ -70,7 +70,7 @@ data class PropertyTypeHolder(
                 }
                 declaration is KSClassDeclaration -> {
                     val parentTypes =
-                        declaration.superTypes.map { it.resolve()?.declaration?.qualifiedName?.asString() }
+                        declaration.superTypes.map { it.resolve().declaration.qualifiedName?.asString() }
                     sharedTypes.firstOrNull { it in parentTypes }?.let {
                         PropertyTypeHolder(name, it)
                     }

@@ -1,6 +1,6 @@
 package tk.mallumo.compose.navigation.ksp
 
-import org.jetbrains.kotlin.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 
 object CodeGen {
 
@@ -64,7 +64,8 @@ fun NavigationActivity.NavigationContent() {
         }
     }
 }    
-    
+
+@SuppressLint("ComposableNaming")
 object ImplNoteUtils {
 
     @Suppress("RemoveRedundantQualifierName")
@@ -73,14 +74,13 @@ object ImplNoteUtils {
         when (node.frameID) {
 $declaration
         }
-
     }
 
     @Composable
     private fun composite(
         navigationViewModel: ImplNavigationViewModel,
         node: ImplNode,
-        body: @Composable () -> Unit
+        content: @Composable () -> Unit
     ) {
         val argsItem: Any? = remember { buildArgsItem(node) }
 
@@ -89,8 +89,8 @@ $declaration
                 argsItem
             }
         }
-        Providers(NavigationAmbient provides nav) {
-            body()
+        Providers(AmbientNavigation provides nav) {
+            content()
         }
 
         onDispose {
@@ -111,23 +111,6 @@ $argsDestructor
         }
     }
 }    
-"""
-        )
-    }
-
-    fun generateCompositeExt(navFunExt: StringBuilder) = buildString {
-        append(
-            """
-@Composable
-fun NavigationActivity.NavigationContent() {
-    Crossfade(current = navigationViewModel.current) {
-        Surface(color = MaterialTheme.colors.background) {
-            navNode(node = it.value)
-        }
-    }
-}
-
-$navFunExt
 """
         )
     }

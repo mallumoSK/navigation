@@ -12,3 +12,4 @@ local.properties
 /secure-ksp.gradle
 /secure.gradle
 /secure-android.gradle
+/app/src/main/ksp/tk/mallumo/compose/navigation/

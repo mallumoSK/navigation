@@ -1,11 +1,10 @@
 package tk.mallumo.compose.navigation.ksp
 
-import org.jetbrains.kotlin.ksp.findActualType
-import org.jetbrains.kotlin.ksp.getAllSuperTypes
-import org.jetbrains.kotlin.ksp.symbol.KSClassDeclaration
-import org.jetbrains.kotlin.ksp.symbol.KSType
-import org.jetbrains.kotlin.ksp.symbol.KSTypeAlias
-import org.jetbrains.kotlin.ksp.symbol.KSTypeParameter
+import com.google.devtools.ksp.findActualType
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSType
+import com.google.devtools.ksp.symbol.KSTypeAlias
+import com.google.devtools.ksp.symbol.KSTypeParameter
 
 
 /**
@@ -16,7 +15,7 @@ fun KSClassDeclaration.getAllSuperTypes(): Sequence<KSType> {
 
     fun KSTypeParameter.getTypesUpperBound(): Sequence<KSClassDeclaration> =
         this.bounds.asSequence().flatMap {
-            when (val resolvedDeclaration = it.resolve()?.declaration) {
+            when (val resolvedDeclaration = it.resolve().declaration) {
                 is KSClassDeclaration -> sequenceOf(resolvedDeclaration)
                 is KSTypeAlias -> sequenceOf(resolvedDeclaration.findActualType())
                 is KSTypeParameter -> resolvedDeclaration.getTypesUpperBound()
@@ -30,7 +29,7 @@ fun KSClassDeclaration.getAllSuperTypes(): Sequence<KSType> {
         .plus(
             this.superTypes
                 .asSequence()
-                .mapNotNull { it.resolve()?.declaration }
+                .mapNotNull { it.resolve().declaration }
                 .flatMap {
                     when (it) {
                         is KSClassDeclaration -> it.getAllSuperTypes()

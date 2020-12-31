@@ -10,11 +10,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlin.reflect.KClass
 
-@Deprecated(message ="Old type of declaration",
-    replaceWith = ReplaceWith("AmbientNavigation", "tk.mallumo.compose.navigation.AmbientNavigation"))
-val NavigationAmbient get() = AmbientNavigation
-
 val AmbientNavigation = ambientOf<Navigation> { error("Unexpected error") }
+
+@Deprecated(
+    message = "Old type of declaration",
+    replaceWith = ReplaceWith(
+        "AmbientNavigation",
+        "tk.mallumo.compose.navigation.AmbientNavigation"
+    )
+)
+val NavigationAmbient
+    get() = AmbientNavigation
+
 
 data class Node(val id: String) {
     companion object
@@ -22,29 +29,29 @@ data class Node(val id: String) {
 
 @Composable
 fun <VM : ViewModel> navigationViewModel(
-        modelClass: KClass<VM>,
-        factory: ViewModelProvider.Factory? = null
+    modelClass: KClass<VM>,
+    factory: ViewModelProvider.Factory? = null
 ): VM {
 
     val nodeID = AmbientNavigation.current.nodeIdentifier
     val viewModelKey = "$nodeID${modelClass.qualifiedName}"
 
     viewModel(ImplNavigationViewModel::class.java)
-            .nodeViewModelRegister(viewModelKey)
+        .nodeViewModelRegister(viewModelKey)
 
     return viewModel(
-            modelClass = modelClass.java,
-            key = viewModelKey,
-            factory = factory
+        modelClass = modelClass.java,
+        key = viewModelKey,
+        factory = factory
     )
 }
 
 
 class Navigation constructor(
-        private val navigationViewModel: ImplNavigationViewModel,
-        val args: Bundle,
-        val nodeIdentifier: String,
-        private val bundledCallback: () -> Any?
+    private val navigationViewModel: ImplNavigationViewModel,
+    val args: Bundle,
+    val nodeIdentifier: String,
+    private val bundledCallback: () -> Any?
 ) {
 
     /**
@@ -81,7 +88,7 @@ class Navigation constructor(
         @Suppress("UNCHECKED_CAST")
         return when {
             item == null -> throw Exception("Navigation node has no arguments")
-            item::class != type -> throw Exception("Invalid type of args binded to Navigation node, must be ${item::class.qualifiedName}")
+            item::class != type -> throw Exception("Invalid type of args bound to Navigation node, must be ${item::class.qualifiedName}")
             else -> item as T
         }
     }
