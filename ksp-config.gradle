@@ -7,4 +7,5 @@ repositories {
     }
     google()
 }
-android.sourceSets.main.java.srcDirs += ['src/main/ksp']
+//android.sourceSets.main.java.srcDirs += ['src/main/ksp']
+android.sourceSets.main.java.srcDirs += ['build/generated/ksp/debug']

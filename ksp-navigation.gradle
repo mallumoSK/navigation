@@ -1,2 +1,3 @@
 
-ksp.arg("NavigationSrcOut", "${projectDir.absolutePath}/src/main/ksp")
+//ksp.arg("NavigationSrcOut", "${projectDir.absolutePath}/src/main/ksp")
+ksp.arg("NavigationSrcOut", "${projectDir.absolutePath}/build/generated/ksp/debug")
