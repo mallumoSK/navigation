@@ -97,6 +97,7 @@ class NavigationProcessor : SymbolProcessor {
             nodes.asSequence()
                 .filterNot { it.args == null }
                 .map { it.args!! to it.argsProperties!! }
+                .distinctBy { it.first.qualifiedName!!.asString() }
                 .forEach {
                     CodeGen.generateBundleFill(it, this)
                     CodeGen.generateAsBundle(it, this)

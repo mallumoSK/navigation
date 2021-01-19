@@ -10,9 +10,6 @@ buildscript {
     repositories {
         google()
         jcenter()
-        maven {
-            url = uri("https://mallumo.jfrog.io/artifactory/gradle-dev-local")
-        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.0-alpha04'

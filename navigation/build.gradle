@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
 }
 group = "tk.mallumo"
-version = "0.1.0"
+version = "0.1.6"
 
 apply from: "../secure-android.gradle"
 
@@ -50,14 +50,12 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     /**/
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-    /**/
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
 //    implementation "androidx.ui:ui-tooling:1.0.0-alpha07"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-rc01'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
     /**/
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
