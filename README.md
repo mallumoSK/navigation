@@ -1,8 +1,8 @@
 # navigation
 ## Navigation component for Jetpack Compose
 ```
-kotlin_version = '1.4.20'
-compose_version = '1.0.0-alpha08'
+kotlin_version = '1.4.21'
+compose_version = '1.0.0-alpha10'
 ```
 
 ## navigation: ![https://mallumo.jfrog.io/artifactory/gradle-dev-local/tk/mallumo/navigation/](https://img.shields.io/maven-metadata/v?color=%234caf50&metadataUrl=https%3A%2F%2Fmallumo.jfrog.io%2Fartifactory%2Fgradle-dev-local%2Ftk%2Fmallumo%2Fnavigation%2Fmaven-metadata.xml&style=for-the-badge "Version")
