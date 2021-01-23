@@ -63,14 +63,21 @@ class Navigation constructor(
     var consumeBackNavigation = { false }
 
     companion object {
-        val preview
+        @Deprecated(
+            replaceWith = ReplaceWith("Navigation.preview()"),
+            message = "Use propriety alternative 'now args or bundle can be used'"
+        )
+        val preview: Navigation
             get() = Navigation(ImplNavigationViewModel(), Bundle(), "-") {
                 null
             }
 
         @SuppressLint("ComposableNaming")
         @Composable
-        fun preview(args: Any, argsBundle: Bundle = Bundle()): Navigation = remember(args) {
+        fun preview(
+            args: Any? = null,
+            argsBundle: Bundle = Bundle()
+        ): Navigation = remember(args) {
             Navigation(ImplNavigationViewModel(), argsBundle, "-") {
                 args
             }

@@ -24,7 +24,7 @@ class NavigationProcessor : SymbolProcessor {
         const val composableNavNodeName = "ComposableNavNode"
         private const val composableNavNodeNameFull = "$basePackage.$composableNavNodeName"
         private const val errProjectOutDir =
-            "Inside yours gradle.build must be defined constant (output): \n'ksp.arg(\"NavigationSrcOut\", \"\${projectDir.absolutePath}/src/main/ksp\")'"
+                "Inside yours gradle.build must be defined constant (output): \n'ksp.arg(\"NavigationSrcOut\", \"\${projectDir.absolutePath}/src/main/ksp\")'"
 
     }
 
@@ -90,8 +90,13 @@ class NavigationProcessor : SymbolProcessor {
             CodeGen.generateNavFunExt(navFunExt, node)
             CodeGen.generateCompositeDeclaration(navCompositeDeclaration, node)
             CodeGen.generateArgsConstructor(argsConstructor, node)
-            CodeGen.generateArgsDestructor(argsDestructor, node)
+
         }
+        nodes.distinctBy { it.args?.qualifiedName?.asString() }
+            .forEach { node ->
+                CodeGen.generateArgsDestructor(argsDestructor, node)
+            }
+
 
         bundled.apply {
             nodes.asSequence()

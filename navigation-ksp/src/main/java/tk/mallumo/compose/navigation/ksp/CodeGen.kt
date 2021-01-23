@@ -181,17 +181,13 @@ $argsDestructor
 
     fun generateArgsConstructor(builder: StringBuilder, node: NavNode) {
         node.args?.also {
-            builder += """
-        "${node.fullName}" -> ${it.qualifiedName!!.asString()}().fill(node.args)                
-"""
+            builder += """"        ${node.fullName}" -> ${it.qualifiedName!!.asString()}().fill(node.args)"""
         }
     }
 
     fun generateArgsDestructor(builder: StringBuilder, node: NavNode) {
         node.args?.also {
-            builder += """
-            is ${it.qualifiedName!!.asString()} -> node.args = argsItem.asBundle()                
-"""
+            builder += """            is ${it.qualifiedName!!.asString()} -> node.args = argsItem.asBundle()"""
         }
     }
 }
