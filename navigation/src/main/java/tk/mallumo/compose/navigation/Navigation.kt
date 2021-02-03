@@ -90,6 +90,14 @@ class Navigation constructor(
         }
     }
 
+    fun requestPermission(vararg permissions: String, body: SystemPermission.() -> Unit) {
+        val permissionHolder = SystemPermission(
+            requestCode = navigationViewModel.generatePermissionID(),
+            permissions = permissions
+        )
+            .apply(body)
+        navigationViewModel.callPermissionRequest(permissionHolder)
+    }
 
     fun up(stack: Int = 1): Boolean = navigationViewModel.up(stack)
 

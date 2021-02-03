@@ -1,12 +1,15 @@
 package tk.sample.app
 
+import android.Manifest
 import android.os.Bundle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.preferredSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.setContent
@@ -47,6 +50,23 @@ data class ArgsMenuFrame(var valueX: String = "")
 @ComposableNavNode(ArgsMenuFrame::class) // declaration frame node + arguments
 fun MenuFrameUI() {
     val nav = AmbientNavigation.current // navigation between frames
+    val locationState = remember { mutableStateOf("unknown") }
+
+    val locationPermission = remember {
+        {
+            nav.requestPermission(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) {
+                granted {
+                    locationState.value = "granted"
+                }
+                rejected {
+                    locationState.value = "rejected"
+                }
+            }
+        }
+    }
     val args = remember { // read arguments
         // map bundle args into data-class of ArgsMenuFrame
         nav.bundledArgs<ArgsMenuFrame>()
@@ -54,6 +74,7 @@ fun MenuFrameUI() {
 
     Column {
         Text(text = "valueX = ${args.valueX}")
+        Spacer(modifier = Modifier.size(16.dp))
         Button(onClick = {
             //open second frame by passing arguments
             nav.navTo_SecondFrameUI(ArgsSecondFrame("1"))
@@ -63,10 +84,15 @@ fun MenuFrameUI() {
         }) {
             Text(text = "navigate to second frame")
         }
+
+        Spacer(modifier = Modifier.size(16.dp))
+        Button(onClick = locationPermission) {
+            Text(text = "Call locationPermission, currentState:\n${locationState.value}")
+        }
     }
 }
 
-data class ArgsSecondFrame(var item: String = "",var item2: String = "")
+data class ArgsSecondFrame(var item: String = "", var item2: String = "")
 
 @Composable
 @ComposableNavNode(ArgsSecondFrame::class)
