@@ -2,7 +2,6 @@
 
 package tk.mallumo.compose.navigation
 
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -24,35 +23,6 @@ abstract class NavigationActivity : AppCompatActivity() {
                     vmProvider.get(it, EmptyViewModel::class.java)
                 }
             }
-
-            viewModelScope.launch(Dispatchers.Main) {
-                permissionFlow.collect { systemPermission ->
-                    val arePermissionsGranted =
-                        systemPermission.permissions.all { checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
-
-                    if (arePermissionsGranted) {
-                        consumePermission(systemPermission.requestCode, true)
-                    } else {
-                        requestPermissions(
-                            systemPermission.permissions,
-                            systemPermission.requestCode
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (!navigationViewModel.consumePermission(
-                requestCode = requestCode,
-                granted = grantResults.all { it == PackageManager.PERMISSION_GRANTED })
-        ) {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
 

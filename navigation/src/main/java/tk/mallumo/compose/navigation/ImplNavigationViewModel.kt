@@ -6,26 +6,10 @@ import android.os.Bundle
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import java.util.concurrent.atomic.AtomicInteger
 
-class SystemPermission(val requestCode: Int, vararg val permissions: String) {
-
-    internal var actionGranted = {}
-
-    internal var actionRejected = {}
-
-    fun granted(action: () -> Unit) {
-        actionGranted = action
-    }
-
-    fun rejected(action: () -> Unit) {
-        actionRejected = action
-    }
-}
 
 @Suppress("unused")
 class ImplNavigationViewModel : ViewModel() {
@@ -36,31 +20,6 @@ class ImplNavigationViewModel : ViewModel() {
     internal val viewModelsToRelease = implViewModelsToRelease.asSharedFlow()
 
     private val backNavigationConsumers = hashMapOf<String, (() -> Boolean)>()
-
-    private val permissionID = AtomicInteger(10)
-    internal val permissionFlow =
-        MutableSharedFlow<SystemPermission>(1, 5, BufferOverflow.DROP_OLDEST)
-    private val permissionStack = arrayListOf<SystemPermission>()
-
-    internal fun generatePermissionID(): Int = permissionID.getAndIncrement()
-
-    internal fun callPermissionRequest(permissionHolder: SystemPermission) {
-        permissionStack.add(permissionHolder)
-        GlobalScope.launch {
-            permissionFlow.emit(permissionHolder)
-        }
-    }
-
-    internal fun consumePermission(requestCode: Int, granted: Boolean): Boolean =
-        permissionStack.firstOrNull { it.requestCode == requestCode }?.let {
-            if (granted) {
-                permissionStack.remove(it)
-                it.actionGranted()
-            } else {
-                it.actionRejected()
-            }
-            true
-        } ?: false
 
     val current by lazy {
         mutableStateOf(nodes.last())
