@@ -1,6 +1,5 @@
 package tk.sample.app
 
-import android.Manifest
 import android.os.Bundle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -52,21 +51,7 @@ fun MenuFrameUI() {
     val nav = AmbientNavigation.current // navigation between frames
     val locationState = remember { mutableStateOf("unknown") }
 
-    val locationPermission = remember {
-        {
-            nav.requestPermission(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) {
-                granted {
-                    locationState.value = "granted"
-                }
-                rejected {
-                    locationState.value = "rejected"
-                }
-            }
-        }
-    }
+
     val args = remember { // read arguments
         // map bundle args into data-class of ArgsMenuFrame
         nav.bundledArgs<ArgsMenuFrame>()
@@ -86,9 +71,6 @@ fun MenuFrameUI() {
         }
 
         Spacer(modifier = Modifier.size(16.dp))
-        Button(onClick = locationPermission) {
-            Text(text = "Call locationPermission, currentState:\n${locationState.value}")
-        }
     }
 }
 
