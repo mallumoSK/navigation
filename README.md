@@ -17,24 +17,24 @@ compose_version = '1.0.0-alpha10'
 
 ## Example
 
-### Navigation root -> NavigationActivity
+### Navigation root
+
 ```kotlin
 import tk.mallumo.compose.navigation.*
 import tk.mallumo.compose.navigation.MenuFrameUI
 
-class MainActivity : NavigationActivity() {
-
-    // pass frame node, which will be opened on app first startup
-    override fun startupNode(): Node = Node.MenuFrameUI //generated value
-
-    // this is default implementation but you can change :)
-    override fun startupArgs(): Bundle = intent.extras ?: Bundle()
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SampleTheme {
-                NavigationContent()  //generated method
+            SampleTheme(darkTheme = true) {
+                //generated method
+                NavigationContent(
+                    startupNode = Node.MenuFrameUI, // startup node
+                    startupArgs = intent.extras, // startup node arguments
+                    animation = tween() // transition between "windows"
+                )
             }
         }
     }
@@ -47,12 +47,12 @@ import tk.mallumo.compose.navigation.*
 
 // you can use bundle as arguments
 // BUT binding into object is safer way :)
-data class ArgsMenuFrame(var valueX: String = "")
+class ArgsMenuFrame(var valueX: String = "")
 
 @Composable
 @ComposableNavNode(ArgsMenuFrame::class) // declaration frame node + arguments
 fun MenuFrameUI() {
-    val nav = NavigationAmbient.current // navigation between frames
+    val nav = AmbientNavigation.current // navigation between frames + arguments management
     val args = remember { // read arguments
         // map bundle args into data-class of ArgsMenuFrame
         nav.bundledArgs<ArgsMenuFrame>()
@@ -74,15 +74,25 @@ fun MenuFrameUI() {
 ```
 
 ### UI Frame (second)
+
 ```kotlin
 import tk.mallumo.compose.navigation.*
 
-data class ArgsSecondFrame(var item: String = "")
+class ArgsSecondFrame(var item: String = "")
+
+class SecondFrameVM : NavigationViewModel() {
+    val anyItem = mutbleStateOf("123")
+    override fun onCleared() {
+        anyItem.value = ""
+        log("onCleared when node released")
+    }
+}
 
 @Composable
 @ComposableNavNode(ArgsSecondFrame::class)
 fun SecondFrameUI() {
-    val nav = NavigationAmbient.current
+    val nav = AmbientNavigation.current
+    val vm = navigationViewModel<SecondFrameVM>()
     val args = remember { // read arguments
         // map bundle args into data-class of ArgsSecondFrame
         nav.bundledArgs<ArgsSecondFrame>()
@@ -95,6 +105,7 @@ fun SecondFrameUI() {
 
         // direct call of args
         Text(text = "nav args CONTENT:  ${nav.args.getString("item")}")
+        Text(text = "vm.anyItem:  ${vm.anyItem.value}")
 
         Spacer(modifier = Modifier.preferredSize(20.dp))
 
@@ -135,6 +146,7 @@ fun ThirdFrameUI() {
 ## How to implement
 
 1. add plugin (**build.gradle**)
+
 ```groovy
 plugins {
     id("symbol-processing") version "1.4.20-dev-experimental-20201222"
@@ -145,8 +157,16 @@ android{
 }
 //...
 
+
+//these 2 files download to local machine (faster compilation)
+//then include as:
+//apply from: '../ksp-config.gradle'
+//apply from: '../ksp-navigation.gradle'
+
 apply from: 'https://raw.githubusercontent.com/mallumoSK/navigation/master/ksp-config.gradle'
 apply from: 'https://raw.githubusercontent.com/mallumoSK/navigation/master/ksp-navigation.gradle'
+
+
 
 dependencies {
     implementation "tk.mallumo:navigation:x.y.z"
