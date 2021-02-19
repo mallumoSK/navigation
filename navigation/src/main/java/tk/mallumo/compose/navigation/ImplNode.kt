@@ -1,5 +1,3 @@
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
-
 package tk.mallumo.compose.navigation
 
 import android.os.Bundle
@@ -12,13 +10,9 @@ private val nodeIdGenerator by lazy {
 open class ImplNode(
     val frameID: String,
     var args: Bundle,
-    var nodeID: Int = nodeIdGenerator.getAndIncrement()
+    private var nodeID: Int = nodeIdGenerator.getAndIncrement()
 ) {
     val identifier get() = "$frameID:$nodeID:"
-
-//    override fun equals(other: Any?): Boolean {
-//        return other is ImplNode && other.identifier == this.identifier
-//    }
 
     override operator fun equals(other: Any?): Boolean {
         return other is ImplNode && other.identifier == this.identifier

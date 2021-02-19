@@ -1,12 +1,14 @@
-@file:Suppress("unused")
-
 package tk.mallumo.compose.navigation
 
-import androidx.lifecycle.ViewModel
 import kotlin.reflect.KClass
 
-class EmptyViewModel : ViewModel()
 
+class EmptyViewModel : NavigationViewModel() {
+    override fun onCleared() {
+    }
+}
+
+@Suppress("unused")
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FUNCTION)
 annotation class ComposableNavNode(val args: KClass<*> = Unit::class)

@@ -1,56 +1,37 @@
-@file:Suppress("unused")
-
 package tk.mallumo.compose.navigation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ambientOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.viewinterop.viewModel
-import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.staticAmbientOf
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlin.reflect.KClass
 
-val AmbientNavigation = ambientOf<Navigation> { error("Unexpected error") }
+val AmbientNavigation = staticAmbientOf<Navigation> { error("Unexpected error") }
 
-@Deprecated(
-    message = "Old type of declaration",
-    replaceWith = ReplaceWith(
-        "AmbientNavigation",
-        "tk.mallumo.compose.navigation.AmbientNavigation"
-    )
-)
-val NavigationAmbient
-    get() = AmbientNavigation
+@Suppress("unused")
+fun ComponentActivity.navigateTo(node: Node, args: Bundle = Bundle(), clearTop: Boolean = false) {
+    ViewModelProvider(this)[NavigationHolder::class.java]
+        .navigateTo(node, args, clearTop)
+}
 
+@Suppress("unused")
+fun ComponentActivity.up(stack: Int = 1) {
+    ViewModelProvider(this)[NavigationHolder::class.java]
+        .up(stack)
+}
 
 data class Node(val id: String) {
     companion object
 }
 
-@Composable
-fun <VM : ViewModel> navigationViewModel(
-    modelClass: KClass<VM>,
-    factory: ViewModelProvider.Factory? = null
-): VM {
-
-    val nodeID = AmbientNavigation.current.nodeIdentifier
-    val viewModelKey = "$nodeID${modelClass.qualifiedName}"
-
-    viewModel(ImplNavigationViewModel::class.java)
-        .nodeViewModelRegister(viewModelKey)
-
-    return viewModel(
-        modelClass = modelClass.java,
-        key = viewModelKey,
-        factory = factory
-    )
-}
-
 
 class Navigation constructor(
-    private val navigationViewModel: ImplNavigationViewModel,
+    private val navigationComposite: NavigationComposite,
     val args: Bundle,
     val nodeIdentifier: String,
     private val bundledCallback: () -> Any?
@@ -60,42 +41,47 @@ class Navigation constructor(
      * if this function return true, it means back press is consumed inside compose layout
      * Default = false
      */
-    var consumeBackNavigation = { false }
-
     companion object {
-        @Deprecated(
-            replaceWith = ReplaceWith("Navigation.preview()"),
-            message = "Use propriety alternative 'now args or bundle can be used'"
-        )
-        val preview: Navigation
-            get() = Navigation(ImplNavigationViewModel(), Bundle(), "-") {
-                null
-            }
+        private val previewNavigationComposite by lazy {
+            object : NavigationComposite {
+                override val currentNode: StateFlow<ImplNode>
+                    get() = MutableStateFlow(ImplNode("default-sample", Bundle()))
 
+                override fun up(stack: Int) {}
+                override fun navigateTo(node: Node, args: Bundle, clearTop: Boolean) {}
+                override fun nodeViewModelRegister(viewModelKey: String) {}
+                override fun registerOnBackPressHandler(
+                    nodeID: String,
+                    onBackPressHandler: () -> Boolean
+                ) {
+                }
+            }
+        }
+
+        @Suppress("unused")
         @SuppressLint("ComposableNaming")
         @Composable
         fun preview(
             args: Any? = null,
             argsBundle: Bundle = Bundle()
         ): Navigation = remember(args) {
-            Navigation(ImplNavigationViewModel(), argsBundle, "-") {
+            Navigation(previewNavigationComposite, argsBundle, "-") {
                 args
             }
         }
     }
 
-    init {
-        navigationViewModel.registerActiveNavigation(nodeIdentifier) {
-            consumeBackNavigation()
-        }
-    }
-
-    fun up(stack: Int = 1): Boolean = navigationViewModel.up(stack)
+    @Suppress("unused")
+    fun up(stack: Int = 1) = navigationComposite.up(stack = stack)
 
     fun navigateTo(node: Node, args: Bundle = Bundle(), clearTop: Boolean) {
-        navigationViewModel.navigateTo(node, args, clearTop)
+        navigationComposite.navigateTo(node, args, clearTop)
     }
 
+    @Suppress("unused")
+    fun onBackPress(key: String = "", body: () -> Boolean) {
+        navigationComposite.registerOnBackPressHandler("$nodeIdentifier:$key", body)
+    }
 
     inline fun <reified T : Any> bundledArgs() = bundledArgs(T::class)
 
@@ -107,5 +93,9 @@ class Navigation constructor(
             item::class != type -> throw Exception("Invalid type of args bound to Navigation node, must be ${item::class.qualifiedName}")
             else -> item as T
         }
+    }
+
+    internal fun registerViewModel(viewModelKey: String) {
+        navigationComposite.nodeViewModelRegister(viewModelKey)
     }
 }
