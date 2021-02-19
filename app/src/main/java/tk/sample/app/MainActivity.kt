@@ -1,35 +1,46 @@
 package tk.sample.app
 
 import android.os.Bundle
+import android.view.KeyEvent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.setContent
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tk.mallumo.compose.navigation.*
 import tk.mallumo.just.files.style.SampleTheme
+import tk.mallumo.log.log
+import kotlin.collections.contains
 
-class MainActivity : NavigationActivity() {
-
-    // pass frame node, which will be opened on app first startup
-    override fun startupNode(): Node = Node.MenuFrameUI //generated value
-
-    // this is default implementation but you can change :)
-    override fun startupArgs(): Bundle = intent.extras ?: Bundle()
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             SampleTheme(darkTheme = true) {
-                NavigationContent()  //generated method
+                //generated method
+                NavigationContent(
+                    startupNode = Node.MenuFrameUI,
+                    startupArgs = intent.extras,
+                    animation = tween()
+                )
             }
         }
     }
@@ -49,8 +60,6 @@ data class ArgsMenuFrame(var valueX: String = "")
 @ComposableNavNode(ArgsMenuFrame::class) // declaration frame node + arguments
 fun MenuFrameUI() {
     val nav = AmbientNavigation.current // navigation between frames
-    val locationState = remember { mutableStateOf("unknown") }
-
 
     val args = remember { // read arguments
         // map bundle args into data-class of ArgsMenuFrame
@@ -70,16 +79,38 @@ fun MenuFrameUI() {
             Text(text = "navigate to second frame")
         }
 
+//        val (textVal,g) by  remember { mutableStateOf("")  }
+        val textVal = remember { mutableStateOf(TextFieldValue()) }
+
+        TextField(
+            value = textVal.value,
+            onValueChange = { textVal.value = it },
+            modifier = Modifier.externalKeyboard(textVal)
+        )
         Spacer(modifier = Modifier.size(16.dp))
     }
 }
 
+
 data class ArgsSecondFrame(var item: String = "", var item2: String = "")
+
+
+class SecondFrameVM : NavigationViewModel() {
+    init {
+        log("init SecondFrameVM")
+    }
+
+    override fun onCleared() {
+        log("onCleared SecondFrameVM")
+    }
+
+}
 
 @Composable
 @ComposableNavNode(ArgsSecondFrame::class)
 fun SecondFrameUI() {
     val nav = AmbientNavigation.current
+    val vm = navigationViewModel<SecondFrameVM>()
     val args = remember { // read arguments
         // map bundle args into data-class of ArgsSecondFrame
         nav.bundledArgs<ArgsSecondFrame>()
@@ -128,5 +159,71 @@ fun ThirdFrameUI() {
 fun PreviewThirdFrameUI() {
     SampleTheme {
         ThirdFrameUI()
+    }
+}
+
+
+//
+fun Modifier.externalKeyboard(input: MutableState<TextFieldValue>): Modifier {
+    return onKeyEvent { event ->
+        if (event.type == KeyEventType.KeyDown
+            || event.nativeKeyEvent.keyCode in arrayOf(
+                KeyEvent.KEYCODE_DPAD_LEFT,
+                KeyEvent.KEYCODE_DPAD_RIGHT
+            )
+        ) {
+            log(event.nativeKeyEvent.keyCode)
+            var selection = input.value.selection
+            var code = event.nativeKeyEvent.unicodeChar.toChar().toString()
+            val newSelection: TextRange
+            when (event.nativeKeyEvent.keyCode) {
+                KeyEvent.KEYCODE_DPAD_LEFT -> {
+                    code = ""
+                    newSelection = if (selection.start == 0) {
+                        TextRange(selection.start)
+                    } else {
+                        TextRange(selection.start - 1)
+                    }
+                    selection = TextRange(0)
+                }
+                KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                    code = ""
+                    newSelection = if (selection.end == input.value.text.length) {
+                        TextRange(selection.end)
+                    } else {
+                        TextRange(selection.end + 1)
+                    }
+                    selection = TextRange(0)
+                }
+                in arrayOf(KeyEvent.KEYCODE_BACK, KeyEvent.KEYCODE_DEL) -> {
+                    code = ""
+                    newSelection = if (selection.start > 0) {
+                        if (selection.start == selection.end) {
+                            TextRange(selection.start - 1)
+                        } else {
+                            TextRange(selection.start)
+                        }
+                    } else {
+                        TextRange(0)
+                    }
+                    if (selection.start == selection.end && selection.start > 0) {
+                        selection = TextRange(selection.start - 1, selection.end)
+                    }
+                }
+                else -> {
+                    newSelection = TextRange(selection.start + 1)
+                }
+            }
+
+            val newText = input.value.text.let {
+                it.substring(0, selection.start) +
+                        code +
+                        it.substring(selection.end, it.length)
+
+            }
+            input.value = TextFieldValue(newText, newSelection)
+            true
+        } else false
+
     }
 }

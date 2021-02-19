@@ -44,8 +44,30 @@ fun Navigation.navTo_${node.name}(args: $args, clearTop: Boolean = false) {
         navCompositeDeclaration.append(
             """
             "${node.fullName}" ->
-                composite(navigationViewModel, node) { ${node.fullName}() }
+                composite(navigationComposite, node) { ${node.fullName}() }
 """
+        )
+    }
+
+    fun generateNavigationContent() = buildString {
+        append(
+            """
+@Composable
+fun ComponentActivity.NavigationContent(
+    startupNode: Node,
+    startupArgs: Bundle? = null,
+    animation: AnimationSpec<Float> = tween()
+) {
+    val navigationComposite = remember {
+        NavigationComposite.get(this, startupNode, startupArgs)
+    }
+    val currentNode = navigationComposite.currentNode.collectAsState()
+    Crossfade(current = currentNode.value, animation = animation) {
+        Surface(color = MaterialTheme.colors.background) {
+            navNode(navigationComposite = navigationComposite, node = it)
+        }
+    }
+}"""
         )
     }
 
@@ -56,21 +78,12 @@ fun Navigation.navTo_${node.name}(args: $args, clearTop: Boolean = false) {
     ) = buildString {
         append(
             """
-@Composable
-fun NavigationActivity.NavigationContent() {
-    Crossfade(current = navigationViewModel.current) {
-        Surface(color = MaterialTheme.colors.background) {
-            navNode(node = it.value)
-        }
-    }
-}    
-
 @SuppressLint("ComposableNaming")
 object ImplNoteUtils {
 
     @Suppress("RemoveRedundantQualifierName")
     @Composable
-    fun NavigationActivity.navNode(node: ImplNode) {
+    fun navNode(navigationComposite: NavigationComposite, node: ImplNode) {
         when (node.frameID) {
 $declaration
         }
@@ -78,14 +91,14 @@ $declaration
 
     @Composable
     private fun composite(
-        navigationViewModel: ImplNavigationViewModel,
+        navigationComposite: NavigationComposite,
         node: ImplNode,
         content: @Composable () -> Unit
     ) {
         val argsItem: Any? = remember { buildArgsItem(node) }
 
         val nav = remember {
-            Navigation(navigationViewModel, node.args, node.identifier) {
+            Navigation(navigationComposite, node.args, node.identifier) {
                 argsItem
             }
         }
@@ -125,7 +138,7 @@ $argsDestructor
     ) {
         builder.apply {
             val fullName = entry.first.qualifiedName!!.asString()
-            append("fun $fullName.fill(bundle: Bundle): $fullName {")
+            append("fun $fullName.fill(bundle: Bundle): $fullName {\n")
             entry.second.forEach {
                 val fieldName = it.propertyName
                 this += when (it.qualifiedName) {
@@ -155,7 +168,7 @@ $argsDestructor
                     else -> throw RuntimeException("unexpected type: $it")
                 }
             }
-            append("\treturn this")
+            append("\treturn this\n")
             append("}")
         }
     }
@@ -169,13 +182,13 @@ $argsDestructor
         builder: StringBuilder
     ) {
         builder.apply {
-            append("\nfun ${entry.first.qualifiedName!!.asString()}.asBundle() = bundleOf(")
+            append("\nfun ${entry.first.qualifiedName!!.asString()}.asBundle() = bundleOf(\n")
             entry.second.forEach {
                 it.propertyName.let { fieldName ->
                     this += "\t\"$fieldName\" to $fieldName,"
                 }
             }
-            append(")")
+            append(")\n")
         }
     }
 

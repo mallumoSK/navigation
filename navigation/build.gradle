@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
 }
 group = "tk.mallumo"
-version = "0.3.0"
+version = "1.0.0"
 
 apply from: "../secure-android.gradle"
 
@@ -60,8 +60,11 @@ dependencies {
 //    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0'
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
     /**/
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    def version_log = "8.3.0"
+    implementation "tk.mallumo:log:$version_log"
+    implementation 'com.google.code.gson:gson:2.8.6'
     /**/
 }

@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "tk.mallumo"
-version = "0.2.1"
+version = "1.0.0"
 
 apply from: "../secure-ksp.gradle"
 

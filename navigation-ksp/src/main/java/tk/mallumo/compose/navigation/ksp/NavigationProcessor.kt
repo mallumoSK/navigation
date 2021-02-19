@@ -124,17 +124,33 @@ class NavigationProcessor : SymbolProcessor {
 
         codeWriter.add(
             basePackage,
-            fileName = "GeneratedNavComposite.kt",
+            fileName = "GeneratedNavigationContent.kt",
             imports = listOf(
-                "androidx.compose.runtime.Composable",
-                "androidx.compose.runtime.Providers",
-                "androidx.compose.runtime.remember",
-                "androidx.compose.runtime.onDispose",
-                "tk.mallumo.compose.navigation.ImplNoteUtils.navNode",
+                "android.os.Bundle",
+                "androidx.activity.ComponentActivity",
                 "androidx.compose.animation.Crossfade",
                 "androidx.compose.material.MaterialTheme",
                 "androidx.compose.material.Surface",
-                "android.annotation.SuppressLint"
+                "androidx.compose.runtime.Composable",
+                "androidx.compose.runtime.remember",
+                "tk.mallumo.compose.navigation.ImplNoteUtils.navNode",
+                "androidx.compose.runtime.collectAsState",
+                "androidx.compose.animation.core.AnimationSpec",
+                "androidx.compose.animation.core.tween"
+            )
+        ) {
+            append(CodeGen.generateNavigationContent())
+        }
+
+        codeWriter.add(
+            basePackage,
+            fileName = "GeneratedImplNoteUtils.kt",
+            imports = listOf(
+                "android.annotation.SuppressLint",
+                "androidx.compose.runtime.Composable",
+                "androidx.compose.runtime.Providers",
+                "androidx.compose.runtime.onDispose",
+                "androidx.compose.runtime.remember"
             )
         ) {
             append(
