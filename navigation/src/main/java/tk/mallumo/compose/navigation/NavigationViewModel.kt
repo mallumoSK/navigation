@@ -20,17 +20,22 @@ fun <VM : NavigationViewModel> navigationViewModel(
     factory: ViewModelProvider.Factory? = null
 ): VM {
     val nav = AmbientNavigation.current
-    val viewModelKey = remember(nav.nodeIdentifier) {
-        "${nav.nodeIdentifier}${modelClass.qualifiedName}".also {
-            nav.registerViewModel(it)
+
+    return if (nav.isPreviewMode) {
+        modelClass.java.newInstance()
+    } else {
+        val viewModelKey = remember(nav.nodeIdentifier) {
+            "${nav.nodeIdentifier}${modelClass.qualifiedName}".also {
+                nav.registerViewModel(it)
+            }
         }
+        viewModel(
+            modelClass = modelClass.java,
+            key = viewModelKey,
+            factory = factory
+        )
     }
 
-    return viewModel(
-        modelClass = modelClass.java,
-        key = viewModelKey,
-        factory = factory
-    )
 }
 
 abstract class NavigationViewModel : ViewModel() {

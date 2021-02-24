@@ -34,6 +34,7 @@ class Navigation constructor(
     private val navigationComposite: NavigationComposite,
     val args: Bundle,
     val nodeIdentifier: String,
+    internal val isPreviewMode: Boolean = false,
     private val bundledCallback: () -> Any?
 ) {
 
@@ -65,7 +66,7 @@ class Navigation constructor(
             args: Any? = null,
             argsBundle: Bundle = Bundle()
         ): Navigation = remember(args) {
-            Navigation(previewNavigationComposite, argsBundle, "-") {
+            Navigation(previewNavigationComposite, argsBundle, "-", true) {
                 args
             }
         }
