@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.preferredSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -26,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tk.mallumo.compose.navigation.*
 import tk.mallumo.just.files.style.SampleTheme
+import tk.mallumo.just.files.style.SampleThemePreview
 import tk.mallumo.log.log
 import kotlin.collections.contains
 
@@ -145,19 +144,38 @@ fun SecondFrameUI() {
     }
 }
 
+class ThirdFrameVM : NavigationViewModel() {
+    val itemText = mutableStateOf("")
+    override fun onCleared() {
+        itemText.value = ""
+    }
+
+    fun click() {
+        val (getter, setter) = itemText
+        setter(
+            if (getter.isEmpty()) ": on click "
+            else "$getter."
+        )
+    }
+
+}
 
 @Composable
 @ComposableNavNode
 fun ThirdFrameUI() {
-    Column {
-        Text(text = "third frame")
+    val vm = navigationViewModel<ThirdFrameVM>()
+    Column(modifier = Modifier.clickable { vm.click() }) {
+        Text(
+            text = "third frame${vm.itemText.value}",
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
 @Preview
 @Composable
 fun PreviewThirdFrameUI() {
-    SampleTheme {
+    SampleThemePreview {
         ThirdFrameUI()
     }
 }

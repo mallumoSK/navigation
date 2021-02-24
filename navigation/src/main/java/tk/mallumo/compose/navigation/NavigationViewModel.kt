@@ -22,7 +22,7 @@ fun <VM : NavigationViewModel> navigationViewModel(
     val nav = AmbientNavigation.current
 
     return if (nav.isPreviewMode) {
-        modelClass.java.newInstance()
+        remember { modelClass.java.newInstance() }
     } else {
         val viewModelKey = remember(nav.nodeIdentifier) {
             "${nav.nodeIdentifier}${modelClass.qualifiedName}".also {
