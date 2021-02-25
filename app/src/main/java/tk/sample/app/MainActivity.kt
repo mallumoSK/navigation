@@ -23,7 +23,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tk.mallumo.compose.navigation.*
-//import tk.mallumo.compose.navigation.NavigationContent
 import tk.mallumo.just.files.style.SampleTheme
 import tk.mallumo.just.files.style.SampleThemePreview
 import tk.mallumo.log.log

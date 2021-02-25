@@ -20,7 +20,6 @@ class NavigationProcessor : SymbolProcessor {
         private const val composableNavNodeNameFull = "$basePackage.$composableNavNodeName"
     }
 
-
     private lateinit var bundled: StringBuilder
     private lateinit var argsConstructor: StringBuilder
     private lateinit var argsDestructor: StringBuilder

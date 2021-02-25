@@ -12,10 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlin.reflect.KClass
 
 
-val LocalNavigation = staticCompositionLocalOf<Navigation> { error("Unexpected error") }
 
-@Deprecated("Use LocalNavigation", replaceWith = ReplaceWith("LocalNavigation"))
-val AmbientNavigation  get() = LocalNavigation
+
 
 @Suppress("unused")
 fun ComponentActivity.navigateTo(node: Node, args: Bundle = Bundle(), clearTop: Boolean = false) {
