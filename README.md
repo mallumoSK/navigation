@@ -1,6 +1,6 @@
 # navigation
 ## Navigation component for Jetpack Compose
-### From version 2.0.0 and high is a lot of changes in configurations, please read carebully
+### From version 2.0.0 and high is a lot of changes in configurations, please read carefully
 #### After config changes project clean + build is required 
 
 ```
