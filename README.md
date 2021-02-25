@@ -1,8 +1,19 @@
 # navigation
 ## Navigation component for Jetpack Compose
+### From version 2.0.0 and high is a lot of changes in configurations, please read carebully
+#### After config changes project clean + build is required 
+
 ```
+//Current version
+kotlin_version = '1.4.30'
+compose_version = '1.0.0-beta-01'
+
+//For older veriosn of kotlin and compose
 kotlin_version = '1.4.21'
 compose_version = '1.0.0-alpha10'
+//use 
+implementation "tk.mallumo:navigation:1.0.1"
+ksp "tk.mallumo:navigation-ksp:1.0.0"
 ```
 
 ## navigation: ![https://mallumo.jfrog.io/artifactory/gradle-dev-local/tk/mallumo/navigation/](https://img.shields.io/maven-metadata/v?color=%234caf50&metadataUrl=https%3A%2F%2Fmallumo.jfrog.io%2Fartifactory%2Fgradle-dev-local%2Ftk%2Fmallumo%2Fnavigation%2Fmaven-metadata.xml&style=for-the-badge "Version")
@@ -149,24 +160,25 @@ fun ThirdFrameUI() {
 
 ```groovy
 plugins {
-    id("symbol-processing") version "1.4.20-dev-experimental-20201222"
+    id("com.google.devtools.ksp") version "1.4.30-1.0.0-alpha02"
 }
+
 //...
+
 android{
     //...
+    sourceSets.main.java.srcDirs += ['build/generated/ksp/debug/kotlin']
 }
+
 //...
 
+repositories {
+    maven {
+        url = uri("https://mallumo.jfrog.io/artifactory/gradle-dev-local")
+    }
+}
 
-//these 2 files download to local machine (faster compilation)
-//then include as:
-//apply from: '../ksp-config.gradle'
-//apply from: '../ksp-navigation.gradle'
-
-apply from: 'https://raw.githubusercontent.com/mallumoSK/navigation/master/ksp-config.gradle'
-apply from: 'https://raw.githubusercontent.com/mallumoSK/navigation/master/ksp-navigation.gradle'
-
-
+//...
 
 dependencies {
     implementation "tk.mallumo:navigation:x.y.z"
@@ -174,16 +186,9 @@ dependencies {
 }
 ```
 
-2. add pluginResolutionStrategy On top of file **settings.gradle** add this:
+2. add pluginManagement **On top** of file **settings.gradle** :
 ```groovy
 pluginManagement {
-    resolutionStrategy {
-        eachPlugin {
-            if ("symbol-processing".equals(requested.id.id)){
-                useModule("com.google.devtools.ksp:symbol-processing:${requested.version}")
-            }
-        }
-    }
     repositories {
         gradlePluginPortal()
         google()

@@ -5,8 +5,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Providers
-import tk.mallumo.compose.navigation.AmbientNavigation
+import androidx.compose.runtime.CompositionLocalProvider
+import tk.mallumo.compose.navigation.LocalNavigation
 import tk.mallumo.compose.navigation.Navigation
 
 private val DarkColorPalette = darkColors(
@@ -52,7 +52,7 @@ fun SampleThemePreview(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {
-    Providers(AmbientNavigation provides Navigation.preview(args)) {
+    CompositionLocalProvider(LocalNavigation provides Navigation.preview(args)) {
         SampleTheme(darkTheme, content)
     }
 }

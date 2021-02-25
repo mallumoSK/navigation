@@ -2,6 +2,7 @@ package tk.sample.app
 
 import android.os.Bundle
 import android.view.KeyEvent
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
@@ -17,12 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import tk.mallumo.compose.navigation.*
+//import tk.mallumo.compose.navigation.NavigationContent
 import tk.mallumo.just.files.style.SampleTheme
 import tk.mallumo.just.files.style.SampleThemePreview
 import tk.mallumo.log.log
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             SampleTheme(darkTheme = true) {
                 //generated method
@@ -58,7 +60,7 @@ data class ArgsMenuFrame(var valueX: String = "")
 @Composable
 @ComposableNavNode(ArgsMenuFrame::class) // declaration frame node + arguments
 fun MenuFrameUI() {
-    val nav = AmbientNavigation.current // navigation between frames
+    val nav = LocalNavigation.current // navigation between frames
 
     val args = remember { // read arguments
         // map bundle args into data-class of ArgsMenuFrame
@@ -91,7 +93,7 @@ fun MenuFrameUI() {
 }
 
 
-data class ArgsSecondFrame(var item: String = "", var item2: String = "")
+data class ArgsSecondFrame(var item: String = "", var item2: String = "",  var item25: String = "")
 
 
 class SecondFrameVM : NavigationViewModel() {
@@ -108,7 +110,7 @@ class SecondFrameVM : NavigationViewModel() {
 @Composable
 @ComposableNavNode(ArgsSecondFrame::class)
 fun SecondFrameUI() {
-    val nav = AmbientNavigation.current
+    val nav = LocalNavigation.current
     val vm = navigationViewModel<SecondFrameVM>()
     val args = remember { // read arguments
         // map bundle args into data-class of ArgsSecondFrame
@@ -118,12 +120,12 @@ fun SecondFrameUI() {
         // call of args by mapped object
         Text(text = "bundledArgs CONTENT:  ${args.item}")
 
-        Spacer(modifier = Modifier.preferredSize(20.dp))
+        Spacer(modifier = Modifier.size(20.dp))
 
         // direct call of args
         Text(text = "nav args CONTENT:  ${nav.args.getString("item")}")
 
-        Spacer(modifier = Modifier.preferredSize(20.dp))
+        Spacer(modifier = Modifier.size(20.dp))
 
         Button(onClick = {
             //up navigation
@@ -132,7 +134,7 @@ fun SecondFrameUI() {
             Text(text = "up")
         }
 
-        Spacer(modifier = Modifier.preferredSize(20.dp))
+        Spacer(modifier = Modifier.size(20.dp))
 
         Button(onClick = {
             //open third frame with no arguments
@@ -147,6 +149,7 @@ fun SecondFrameUI() {
 class ThirdFrameVM : NavigationViewModel() {
     val itemText = mutableStateOf("")
     override fun onCleared() {
+        log("CLEAN-UP")
         itemText.value = ""
     }
 
@@ -181,7 +184,7 @@ fun PreviewThirdFrameUI() {
 }
 
 
-//
+//jryyjfr
 fun Modifier.externalKeyboard(input: MutableState<TextFieldValue>): Modifier {
     return onKeyEvent { event ->
         if (event.type == KeyEventType.KeyDown

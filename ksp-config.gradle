@@ -1,11 +1,8 @@
 repositories {
     maven {
-        url = uri("https://dl.bintray.com/kotlin/kotlin-eap")
-    }
-    maven {
         url = uri("https://mallumo.jfrog.io/artifactory/gradle-dev-local")
     }
     google()
 }
-//android.sourceSets.main.java.srcDirs += ['src/main/ksp']
-android.sourceSets.main.java.srcDirs += ['build/generated/ksp/debug']
+
+android.sourceSets.main.java.srcDirs += ['build/generated/ksp/debug/kotlin']

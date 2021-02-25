@@ -3,6 +3,7 @@ package tk.mallumo.compose.navigation.ksp
 import com.google.devtools.ksp.getDeclaredProperties
 import com.google.devtools.ksp.isAbstract
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
 
@@ -11,6 +12,7 @@ class NavNode(
     val name: String = declaration.simpleName.asString(),
     val fullName: String = declaration.qualifiedName!!.asString(),
     val args: KSClassDeclaration? = extractArgs(declaration),
+    val files:List<KSFile?> = listOf(declaration.containingFile, args?.containingFile),
     val argsProperties: Sequence<PropertyTypeHolder>? = extractArgsProperties(args)
 ) {
     companion object {

@@ -56,13 +56,13 @@ fun Navigation.navTo_${node.name}(args: $args, clearTop: Boolean = false) {
 fun ComponentActivity.NavigationContent(
     startupNode: Node,
     startupArgs: Bundle? = null,
-    animation: AnimationSpec<Float> = tween()
+    animation: FiniteAnimationSpec<Float> = tween()
 ) {
     val navigationComposite = remember {
         NavigationComposite.get(this, startupNode, startupArgs)
     }
     val currentNode = navigationComposite.currentNode.collectAsState()
-    Crossfade(current = currentNode.value, animation = animation) {
+     Crossfade(targetState = currentNode.value, animationSpec = animation) {
         Surface(color = MaterialTheme.colors.background) {
             navNode(navigationComposite = navigationComposite, node = it)
         }
@@ -78,7 +78,6 @@ fun ComponentActivity.NavigationContent(
     ) = buildString {
         append(
             """
-@SuppressLint("ComposableNaming")
 object ImplNoteUtils {
 
     @Suppress("RemoveRedundantQualifierName")
@@ -102,12 +101,15 @@ $declaration
                 argsItem
             }
         }
-        Providers(AmbientNavigation provides nav) {
+        
+        CompositionLocalProvider(LocalNavigation provides nav) {
             content()
         }
 
-        onDispose {
-            saveArgsItem(node, argsItem)
+        DisposableEffect(node){
+           onDispose {
+               saveArgsItem(node, argsItem)
+           }
         }
     }
 

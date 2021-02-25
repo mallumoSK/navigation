@@ -5,13 +5,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.staticAmbientOf
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.reflect.KClass
 
-val AmbientNavigation = staticAmbientOf<Navigation> { error("Unexpected error") }
+
+val LocalNavigation = staticCompositionLocalOf<Navigation> { error("Unexpected error") }
+
+@Deprecated("Use LocalNavigation", replaceWith = ReplaceWith("LocalNavigation"))
+val AmbientNavigation  get() = LocalNavigation
 
 @Suppress("unused")
 fun ComponentActivity.navigateTo(node: Node, args: Bundle = Bundle(), clearTop: Boolean = false) {
