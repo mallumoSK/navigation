@@ -5,14 +5,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.reflect.KClass
-
-
-
 
 
 @Suppress("unused")
@@ -22,10 +18,9 @@ fun ComponentActivity.navigateTo(node: Node, args: Bundle = Bundle(), clearTop: 
 }
 
 @Suppress("unused")
-fun ComponentActivity.up(stack: Int = 1) {
+fun ComponentActivity.up(stack: Int = 1): Boolean =
     ViewModelProvider(this)[NavigationHolder::class.java]
         .up(stack)
-}
 
 data class Node(val id: String) {
     companion object

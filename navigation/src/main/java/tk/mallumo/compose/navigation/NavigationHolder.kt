@@ -36,12 +36,16 @@ internal class NavigationHolder : ViewModel() {
     }
 
 
-    fun up(stack: Int = 1) {
-        repeat(stack) {
-            val removedNode = nodes.removeLast()
-            releaseNode(removedNode)
+    fun up(stack: Int = 1):Boolean {
+        return if(nodes.size<=1)  false
+        else{
+            repeat(stack) {
+                val removedNode = nodes.removeLast()
+                releaseNode(removedNode)
+            }
+            currentInternal.value = nodes.last()
+            true
         }
-        currentInternal.value = nodes.last()
     }
 
     fun navigateTo(node: Node, args: Bundle = Bundle(), clearTop: Boolean) {
