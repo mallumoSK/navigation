@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.lang.Integer.max
 
 internal class NavigationHolder : ViewModel() {
 
@@ -35,10 +36,17 @@ internal class NavigationHolder : ViewModel() {
         }
     }
 
+    internal fun removeBackStackNodes(indexRange: IntRange) {
+        nodes.filterIndexed { index, _ -> index in indexRange }
+            .also { nodesToRemove ->
+                nodes.removeAll(nodesToRemove)
+                nodesToRemove.forEach { releaseNode(it) }
+            }
+    }
 
-    fun up(stack: Int = 1):Boolean {
-        return if(nodes.size<=1)  false
-        else{
+    fun up(stack: Int = 1): Boolean {
+        return if (nodes.size <= 1) false
+        else {
             repeat(stack) {
                 val removedNode = nodes.removeLast()
                 releaseNode(removedNode)
@@ -46,6 +54,12 @@ internal class NavigationHolder : ViewModel() {
             currentInternal.value = nodes.last()
             true
         }
+    }
+
+    internal fun backStackAdd(endOffset: Int, newBackstack: List<Pair<Node, Bundle>>) {
+        val newNodes = newBackstack.map { ImplNode(it.first.id, it.second) }
+        val backStackIndex = max(0, nodes.size - 1 - endOffset)
+        nodes.addAll(backStackIndex, newNodes)
     }
 
     fun navigateTo(node: Node, args: Bundle = Bundle(), clearTop: Boolean) {
@@ -64,7 +78,6 @@ internal class NavigationHolder : ViewModel() {
     fun nodeViewModelRegister(viewModelKey: String) {
         viewModels.add(viewModelKey)
     }
-
 
     fun registerOnBackPressHandler(nodeID: String, onBackPressHandler: () -> Boolean) {
         onBackPressHandlers[nodeID] = onBackPressHandler

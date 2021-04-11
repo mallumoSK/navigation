@@ -10,6 +10,9 @@ interface NavigationComposite {
     val currentNode: StateFlow<ImplNode>
 
     fun up(stack: Int = 1)
+    fun backStackAdd(endOffset: Int = 0, nodes: List<Pair<Node, Bundle>>)
+    fun backStackClearAll()
+    fun backStackClear(startOffset: Int = 0, endOffset: Int = 0)
     fun navigateTo(node: Node, args: Bundle = Bundle(), clearTop: Boolean = false)
     fun nodeViewModelRegister(viewModelKey: String)
     fun registerOnBackPressHandler(nodeID: String, onBackPressHandler: () -> Boolean)
@@ -74,6 +77,17 @@ private class NavigationCompositeImpl(
             backPressCallback.isEnabled = true
             viewModel.up(stack)
         }
+    }
+
+    override fun backStackAdd(endOffset: Int, nodes: List<Pair<Node, Bundle>>) {
+        viewModel.backStackAdd(endOffset,nodes )
+    }
+
+    override fun backStackClearAll() = backStackClear(0, 0)
+
+    override fun backStackClear(startOffset: Int, endOffset: Int) {
+        val range = (startOffset) until (viewModel.stackSize - endOffset -1)
+        viewModel.removeBackStackNodes(range)
     }
 
     override fun navigateTo(node: Node, args: Bundle, clearTop: Boolean) {
