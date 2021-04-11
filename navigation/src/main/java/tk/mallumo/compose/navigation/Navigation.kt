@@ -49,13 +49,15 @@ class Navigation constructor(
                     get() = MutableStateFlow(ImplNode("default-sample", Bundle()))
 
                 override fun up(stack: Int) {}
+                override fun backStackAdd(endOffset: Int, nodes: List<Pair<Node, Bundle>>) {}
+                override fun backStackClearAll() {}
+                override fun backStackClear(startOffset: Int, endOffset: Int) {}
                 override fun navigateTo(node: Node, args: Bundle, clearTop: Boolean) {}
                 override fun nodeViewModelRegister(viewModelKey: String) {}
                 override fun registerOnBackPressHandler(
                     nodeID: String,
                     onBackPressHandler: () -> Boolean
-                ) {
-                }
+                ) {}
             }
         }
 
