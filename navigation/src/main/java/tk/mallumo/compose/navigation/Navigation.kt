@@ -20,7 +20,10 @@ fun ComponentActivity.navigateTo(node: Node, args: Bundle = Bundle(), clearTop: 
 @Suppress("unused")
 fun ComponentActivity.up(stack: Int = 1): Boolean =
     ViewModelProvider(this)[NavigationHolder::class.java]
-        .up(stack)
+        .let { vm ->
+            if (vm.handleOnBackPressed()) true
+            else vm.up(stack)
+        }
 
 data class Node(val id: String) {
     companion object
