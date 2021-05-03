@@ -29,6 +29,11 @@ data class Node(val id: String) {
     companion object
 }
 
+interface ImplBackStack {
+    fun add(endOffset: Int = 0, nodes: List<Pair<Node, Bundle>>)
+    fun clearAll()
+    fun clear(startOffset: Int = 0, endOffset: Int = 0)
+}
 
 class Navigation constructor(
     private val navigationComposite: NavigationComposite,
@@ -37,6 +42,23 @@ class Navigation constructor(
     internal val isPreviewMode: Boolean = false,
     private val bundledCallback: () -> Any?
 ) {
+
+    @Suppress("unused")
+    val backStack by lazy {
+
+        object : ImplBackStack {
+
+            override fun add(endOffset: Int, nodes: List<Pair<Node, Bundle>>) =
+                navigationComposite.backStackAdd(endOffset, nodes)
+
+            override fun clearAll() =
+                navigationComposite.backStackClearAll()
+
+            override fun clear(startOffset: Int, endOffset: Int) {
+                navigationComposite.backStackClear(startOffset, endOffset)
+            }
+        }
+    }
 
     /**
      * if this function return true, it means back press is consumed inside compose layout
@@ -57,7 +79,8 @@ class Navigation constructor(
                 override fun registerOnBackPressHandler(
                     nodeID: String,
                     onBackPressHandler: () -> Boolean
-                ) {}
+                ) {
+                }
             }
         }
 
