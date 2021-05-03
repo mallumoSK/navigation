@@ -92,7 +92,7 @@ fun MenuFrameUI() {
 }
 
 
-data class ArgsSecondFrame(var item: String = "", var item2: String = "",  var item25: String = "")
+data class ArgsSecondFrame(var item: String = "", var item2: String = "", var item25: String = "")
 
 
 class SecondFrameVM : NavigationViewModel() {
@@ -153,11 +153,9 @@ class ThirdFrameVM : NavigationViewModel() {
     }
 
     fun click() {
-        val (getter, setter) = itemText
-        setter(
-            if (getter.isEmpty()) ": on click "
-            else "$getter."
-        )
+        itemText.value = itemText.value.takeIf { it.isNotEmpty() }
+            ?.let { "$it." }
+            ?: ": on click "
     }
 
 }

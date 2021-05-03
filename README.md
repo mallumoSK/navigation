@@ -5,15 +5,14 @@
 
 ```
 //Current version
+kotlin_version = '1.4.32'
+compose_version = '1.0.0-beta-05'
+
+//Previous
 kotlin_version = '1.4.31'
 compose_version = '1.0.0-beta-03'
-
-//For older veriosn of kotlin and compose
-kotlin_version = '1.4.21'
-compose_version = '1.0.0-alpha10'
-//use 
-implementation "tk.mallumo:navigation:1.0.1"
-ksp "tk.mallumo:navigation-ksp:1.0.0"
+navigation = 2.0.5
+navigation-ksp = 2.0.2
 ```
 
 ## navigation: ![https://mallumo.jfrog.io/artifactory/gradle-dev-local/tk/mallumo/navigation/](https://img.shields.io/maven-metadata/v?color=%234caf50&metadataUrl=https%3A%2F%2Fmallumo.jfrog.io%2Fartifactory%2Fgradle-dev-local%2Ftk%2Fmallumo%2Fnavigation%2Fmaven-metadata.xml&style=for-the-badge "Version")
@@ -160,7 +159,7 @@ fun ThirdFrameUI() {
 
 ```groovy
 plugins {
-    id("com.google.devtools.ksp") version "1.4.31-1.0.0-alpha06"
+    id("com.google.devtools.ksp") version "1.4.32-1.0.0-alpha07"
 }
 
 //...
