@@ -43,6 +43,8 @@ class Navigation constructor(
     private val bundledCallback: () -> Any?
 ) {
 
+    val currentNode: StateFlow<ImplNode> get() = navigationComposite.currentNode
+
     @Suppress("unused")
     val backStack by lazy {
 
