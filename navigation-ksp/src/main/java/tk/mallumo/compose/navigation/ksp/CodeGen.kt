@@ -10,6 +10,9 @@ object CodeGen {
     ) {
         navNodeExt.append(
             """
+/**
+ * @see ${node.fullName}
+ */
 val Node.Companion.${node.name} get() = Node("${node.fullName}") //args: ${node.args?.qualifiedName?.asString()}
 """
         )
@@ -20,6 +23,9 @@ val Node.Companion.${node.name} get() = Node("${node.fullName}") //args: ${node.
         node: NavNode
     ) {
         navFunExt += """
+/**
+ * @see ${node.fullName}
+ */
 @ExtNavMarker
 @Suppress("FunctionName")
 fun Navigation.navTo_${node.name}(args: Bundle = Bundle(), clearTop: Boolean = false) {
@@ -28,6 +34,9 @@ fun Navigation.navTo_${node.name}(args: Bundle = Bundle(), clearTop: Boolean = f
 """
         node.args?.qualifiedName?.asString()?.also { args ->
             navFunExt += """
+/**
+ * @see ${node.fullName}
+ */
 @ExtNavMarker
 @Suppress("FunctionName")
 fun Navigation.navTo_${node.name}(args: $args, clearTop: Boolean = false) {
