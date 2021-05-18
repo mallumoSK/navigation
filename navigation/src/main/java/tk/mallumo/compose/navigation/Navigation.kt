@@ -10,30 +10,55 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.reflect.KClass
 
-
-@Suppress("unused")
-fun ComponentActivity.navigateTo(node: Node, args: Bundle = Bundle(), clearTop: Boolean = false) {
-    ViewModelProvider(this)[NavigationHolder::class.java]
-        .navigateTo(node, args, clearTop)
-}
-
-@Suppress("unused")
-fun ComponentActivity.up(stack: Int = 1): Boolean =
-    ViewModelProvider(this)[NavigationHolder::class.java]
-        .let { vm ->
-            if (vm.handleOnBackPressed()) true
-            else vm.up(stack)
-        }
-
-data class Node(val id: String) {
-    companion object
-}
-
 interface ImplBackStack {
     fun add(endOffset: Int = 0, nodes: List<Pair<Node, Bundle>>)
     fun clearAll()
     fun clear(startOffset: Int = 0, endOffset: Int = 0)
 }
+
+
+interface ImplNavigationReference:ImplBackStack {
+    fun up(stack: Int = 1): Boolean
+    fun navigateTo(node: Node, args: Bundle = Bundle(), clearTop: Boolean = false)
+    val currentNode:StateFlow<ImplNode>
+}
+
+@Suppress("unused")
+val ComponentActivity.composeNavigation: ImplNavigationReference
+    get() {
+        val vm = ViewModelProvider(this)[NavigationHolder::class.java]
+        return object : ImplNavigationReference {
+            override fun up(stack: Int): Boolean =
+                if (vm.handleOnBackPressed()) true
+                else vm.up(stack)
+
+            override fun navigateTo(node: Node, args: Bundle, clearTop: Boolean) {
+               vm.navigateTo(node, args, clearTop)
+            }
+
+            override val currentNode: StateFlow<ImplNode>
+                get() = vm.current
+
+            override fun add(endOffset: Int, nodes: List<Pair<Node, Bundle>>) {
+                vm.backStackAdd(endOffset, nodes)
+            }
+
+            override fun clearAll() {
+                clear()
+            }
+
+            override fun clear(startOffset: Int, endOffset: Int) {
+                val range = (startOffset) until (vm.stackSize - endOffset -1)
+                vm.removeBackStackNodes(range)
+            }
+
+        }
+    }
+
+data class Node(val id: String) {
+    companion object
+}
+
 
 class Navigation constructor(
     private val navigationComposite: NavigationComposite,
@@ -43,6 +68,7 @@ class Navigation constructor(
     private val bundledCallback: () -> Any?
 ) {
 
+    @Suppress("unused")
     val currentNode: StateFlow<ImplNode> get() = navigationComposite.currentNode
 
     @Suppress("unused")
@@ -53,8 +79,7 @@ class Navigation constructor(
             override fun add(endOffset: Int, nodes: List<Pair<Node, Bundle>>) =
                 navigationComposite.backStackAdd(endOffset, nodes)
 
-            override fun clearAll() =
-                navigationComposite.backStackClearAll()
+            override fun clearAll() = clear()
 
             override fun clear(startOffset: Int, endOffset: Int) {
                 navigationComposite.backStackClear(startOffset, endOffset)
