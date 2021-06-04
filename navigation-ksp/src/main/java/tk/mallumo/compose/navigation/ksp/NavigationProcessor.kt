@@ -8,11 +8,19 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
-class NavigationProcessor : SymbolProcessor {
+class NavigationProcessorProvider : SymbolProcessorProvider {
+    override fun create(
+        environment: SymbolProcessorEnvironment
+    ): SymbolProcessor {
+        return NavigationProcessor(environment.codeGenerator, environment.options)
+    }
+}
 
-    private lateinit var codeGenerator: CodeGenerator
-
-    private lateinit var options: Map<String, String>
+class NavigationProcessor(
+   private var codeGenerator: CodeGenerator,
+   private  var options: Map<String, String>,
+   private var invoked:Boolean = false
+) : SymbolProcessor {
 
     companion object {
         private const val basePackage = "tk.mallumo.compose.navigation"
@@ -29,26 +37,19 @@ class NavigationProcessor : SymbolProcessor {
     private lateinit var navCompositeDeclaration: StringBuilder
 
 
-    override fun init(
-        options: Map<String, String>,
-        kotlinVersion: KotlinVersion,
-        codeGenerator: CodeGenerator,
-        logger: KSPLogger
-    ) {
-        this.options = options
-        this.codeGenerator = codeGenerator
-    }
-
     val nodes = hashMapOf<String, NavNode>()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        if(invoked) return emptyList()
+
         val symbols = resolver.getSymbolsWithAnnotation(composableNavNodeNameFull)
 
         val valid = symbols.filterIsInstance<KSFunctionDeclaration>()
             .map { it.qualifiedName!!.asString() to NavNode(it) }
         val invalid = symbols.filterNot { it is KSFunctionDeclaration }
         nodes.putAll(valid)
-        return invalid
+        invoked = true
+        return invalid.toList()
     }
 
     override fun finish() {

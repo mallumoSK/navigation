@@ -8,10 +8,14 @@ object CodeGen {
         navNodeExt: StringBuilder,
         node: NavNode
     ) {
+        val seeArgs =node.args?.qualifiedName?.asString()?.let {
+            "@see $it"
+        }?:""
         navNodeExt.append(
             """
 /**
  * @see ${node.fullName}
+ * $seeArgs
  */
 val Node.Companion.${node.name} get() = Node("${node.fullName}") //args: ${node.args?.qualifiedName?.asString()}
 """
@@ -103,9 +107,9 @@ $declaration
         node: ImplNode,
         content: @Composable () -> Unit
     ) {
-        val argsItem: Any? = remember { buildArgsItem(node) }
+        val argsItem: Any? = remember(node) { buildArgsItem(node) }
 
-        val nav = remember {
+        val nav = remember(node) {
             Navigation(navigationComposite, node.args, node.identifier) {
                 argsItem
             }
@@ -127,16 +131,25 @@ $declaration
     private fun buildArgsItem(node: ImplNode): Any? = when (node.frameID) {
 $argsConstructor
         else -> null
-    }
-
+    }   
+""")
+        if(argsDestructor.isBlank()){
+            append("""
+    @Suppress("UNUSED_PARAMETER")
+    private fun saveArgsItem(node: ImplNode, argsItem: Any?) {}
+}
+""")
+        }else{
+            append("""
+    @Suppress("UNUSED_PARAMETER")
     private fun saveArgsItem(node: ImplNode, argsItem: Any?) {
         when (argsItem) {
 $argsDestructor
         }
     }
-}    
-"""
-        )
+} 
+""")
+        }
     }
 
     /**
