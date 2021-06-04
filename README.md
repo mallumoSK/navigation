@@ -5,8 +5,14 @@
 
 ```
 //Current version
+kotlin_version = '1.5.10'
+compose_version = '1.0.0-beta08'
+
+//Previous
 kotlin_version = '1.4.32'
 compose_version = '1.0.0-beta-05'
+navigation = 2.1.2
+navigation-ksp = 2.1.1
 
 //Previous
 kotlin_version = '1.4.31'
@@ -159,7 +165,7 @@ fun ThirdFrameUI() {
 
 ```groovy
 plugins {
-    id("com.google.devtools.ksp") version "1.4.32-1.0.0-alpha07"
+    id("com.google.devtools.ksp") version "1.5.10-1.0.0-beta01"
 }
 
 //...
