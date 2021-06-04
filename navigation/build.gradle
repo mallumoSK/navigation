@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
 }
 group = "tk.mallumo"
-version = "2.3.0"
+version = "2.3.1"
 
 apply from: "../secure-android.gradle"
 
