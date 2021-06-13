@@ -34,13 +34,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val dismissState = rememberSwipeToDismissOverlayState {
+                log("dismissState on dismiss")
+            }
             SampleTheme(darkTheme = true) {
                 //generated method
-                NavigationContent(
-                    startupNode = Node.MenuFrameUI,
-                    startupArgs = intent.extras,
-                    animation = tween()
-                )
+                SwipeToDismissOverlay(
+                    modifier = Modifier.fillMaxSize(),
+                    state = dismissState
+                ) {
+                    NavigationContent(
+                        startupNode = Node.MenuFrameUI,
+                        startupArgs = intent.extras,
+                        animation = tween()
+                    )
+                }
+
             }
         }
     }

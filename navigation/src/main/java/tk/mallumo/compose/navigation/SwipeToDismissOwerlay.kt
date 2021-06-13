@@ -1,17 +1,15 @@
 package tk.mallumo.compose.navigation
 
-
 import android.os.Build
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
@@ -25,19 +23,41 @@ private enum class SwipeState {
     START, END
 }
 
+class SwipeToDismissOverlayState(
+    val isEnabled: MutableState<Boolean>,
+    val arrowAngle: Float,
+    val arrowColor: Color? = null,
+    val onDismiss: () -> Unit
+)
+
+@Composable
+fun rememberSwipeToDismissOverlayState(
+    isEnabled: MutableState<Boolean> = mutableStateOf(Build.VERSION.SDK_INT < 29),
+    arrowAngle: Float = 100F,
+    arrowColor: Color? = null,
+    onDismiss: () -> Unit
+) = remember {
+    SwipeToDismissOverlayState(
+        isEnabled = isEnabled,
+        arrowAngle = arrowAngle,
+        arrowColor = arrowColor,
+        onDismiss = onDismiss
+    )
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeToDismissOverlay(
     modifier: Modifier = Modifier,
-    isEnabled: Boolean = Build.VERSION.SDK_INT < 29,
-    onDismiss: () -> Unit, body: @Composable BoxScope.() -> Unit
+    state: SwipeToDismissOverlayState,
+    body: @Composable BoxScope.() -> Unit
 ) {
 
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     val sweepableState = rememberSwipeableState(SwipeState.START,
         confirmStateChange = { newState ->
-            onDismiss.takeIf { newState == SwipeState.END }?.invoke()
+            state.onDismiss.takeIf { newState == SwipeState.END }?.invoke()
             false
         })
 
@@ -65,14 +85,19 @@ fun SwipeToDismissOverlay(
                 state = sweepableState,
                 anchors = anchors,
                 thresholds = { _, _ -> FixedThreshold(dimensions.second.dp) },
-                resistance = ResistanceConfig(dimensions.second, dimensions.second, dimensions.second),
+                resistance = ResistanceConfig(
+                    dimensions.second,
+                    dimensions.second,
+                    dimensions.second
+                ),
                 orientation = Orientation.Horizontal
             )
     ) {
         body()
-        if (isEnabled) {
+        if (state.isEnabled.value) {
             DismissLine(
                 modifier = Modifier.align(Alignment.CenterStart),
+                state = state,
                 offset = sweepableState.offset,
                 offsetMax = dimensions.second
             )
@@ -83,16 +108,17 @@ fun SwipeToDismissOverlay(
 @Composable
 private fun DismissLine(
     modifier: Modifier,
+    state: SwipeToDismissOverlayState,
     offset: State<Float>,
     offsetMax: Float
 ) {
     val dest = LocalDensity.current
 
     val onePercent = remember {
-        offsetMax / 100F
+        offsetMax / state.arrowAngle
     }
 
-    val pathColor = contentColorFor(backgroundColor = LocalContentColor.current)
+    val pathColor = state.arrowColor ?: contentColorFor(backgroundColor = LocalContentColor.current)
 
     Canvas(modifier = modifier
         .size(24.dp)
