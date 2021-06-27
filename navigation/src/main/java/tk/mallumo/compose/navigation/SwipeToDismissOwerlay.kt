@@ -83,6 +83,7 @@ fun SwipeToDismissOverlay(
             .fillMaxWidth()
             .swipeable(
                 state = sweepableState,
+                enabled = state.isEnabled.value,
                 anchors = anchors,
                 thresholds = { _, _ -> FixedThreshold(dimensions.second.dp) },
                 resistance = ResistanceConfig(
