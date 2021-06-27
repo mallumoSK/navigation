@@ -8,8 +8,7 @@
 .externalNativeBuild
 .cxx
 local.properties
-/gradle/wrapper/
+/gradle/wrapper/gradle-wrapper.jar
 secure-ksp.gradle
 secure.gradle
 secure-android.gradle
-/app/src/main/ksp/tk/mallumo/compose/navigation/

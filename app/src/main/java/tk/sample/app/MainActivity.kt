@@ -1,6 +1,7 @@
 package tk.sample.app
 
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -25,17 +26,19 @@ import androidx.compose.ui.unit.dp
 import tk.mallumo.compose.navigation.*
 import tk.mallumo.just.files.style.SampleTheme
 import tk.mallumo.just.files.style.SampleThemePreview
-import tk.mallumo.log.log
 import kotlin.collections.contains
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        val TAG = MainActivity::class.simpleName
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             val dismissState = rememberSwipeToDismissOverlayState {
-                log("dismissState on dismiss")
+                Log.e(TAG, "dismissState on dismiss")
             }
             SampleTheme(darkTheme = true) {
                 //generated method
@@ -106,11 +109,11 @@ data class ArgsSecondFrame(var item: String = "", var item2: String = "", var it
 
 class SecondFrameVM : NavigationViewModel() {
     init {
-        log("init SecondFrameVM")
+        Log.e(MainActivity.TAG, "init SecondFrameVM")
     }
 
     override fun onCleared() {
-        log("onCleared SecondFrameVM")
+        Log.e(MainActivity.TAG, "onCleared SecondFrameVM")
     }
 
 }
@@ -157,7 +160,7 @@ fun SecondFrameUI() {
 class ThirdFrameVM : NavigationViewModel() {
     val itemText = mutableStateOf("")
     override fun onCleared() {
-        log("CLEAN-UP")
+        Log.e(MainActivity.TAG, "CLEAN-UP")
         itemText.value = ""
     }
 
@@ -199,7 +202,7 @@ fun Modifier.externalKeyboard(input: MutableState<TextFieldValue>): Modifier {
                 KeyEvent.KEYCODE_DPAD_RIGHT
             )
         ) {
-            log(event.nativeKeyEvent.keyCode)
+            Log.e(MainActivity.TAG, event.nativeKeyEvent.keyCode.toString())
             var selection = input.value.selection
             var code = event.nativeKeyEvent.unicodeChar.toChar().toString()
             val newSelection: TextRange
