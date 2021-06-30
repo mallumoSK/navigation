@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
 }
 group = "tk.mallumo"
-version = "2.3.4"
+version = "2.3.5"
 
 apply from: "../secure-android.gradle"
 
@@ -11,7 +11,7 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        minSdkVersion 24
+        minSdkVersion 21
         targetSdkVersion 30
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -32,9 +32,9 @@ android {
         jvmTarget = '1.8'
         useIR = true
     }
-    buildFeatures {
-        compose true
-    }
+    buildFeatures.compose true
+    lintOptions.abortOnError false
+
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
         kotlinCompilerVersion kotlin_version
