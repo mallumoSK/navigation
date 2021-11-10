@@ -17,9 +17,9 @@ class NavigationProcessorProvider : SymbolProcessorProvider {
 }
 
 class NavigationProcessor(
-   private var codeGenerator: CodeGenerator,
-   private  var options: Map<String, String>,
-   private var invoked:Boolean = false
+    private var codeGenerator: CodeGenerator,
+    @Suppress("unused") private  var options: Map<String, String>,
+    private var invoked:Boolean = false
 ) : SymbolProcessor {
 
     companion object {
@@ -37,7 +37,7 @@ class NavigationProcessor(
     private lateinit var navCompositeDeclaration: StringBuilder
 
 
-    val nodes = hashMapOf<String, NavNode>()
+    private val nodes = hashMapOf<String, NavNode>()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if(invoked) return emptyList()
@@ -75,6 +75,7 @@ class NavigationProcessor(
             CodeGen.generateNavNodeExt(navNodeExt, node)
             CodeGen.generateNavFunExt(navFunExt, node)
             CodeGen.generateCompositeDeclaration(navCompositeDeclaration, node)
+            @Suppress("unused")
             CodeGen.generateArgsConstructor(argsConstructor, node)
 
         }

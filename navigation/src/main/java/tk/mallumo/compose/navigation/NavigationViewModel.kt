@@ -69,7 +69,7 @@ fun <VM : ViewModel> viewModelByActivity(
             ctx.get(modelClass, key, factory)
         }else{
             view.findViewTreeViewModelStoreOwner()?.get(modelClass, key, factory)
-                ?: throw Exception("Viewmodel store owner not found")
+                ?: throw Exception("View model store owner not found")
         }
     }
 }
@@ -88,7 +88,7 @@ fun <VM : ViewModel> viewModelByCurrent(
 ): VM = LocalView.current.let {
     remember("${modelClass.simpleName}-$key") {
         it.findViewTreeViewModelStoreOwner()?.get(modelClass, key, factory)
-            ?: throw Exception("Viewmodel store owner not found")
+            ?: throw Exception("View model store owner not found")
     }
 }
 
@@ -103,7 +103,7 @@ private fun <VM : ViewModel> ViewModelStoreOwner.get(
         ViewModelProvider(this)
     }
     return if (key != null) {
-        provider.get(key, javaClass)
+        provider[key, javaClass]
     } else {
         provider[javaClass]
     }

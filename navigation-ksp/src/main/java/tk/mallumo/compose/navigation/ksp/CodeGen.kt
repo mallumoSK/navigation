@@ -63,6 +63,7 @@ fun Navigation.navTo_${node.name}(args: $args, clearTop: Boolean = false) {
     }
 
     fun generateNavigationContent() = buildString {
+        @Suppress("SpellCheckingInspection")
         append(
             """
 @Composable

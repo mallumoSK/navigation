@@ -30,11 +30,11 @@ fun KSClassDeclaration.getAllSuperTypes(): Sequence<KSType> {
             this.superTypes
                 .asSequence()
                 .map { it.resolve().declaration }
-                .flatMap {
-                    when (it) {
-                        is KSClassDeclaration -> it.getAllSuperTypes()
-                        is KSTypeAlias -> it.findActualType().getAllSuperTypes()
-                        is KSTypeParameter -> it.getTypesUpperBound()
+                .flatMap { ksDeclaration ->
+                    when (ksDeclaration) {
+                        is KSClassDeclaration -> ksDeclaration.getAllSuperTypes()
+                        is KSTypeAlias -> ksDeclaration.findActualType().getAllSuperTypes()
+                        is KSTypeParameter -> ksDeclaration.getTypesUpperBound()
                             .flatMap { it.getAllSuperTypes() }
                         else -> throw IllegalStateException()
                     }

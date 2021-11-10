@@ -41,7 +41,7 @@ private class NavigationCompositeImpl(
     private val viewModelProvider by lazy { ViewModelProvider(composite) }
 
     private val viewModelReleaseCallback: (viewModelKey: String) -> Unit = { viewModelKey ->
-        viewModelProvider.get(viewModelKey, EmptyViewModel::class.java)
+        viewModelProvider[viewModelKey, EmptyViewModel::class.java]
     }
 
     private val viewModel by lazy {
