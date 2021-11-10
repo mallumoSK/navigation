@@ -4,7 +4,14 @@
 #### After config changes project clean + build is required 
 
 ```
-//Current version
+//Current version [testing]
+navigation = '2.4.0'
+navigation-ksp = '2.4.0'
+kotlin_version = '1.5.31'
+compose_version = '1.0.5'
+ksp_version = '1.5.31-1.0.0'
+
+//Previous
 kotlin_version = '1.5.10'
 compose_version = '1.0.0-beta08'
 
@@ -165,7 +172,7 @@ fun ThirdFrameUI() {
 
 ```groovy
 plugins {
-    id("com.google.devtools.ksp") version "1.5.10-1.0.0-beta01"
+    id("com.google.devtools.ksp") version "1.5.31-1.0.0"
 }
 
 //...

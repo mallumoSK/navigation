@@ -217,7 +217,9 @@ $argsDestructor
     }
 
     fun generateArgsConstructor(builder: StringBuilder, node: NavNode) {
-        node.args?.also {
+        node.args
+            ?.takeIf {  it.simpleName.asString() != "Unit" }
+            ?.also {
             builder += """        "${node.fullName}" -> ${it.qualifiedName!!.asString()}().fill(node.args)"""
         }
     }

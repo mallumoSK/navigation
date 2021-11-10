@@ -25,11 +25,11 @@ fun KSClassDeclaration.getAllSuperTypes(): Sequence<KSType> {
 
     return this.superTypes
         .asSequence()
-        .mapNotNull { it.resolve() }
+        .map { it.resolve() }
         .plus(
             this.superTypes
                 .asSequence()
-                .mapNotNull { it.resolve().declaration }
+                .map { it.resolve().declaration }
                 .flatMap {
                     when (it) {
                         is KSClassDeclaration -> it.getAllSuperTypes()
