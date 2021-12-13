@@ -4,7 +4,13 @@
 #### After config changes project clean + build is required 
 
 ```
-//Current version [testing]
+navigation = '3.0.0'
+navigation-ksp = '3.0.0'
+kotlin_version = '1.6.0'
+compose_version = '1.1.0-beta04'
+ksp_version = '1.6.0-1.0.1'
+
+//Previous
 navigation = '2.4.0'
 navigation-ksp = '2.4.0'
 kotlin_version = '1.5.31'

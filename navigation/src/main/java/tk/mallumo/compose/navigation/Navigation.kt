@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tk.mallumo.compose.navigation
 
 import android.annotation.SuppressLint
@@ -17,10 +19,10 @@ interface ImplBackStack {
 }
 
 
-interface ImplNavigationReference:ImplBackStack {
+interface ImplNavigationReference : ImplBackStack {
     fun up(stack: Int = 1): Boolean
     fun navigateTo(node: Node, args: Bundle = Bundle(), clearTop: Boolean = false)
-    val currentNode:StateFlow<ImplNode>
+    val currentNode: StateFlow<ImplNode>
 }
 
 @Suppress("unused")
@@ -33,7 +35,7 @@ val ComponentActivity.composeNavigation: ImplNavigationReference
                 else vm.up(stack)
 
             override fun navigateTo(node: Node, args: Bundle, clearTop: Boolean) {
-               vm.navigateTo(node, args, clearTop)
+                vm.navigateTo(node, args, clearTop)
             }
 
             override val currentNode: StateFlow<ImplNode>
@@ -48,7 +50,7 @@ val ComponentActivity.composeNavigation: ImplNavigationReference
             }
 
             override fun clear(startOffset: Int, endOffset: Int) {
-                val range = (startOffset) until (vm.stackSize - endOffset -1)
+                val range = (startOffset) until (vm.stackSize - endOffset - 1)
                 vm.removeBackStackNodes(range)
             }
 
@@ -69,7 +71,8 @@ class Navigation constructor(
 ) {
 
     @Suppress("unused")
-    val currentNode: StateFlow<ImplNode> get() = navigationComposite.currentNode
+    val currentNode: StateFlow<ImplNode>
+        get() = navigationComposite.currentNode
 
     @Suppress("unused")
     val backStack by lazy {

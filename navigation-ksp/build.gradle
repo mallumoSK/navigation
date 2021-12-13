@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "tk.mallumo"
-version = "2.4.0"
+version = "3.0.0"
 
 apply from: "../secure-ksp.gradle"
 
@@ -15,10 +15,4 @@ java {
 
 dependencies {
     implementation("com.google.devtools.ksp:symbol-processing-api:$ksp_version")
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-    kotlinOptions {
-        freeCompilerArgs +=  "-Xopt-in=kotlin.RequiresOptIn"
-    }
 }
