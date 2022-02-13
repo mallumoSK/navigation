@@ -1,9 +1,20 @@
 # navigation
-## Navigation component for Jetpack Compose
-### From version 2.0.0 and high is a lot of changes in configurations, please read carefully
-#### After config changes project clean + build is required 
 
-```
+## Navigation component for Jetpack Compose
+
+### From version 2.0.0 and high is a lot of changes in configurations, please read carefully
+
+#### After config changes project clean + build is required
+
+```shell
+#                 KOTLIN-KSP-COMPOSE-LIBRARY
+navigation =      '1.6.10-1.0.2-1.1.0-3.1.0'
+navigation_ksp =  '1.6.10-1.0.2-1.1.0-3.1.0'
+kotlin_version =  '1.6.10'
+compose_version = '1.1.0'
+ksp_version =     '1.6.10-1.0.2'
+
+//Previous
 navigation = '3.0.0'
 navigation-ksp = '3.0.0'
 kotlin_version = '1.6.0'
@@ -178,7 +189,7 @@ fun ThirdFrameUI() {
 
 ```groovy
 plugins {
-    id("com.google.devtools.ksp") version "1.5.31-1.0.0"
+    id("com.google.devtools.ksp") version "$ksp_version"
 }
 
 //...
@@ -199,8 +210,8 @@ repositories {
 //...
 
 dependencies {
-    implementation "tk.mallumo:navigation:x.y.z"
-    ksp "tk.mallumo:navigation-ksp:x.y.z"
+    implementation "tk.mallumo:navigation:$navigation"
+    ksp "tk.mallumo:navigation-ksp:$navigation_ksp"
 }
 ```
 
@@ -210,6 +221,7 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         google()
+        mavenCentral()
     }
 }
 ```
