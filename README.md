@@ -8,6 +8,14 @@
 
 ```shell
 #                 KOTLIN-KSP-COMPOSE-LIBRARY
+kotlin_version =  '1.7.0'
+compose_version = '1.1.1'
+compose_compiller_version = '1.2.0'
+ksp_version =     "$kotlin_version-1.0.6"
+navigation =      "$kotlin_version-$compose_version-3.2.0"
+navigation_ksp =  navigation
+
+//Previous
 navigation =      '1.6.10-1.0.2-1.1.0-3.1.0'
 navigation_ksp =  '1.6.10-1.0.2-1.1.0-3.1.0'
 kotlin_version =  '1.6.10'
