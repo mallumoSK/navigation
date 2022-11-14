@@ -15,14 +15,13 @@ pluginManagement {
         id("com.google.devtools.ksp") version extra["version.ksp"] as String
         id("org.jetbrains.compose") version extra["version.compose.desktop"] as String
         id("com.android.application") version extra["version.agp"] as String
-//        id("org.jetbrains.kotlin.android") version "1.7.20"
     }
 }
 @Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        maven("/opt/GitHub/navigation2/repository")
+        maven("${rootDir.absolutePath}/repository")
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
@@ -34,8 +33,8 @@ rootProject.name = "navigation"
 include(":navigation")
 include(":navigation-ksp")
 //
-//include(":test:android")
-//include(":test:desktop")
-//include(":test:common")
+include(":test:android")
+include(":test:desktop")
+include(":test:common")
 ////
-//include(":test:single-android")
+include(":test:single-android")
