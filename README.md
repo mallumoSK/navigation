@@ -39,9 +39,9 @@ ksp_version =     '1.6.10-1.0.2'
 ## Example
 
 - shared navigation, see
+    - test/common/commonMain
     - test/android
     - test/desktop
-    - test/common/commonMain
 - standalone android
     - test/single-android
 
@@ -71,10 +71,10 @@ class MainActivity : AppCompatActivity() {
 
 // DESKTOP
 
-import androidx . compose . material . MaterialTheme
-    import androidx . compose . ui . window . Window
-    import androidx . compose . ui . window . application
-    import tk . mallumo . compose . navigation . *
+import androidx.compose.material.MaterialTheme 
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.application
+import tk.mallumo.compose.navigation.*
 
 fun main() = application {
     Window(onCloseRequest = ::exitApplication) {
