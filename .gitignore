@@ -10,3 +10,12 @@
 secure-ksp.gradle
 secure.gradle
 secure-android.gradle
+/projectFilesBackup/.idea/
+/repository/tk/mallumo/
+/test/android/build/
+/test/common/build/
+/test/desktop/build/
+/test/single-android/release/
+/buildSrc/build/
+/navigation/build/
+/navigation-ksp/build/
