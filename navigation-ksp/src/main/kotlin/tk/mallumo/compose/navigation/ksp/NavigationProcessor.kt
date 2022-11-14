@@ -57,9 +57,9 @@ class NavigationProcessor(
             writeSources(items)
         }
     }
-
+    @Suppress("SpellCheckingInspection")
     private fun generateCommonFile(
-        @Suppress("SpellCheckingInspection") pckg: String,
+        pckg: String,
         name: String,
         ext: String
     ): File? {

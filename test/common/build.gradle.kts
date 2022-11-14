@@ -55,9 +55,7 @@ dependencies {
     add("kspDesktop", project(":navigation-ksp"))
 }
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(8))
-}
+
 
 android {
     compileSdk = 33
@@ -78,12 +76,12 @@ android {
     namespace = "tk.mallumo.common"
 }
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(8))
-}
-
 ksp {
     arg("child", "child0 child1 child2 child3")
     arg("commonSourcesOnly", "true")
 
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(8))
 }
