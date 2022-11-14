@@ -39,9 +39,9 @@ ksp_version =     '1.6.10-1.0.2'
 ## Example
 
 - shared navigation, see
+    - test/android
+    - test/desktop
     - test/common/commonMain
-        - test/android
-        - test/desktop
 - standalone android
     - test/single-android
 
