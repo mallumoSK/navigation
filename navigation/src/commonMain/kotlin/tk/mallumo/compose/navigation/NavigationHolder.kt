@@ -3,7 +3,6 @@ package tk.mallumo.compose.navigation
 
 import kotlinx.coroutines.flow.*
 import tk.mallumo.compose.navigation.viewmodel.*
-import java.util.concurrent.atomic.*
 import kotlin.math.*
 
 internal class NavigationHolder : NavigationViewModel() {
@@ -106,9 +105,7 @@ internal class NavigationHolder : NavigationViewModel() {
             ?: this
     }
 
-    private val onBackPressHandlerIdGen by lazy {
-        AtomicInteger()
-    }
+    private var onBackPressHandlerIdGen = 0
 
 
     fun registerOnBackPressHandler(onBackPressHandler: () -> Boolean): String {
@@ -121,11 +118,17 @@ internal class NavigationHolder : NavigationViewModel() {
 
     private fun buildBackPressKey(genId: Boolean, nodeId: String = current.value.identifier) = buildString {
         append("${navigationId}[$nodeId].onBackPress")
-        if (genId) append("(${onBackPressHandlerIdGen.getAndIncrement()})")
+        if (genId) append("(${onBackPressHandlerIdGen++})")
     }
 
     fun unregisterOnBackPressHandler(bpKey: String) {
-        findRootNavigationHolder().onBackPressHandlers.removeIf { it.first == bpKey }
+        findRootNavigationHolder()
+            .onBackPressHandlers
+            .run {
+                firstOrNull { it.first == bpKey }?.also {
+                    remove(it)
+                }
+            }
     }
 
     fun handleOnBackPressed(): Boolean {

@@ -31,17 +31,17 @@ dependencies {
     implementation(compose.desktop.currentOs)
 
     implementation("tk.mallumo:log:${toolkit["version.log"]}")
-    implementation("tk.mallumo:utils:${toolkit["version.utils"]}")
+//    implementation("tk.mallumo:utils:${toolkit["version.utils"]}")
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
+        languageVersion.set(JavaLanguageVersion.of(8))
     }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
+    kotlinOptions.jvmTarget = "1.8"
 }
 
 application {

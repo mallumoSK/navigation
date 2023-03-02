@@ -9,7 +9,6 @@ expect abstract class SharedViewModel() {
 
     abstract fun onRelease()
     internal fun releaseInternal()
-
 }
 
 

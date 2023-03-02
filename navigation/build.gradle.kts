@@ -12,7 +12,7 @@ group = "tk.mallumo"
 version = toolkit["version.navigation"]
 
 kotlin {
-    jvm("desktop") {
+    jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
         }
@@ -21,60 +21,72 @@ kotlin {
         publishLibraryVariants("release")
         publishLibraryVariantsGroupedByFlavor = true
     }
+    js(IR)
     sourceSets {
         @Suppress("UNUSED_VARIABLE") val commonMain by getting {
             dependencies {
                 api(compose.runtime)
+                api(compose.foundation)
+                api(compose.material)
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${toolkit["version.coroutines"]}")
                 implementation("org.jetbrains.kotlin:kotlin-reflect:${toolkit["version.kotlin"]}")
             }
         }
-        @Suppress("UNUSED_VARIABLE") val desktopMain by getting {
+        @Suppress("UNUSED_VARIABLE") val jsMain by getting{
             dependencies {
-
+                api(compose.web.core)
+            }
+        }
+        @Suppress("UNUSED_VARIABLE") val jvmMain by getting {
+            dependencies {
+                api(compose.desktop.linux_x64)
             }
         }
         @Suppress("UNUSED_VARIABLE") val androidMain by getting {
             dependencies {
-                implementation("androidx.core:core-ktx:1.9.0")
+//                implementation("androidx.core:core-ktx:1.9.0")
                 implementation("androidx.activity:activity-compose:${toolkit["version.compose.android.activity"]}")
-                implementation("androidx.compose.foundation:foundation-layout:${toolkit["version.compose.android"]}")
-                implementation("androidx.compose.material:material:${toolkit["version.compose.android"]}")
             }
         }
     }
 }
 
-@Suppress("UnstableApiUsage")
+@Suppress("UnstableApiUsage", "OldTargetApi")
 android {
-    compileSdk = 33
+    compileSdk = 31
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 31
+        namespace = "tk.mallumo.navigation"
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
-    namespace = "tk.mallumo.navigation"
+
+    lintOptions {
+        isCheckReleaseBuilds = false
+        isAbortOnError = false
+        disable("TypographyFractions", "TypographyQuotes")
+    }
     lint {
         abortOnError = false
         checkReleaseBuilds = false
         disable += setOf("TypographyFractions", "TypographyQuotes")
     }
+    buildFeatures {
+        buildConfig = false
+    }
 }
 
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+compose {
+    kotlinCompilerPlugin.set("androidx.compose.compiler:compiler:1.4.0")
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
+        languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
 

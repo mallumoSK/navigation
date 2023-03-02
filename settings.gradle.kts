@@ -19,7 +19,7 @@ pluginManagement {
 }
 @Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
     repositories {
         maven("${rootDir.absolutePath}/repository")
         google()
@@ -33,8 +33,8 @@ rootProject.name = "navigation"
 include(":navigation")
 include(":navigation-ksp")
 //
-include(":test:android")
+//include(":test:android")
 include(":test:desktop")
 include(":test:common")
-////
-include(":test:single-android")
+//////
+//include(":test:single-android")

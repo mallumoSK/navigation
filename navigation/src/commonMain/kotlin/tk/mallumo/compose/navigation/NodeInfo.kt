@@ -2,16 +2,12 @@
 
 package tk.mallumo.compose.navigation
 
-import java.util.concurrent.atomic.*
-
-private val nodeIdGenerator by lazy {
-    AtomicInteger()
-}
+private var nodeIdGenerator = 0
 
 open class NodeInfo(
     id: String,
     var args: ArgumentsNavigation,
-    private val atomicId: Int = nodeIdGenerator.getAndIncrement()
+    private val atomicId: Int = (nodeIdGenerator++)
 ) : Node(id) {
     val identifier = "$id:$atomicId"
 

@@ -3,6 +3,7 @@ package tk.mallumo.compose.navigation.viewmodel
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.*
 import androidx.lifecycle.*
+import tk.mallumo.compose.navigation.*
 import kotlin.reflect.*
 
 @Composable
@@ -13,7 +14,7 @@ actual fun <VM : SharedViewModel> globalViewModel(
     val ctx = LocalContext.current
     val view = LocalView.current
 
-    val id = key ?: modelClass.qualifiedName!!
+    val id = key ?: modelClass.qName
 
     return remember(id) {
         if (ctx is ViewModelStoreOwner) {
@@ -27,7 +28,7 @@ actual fun <VM : SharedViewModel> globalViewModel(
 
 inline fun <reified VM : SharedViewModel> ViewModelStoreOwner.vm(key: String? = null): VM = vm(VM::class, key)
 fun <VM : SharedViewModel> ViewModelStoreOwner.vm(modelClass: KClass<VM>, key: String?): VM {
-    val id = key ?: modelClass.qualifiedName!!
+    val id = key ?: modelClass.qName
     return get(modelClass.java, id, null)
 }
 

@@ -11,7 +11,6 @@ fun Navigation.Companion.rememberNavigationComposite(
     startupArgs: ArgumentsNavigation?,
     navigationHost: String = navRootKey
 ): Navigation {
-
     val isRootNavigation = remember(navigationHost) {
         navigationHost == navRootKey
     }
@@ -38,7 +37,6 @@ internal fun Navigation.Companion.rememberNavigationPreview(
     startupNode: Node,
     startupArgs: ArgumentsNavigation?
 ): Navigation {
-
     val vm = globalViewModel<NavigationHolder>(navRootKey).init(navRootKey, startupNode, startupArgs) {
         //NOTHING
     }
@@ -86,26 +84,19 @@ private fun createChildNavigation(
                         startupArgs = startupArgs,
                         viewModelReleaseCallback = releaseTask
                     )
-                    val newChildNavigation = object : NavigationWrapper() {
 
-                        override fun up(stack: Int): Boolean =
-                            if (vm.stackSize <= stack) {
-                                val parentWrapper = (vm.parentNavigation as NavigationWrapper)
-                                parentWrapper.up((stack + 1) - vm.stackSize)
-                            } else {
-                                vm.up(stack)
-                            }
-
-                        override val navigationId: String
-                            get() = key
-
-                        override val viewModelHolder: NavigationHolder
-                            get() = vm
-
-                        override val isPreviewMode: Boolean
-                            get() = parentNavigation.isPreviewMode
-
+                    val newChildNavigation =  NavigationWrapperInstance(
+                        viewModelHolder = vm,
+                        navigationId = key,
+                        isPreviewMode = parentNavigation.isPreviewMode) { stack ->
+                        if (vm.stackSize <= stack) {
+                            val parentWrapper = (vm.parentNavigation as NavigationWrapper)
+                            parentWrapper.up((stack + 1) - vm.stackSize)
+                        } else {
+                            vm.up(stack)
+                        }
                     }
+
                     vm.parentNavigation = this
                     viewModelHolder.childNavigation += newChildNavigation
                     newChildNavigation
@@ -139,31 +130,32 @@ private fun createRootNavigation(
             startupArgs = startupArgs,
             viewModelReleaseCallback = releaseTask
         )
-        object : NavigationWrapper() {
-
-            init {
-                backPressDispatcher.wrapper = this
+        NavigationWrapperInstance(
+            viewModelHolder = vm,
+            navigationId = key,
+            isPreviewMode = false) { stack ->
+            if (vm.stackSize < stack + 1) {
+                backPressDispatcher.isEnabled = false
+                backPressDispatcher.onBackPressed()
+                false
+            } else {
+                backPressDispatcher.isEnabled = true
+                vm.up(stack)
             }
-
-            override fun up(stack: Int): Boolean =
-                if (vm.stackSize < stack + 1) {
-                    backPressDispatcher.isEnabled = false
-                    backPressDispatcher.onBackPressed()
-                    false
-                } else {
-                    backPressDispatcher.isEnabled = true
-                    vm.up(stack)
-                }
-
-            override val navigationId: String
-                get() = key
-
-            override val viewModelHolder: NavigationHolder
-                get() = vm
-
-            override val isPreviewMode: Boolean
-                get() = false
-
+        }.apply {
+            backPressDispatcher.wrapper = this
         }
     }
+}
+
+
+private class NavigationWrapperInstance(
+    override val viewModelHolder: NavigationHolder,
+    override val navigationId: String,
+    override val isPreviewMode: Boolean,
+    private val onUp: (stack: Int) -> Boolean
+) : NavigationWrapper() {
+
+
+    override fun up(stack: Int): Boolean = onUp(stack)
 }

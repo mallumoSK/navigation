@@ -3,9 +3,7 @@ package tk.mallumo.compose.navigation.viewmodel
 import androidx.compose.runtime.*
 import kotlinx.coroutines.*
 import tk.mallumo.compose.navigation.*
-import java.util.concurrent.atomic.*
 import kotlin.reflect.*
-import kotlin.reflect.full.*
 
 class EmptySharedViewModel : SharedViewModel() {
     override fun onRelease() = Unit
@@ -36,7 +34,7 @@ expect fun <VM : SharedViewModel> globalViewModel(modelClass: KClass<VM>, key: S
 internal fun <VM : NavigationViewModel> Navigation.viewModelInternal(modelClass: KClass<VM>, key: String?): VM {
 
     return if (isPreviewMode) {
-        remember { modelClass.createInstance() }
+        remember {ViewModelFactory.instanceOf(modelClass) }
     } else {
         val viewModelKey = remember(nodeIdentifier) {
             buildViewModelKeyFull(key, modelClass).also {
@@ -51,7 +49,7 @@ internal fun <VM : NavigationViewModel> Navigation.viewModelInternal(modelClass:
 }
 
 internal fun Navigation.buildViewModelKeyFull(key: String?, clazz: KClass<*>): String {
-    return "${navigationId}.node[${nodeIdentifier}]_${key ?: ""}(${clazz.qualifiedName})"
+    return "${navigationId}.node[${nodeIdentifier}]_${key ?: ""}(${clazz.qName})"
 }
 
 internal fun SharedViewModel.releaseScope() {
@@ -63,9 +61,9 @@ internal fun SharedViewModel.releaseScope() {
     }
 }
 
-private val scopeNameAtomic = AtomicInteger()
+private var scopeNameAtomic = 0
 
 
 internal fun createViewModelScope(clazz: KClass<out SharedViewModel>): CoroutineName {
-    return CoroutineName(clazz::class.qualifiedName ?: scopeNameAtomic.getAndIncrement().toString())
+    return CoroutineName(clazz::class.qName)
 }

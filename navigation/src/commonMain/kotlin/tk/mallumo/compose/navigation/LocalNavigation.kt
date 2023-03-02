@@ -14,7 +14,7 @@ abstract class NavigationArgs(
 ) {
     fun <T : Any> args(type: KClass<T>): T {
         val local = args() ?: throw IllegalStateException("Navigation node has no arguments")
-        if (local::class != type) throw Exception("Invalid type of args bound to Navigation node, must be ${local::class.qualifiedName}")
+        if (local::class != type) throw Exception("Invalid type of args bound to Navigation node, must be ${local::class.qName}")
 
         @Suppress("UNCHECKED_CAST")
         return local as T

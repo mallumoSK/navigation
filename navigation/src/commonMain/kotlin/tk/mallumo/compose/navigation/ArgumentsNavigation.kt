@@ -220,11 +220,12 @@ class ArgumentsNavigation(vararg properties: Pair<String, Any> = arrayOf()) {
                 CharArray::class -> holderCharArray[it.first] = it.second as CharArray
                 BooleanArray::class -> holderBooleanArray[it.first] = it.second as BooleanArray
 
-                else -> error("unsupported property '${it.first}' of type ${it.second::class.qualifiedName}")
+                else -> error("unsupported property '${it.first}' of type ${it.second::class.qName}")
             }
         }
     }
 
+    @Suppress("IMPLICIT_CAST_TO_ANY")
     inline operator fun <reified T> get(key: String): T = when (T::class) {
         Int::class -> int[key]
         String::class -> string[key]
@@ -244,7 +245,7 @@ class ArgumentsNavigation(vararg properties: Pair<String, Any> = arrayOf()) {
         ShortArray::class -> shortArray[key]
         CharArray::class -> charArray[key]
         BooleanArray::class -> booleanArray[key]
-        else -> error("unsupported property '$key' of type ${T::class.qualifiedName}")
+        else -> error("unsupported property '$key' of type ${T::class.qName}")
     } as T
 
     inline operator fun <reified T> set(key: String, value: T) {
@@ -267,13 +268,13 @@ class ArgumentsNavigation(vararg properties: Pair<String, Any> = arrayOf()) {
             ShortArray::class -> shortArray[key] = value as ShortArray
             CharArray::class -> charArray[key] = value as CharArray
             BooleanArray::class -> booleanArray[key] = value as BooleanArray
-            else -> error("unsupported property '$key' of type ${T::class.qualifiedName}")
+            else -> error("unsupported property '$key' of type ${T::class.qName}")
         }
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (other != null && other::class != this::class) return false
 
         other as ArgumentsNavigation
 

@@ -1,6 +1,7 @@
 package tk.mallumo.compose.navigation.viewmodel
 
 import androidx.compose.runtime.*
+import tk.mallumo.compose.navigation.*
 import kotlin.reflect.*
 import kotlin.reflect.full.*
 
@@ -12,7 +13,7 @@ actual fun <VM : SharedViewModel> globalViewModel(
     modelClass: KClass<VM>,
     key: String?
 ): VM {
-    val id = key ?: modelClass.qualifiedName!!
+    val id = key ?: modelClass.qName
     return remember(id) {
         getViewModel(modelClass, id)
     }
@@ -21,6 +22,6 @@ actual fun <VM : SharedViewModel> globalViewModel(
 internal fun <VM : SharedViewModel> getViewModel(modelClass: KClass<VM>, key: String): VM {
     @Suppress("UNCHECKED_CAST")
     return viewModels.getOrPut(key) {
-        modelClass.createInstance()
+        ViewModelFactory.instanceOf(modelClass)
     } as VM
 }
