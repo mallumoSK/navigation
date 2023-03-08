@@ -51,7 +51,7 @@ kotlin {
     }
 }
 
-@Suppress("UnstableApiUsage", "OldTargetApi")
+@Suppress("UnstableApiUsage", "OldTargetApi", "DEPRECATION")
 android {
     compileSdk = 31
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")

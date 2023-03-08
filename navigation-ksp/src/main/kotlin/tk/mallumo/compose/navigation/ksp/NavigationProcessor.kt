@@ -23,6 +23,10 @@ class NavigationProcessor(
         private const val basePackage = "tk.mallumo.compose.navigation"
         const val composableNavNodeName = "ComposableNavNode"
         private const val composableNavNodeNameFull = "$basePackage.$composableNavNodeName"
+
+        private const val vmPackage = "$basePackage.viewmodel"
+        const val vmName = "VM"
+        private const val vmNameFull = "$vmPackage.$vmName"
     }
 
     private lateinit var bundled: StringBuilder
@@ -35,28 +39,38 @@ class NavigationProcessor(
 
     private val commonSourcesOnly get() = environment.options["commonSourcesOnly"] == "true"
 
-    private val nodes = hashMapOf<String, NavNode>()
+    private val nodesComposable = mutableMapOf<String, NavNode>()
+    private var nodesVM = mutableMapOf<String, KSClassDeclaration>()
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if (invoked) return emptyList()
 
-        val symbols = resolver.getSymbolsWithAnnotation(composableNavNodeNameFull)
+        val (validComposable, invalidComposable) = resolver.getSymbolsWithAnnotation(composableNavNodeNameFull)
+            .let {
+                it.filterIsInstance<KSFunctionDeclaration>()
+                    .map { it.qualifiedName!!.asString() to NavNode(it) } to it.filterNot { it is KSFunctionDeclaration }
+            }
 
-        val valid = symbols.filterIsInstance<KSFunctionDeclaration>()
-            .map { it.qualifiedName!!.asString() to NavNode(it) }
-        val invalid = symbols.filterNot { it is KSFunctionDeclaration }
-        nodes.putAll(valid)
+        val (validVM, invalidVM) = resolver.getSymbolsWithAnnotation(vmNameFull)
+            .let {
+                it.filterIsInstance<KSClassDeclaration>()
+                    .map { it.qualifiedName!!.asString() to it }to it.filterNot { it is KSClassDeclaration }
+            }
+        nodesVM.putAll(validVM)
+        nodesComposable.putAll(validComposable)
         invoked = true
-        return invalid.toList()
+        return (invalidComposable + invalidVM).toList()
     }
 
     override fun finish() {
-        val items = nodes.entries.map { it.value }
-        if (items.isNotEmpty()) {
-            generate(items)
-            writeSources(items)
+        val itemsComposable = nodesComposable.entries.map { it.value }
+        val itemsVM = nodesVM.entries.map { it.value }
+        if (itemsComposable.isNotEmpty()) {
+            generate(itemsComposable)
+            writeSources(itemsComposable, itemsVM)
         }
     }
+
     @Suppress("SpellCheckingInspection")
     private fun generateCommonFile(
         pckg: String,
@@ -86,9 +100,7 @@ class NavigationProcessor(
             }
     }
 
-    private fun generate(
-        nodes: List<NavNode>
-    ) {
+    private fun generate(        nodes: List<NavNode>) {
         bundled = StringBuilder()
         argsConstructor = StringBuilder()
         argsDestructor = StringBuilder()
@@ -157,7 +169,7 @@ ${content()}"""
         }
     }
 
-    private fun writeSources(nodes: List<NavNode>) {
+    private fun writeSources(nodes: List<NavNode>, itemsVM: List<KSClassDeclaration>) {
         val files = nodes.map { it.files }
             .flatten()
             .filterNotNull()
@@ -191,9 +203,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
-import tk.mallumo.compose.navigation.ImplNoteUtils.navNode"""
+import tk.mallumo.compose.navigation.ImplNoteUtils.navNode
+import tk.mallumo.compose.navigation.viewmodel.ViewModelFactory"""
         ) {
-            CodeGen.generateNavigationContent(environment.options)
+            CodeGen.generateNavigationContent(environment.options, itemsVM)
         }
 
         output(

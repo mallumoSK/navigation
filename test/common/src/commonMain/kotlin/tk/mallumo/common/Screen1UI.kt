@@ -13,6 +13,7 @@ import tk.mallumo.compose.navigation.viewmodel.*
 @Stable
 class ArgsScreen1UI(var showChildNavigation: Boolean = false)
 
+@VM
 class Screen1VM : NavigationViewModel() {
     override fun onRelease() {
         println("Screen1VM onRelease")

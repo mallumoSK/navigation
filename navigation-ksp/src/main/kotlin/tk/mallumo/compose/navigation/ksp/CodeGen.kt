@@ -62,8 +62,12 @@ fun Navigation.navTo_${node.name}(args: $args, clearTop: Boolean = false) {
         )
     }
 
-    fun generateNavigationContent(options: Map<String, String>) = buildString {
+    fun generateNavigationContent(options: Map<String, String>, itemsVM: List<KSClassDeclaration>) = buildString {
 
+        val factoryContent = itemsVM.joinToString("\n") {
+            val clazz = it.qualifiedName!!.asString()
+            "\t\tViewModelFactory.register($clazz::class){${clazz}()}"
+        }
         val navigationChildren = options["child"]
             ?.split(' ')
             ?.asSequence()
@@ -86,6 +90,9 @@ fun NavigationRoot(
     startupArgs: ArgumentsNavigation? = null,
     animation: FiniteAnimationSpec<Float> = tween()
 ) {
+    
+    setupViewModelFactory()
+
     val navigation = Navigation.rememberNavigationComposite(startupNode, startupArgs)
     val currentNode = navigation.currentNode.collectAsState()
 
@@ -95,6 +102,14 @@ fun NavigationRoot(
                 navNode(node = it)
             }
         }
+    }
+}
+
+@Composable
+private fun setupViewModelFactory() {
+    DisposableEffect(Unit) {
+$factoryContent
+        onDispose { }
     }
 }
 

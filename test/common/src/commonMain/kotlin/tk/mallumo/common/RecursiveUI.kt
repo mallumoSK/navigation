@@ -9,6 +9,7 @@ import tk.mallumo.compose.navigation.viewmodel.*
 data class ArgsRecursiveUI(var recursion: Int = 0)
 
 
+@VM
 class RecursiveVM : NavigationViewModel() {
     override fun onRelease() {
         println("RecursiveVM onRelease")
