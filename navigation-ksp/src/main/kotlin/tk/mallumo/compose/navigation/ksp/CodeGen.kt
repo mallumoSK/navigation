@@ -184,7 +184,7 @@ $declaration
         }
         
         val navArgs = remember {
-            object : NavigationArgs({ args }) { }
+           navigationArgsInstance(args)
         }
 
         CompositionLocalProvider(LocalNavigationArgs provides navArgs) {
@@ -198,7 +198,7 @@ $declaration
         }
     }
 
-
+    private fun navigationArgsInstance(args: Any?) = object : NavigationArgs({ args }) { }
 
     private fun buildArgsItem(node: NodeInfo): Any? = when (node.id) {
 $argsConstructor
