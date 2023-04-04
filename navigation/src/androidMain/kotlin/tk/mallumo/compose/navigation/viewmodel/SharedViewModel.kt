@@ -8,7 +8,7 @@ actual abstract class SharedViewModel : ViewModel() {
 
     protected actual val scope: CoroutineScope get() = internalScopeRef
 
-    internal actual var internalScopeRef: CoroutineScope = viewModelScope + createViewModelScope(this::class)
+    internal actual var internalScopeRef: CoroutineScope = createViewModelScope(this::class)
 
     actual abstract fun onRelease()
 

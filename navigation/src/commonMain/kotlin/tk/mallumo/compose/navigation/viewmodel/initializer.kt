@@ -65,6 +65,6 @@ internal fun SharedViewModel.releaseScope() {
 private var scopeNameAtomic = 0
 
 
-internal fun createViewModelScope(clazz: KClass<out SharedViewModel>): CoroutineName {
-    return CoroutineName(clazz::class.qName)
+internal fun createViewModelScope(clazz: KClass<out SharedViewModel>): CoroutineScope {
+    return CoroutineScope(CoroutineName(clazz::class.qName))
 }

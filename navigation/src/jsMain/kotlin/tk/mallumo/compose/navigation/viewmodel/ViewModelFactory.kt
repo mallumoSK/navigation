@@ -32,7 +32,7 @@ actual object ViewModelFactory {
     actual fun <T : SharedViewModel> release(instance: T) {
         viewModels.entries.firstOrNull { it.value ==instance }
             ?.also {
-                viewModels.remove(it.key)
+                viewModels.remove(it.key)?.releaseInternal()
             }
     }
 }

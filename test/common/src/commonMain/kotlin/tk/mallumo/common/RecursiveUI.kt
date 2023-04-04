@@ -3,6 +3,7 @@ package tk.mallumo.common
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.*
+import kotlinx.coroutines.*
 import tk.mallumo.compose.navigation.*
 import tk.mallumo.compose.navigation.viewmodel.*
 
@@ -15,6 +16,8 @@ class RecursiveVM : NavigationViewModel() {
         println("RecursiveVM onRelease")
     }
 
+    fun isScopeActive(): Boolean = scope.isActive
+
 }
 
 @ComposableNavNode(ArgsRecursiveUI::class)
@@ -24,10 +27,11 @@ fun RecursiveUI() {
     val navArgs = LocalNavigationArgs.current
     val args = navArgs.rememberArgs<ArgsRecursiveUI>()
     val vm = nav.viewModel<RecursiveVM>()
+
     ContentWrapper("RecursiveUI:${args.recursion}", Color.Magenta) {
         Text("recursion: ${args.recursion}")
 
-        ScreenAction("Nav to next 'RecursiveUI'") {
+        ScreenAction("Nav to next 'RecursiveUI'", "scope-active: ${vm.isScopeActive()}") {
             navTo_RecursiveUI(args.copy(recursion = args.recursion + 1))
         }
 
