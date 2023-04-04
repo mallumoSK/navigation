@@ -59,6 +59,7 @@ internal fun SharedViewModel.releaseScope() {
         println("release of VM scope error")
         it.printStackTrace()
     }
+    ViewModelFactory.release(this)
 }
 
 private var scopeNameAtomic = 0

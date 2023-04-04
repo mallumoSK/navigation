@@ -3,9 +3,6 @@ package tk.mallumo.compose.navigation.viewmodel
 import androidx.compose.runtime.*
 import kotlin.reflect.*
 
-
-internal val viewModels = mutableMapOf<String, SharedViewModel>()
-
 @Composable
 actual fun <VM : SharedViewModel> globalViewModel(
     modelClass: KClass<VM>,

@@ -53,9 +53,20 @@ class NavigationProcessor(
 
         val (validVM, invalidVM) = resolver.getSymbolsWithAnnotation(vmNameFull)
             .let {
-                it.filterIsInstance<KSClassDeclaration>()
-                    .map { it.qualifiedName!!.asString() to it }to it.filterNot { it is KSClassDeclaration }
+                val valid = it.filterIsInstance<KSClassDeclaration>()
+
+
+                val invalid = it - valid
+
+                valid.map { it.qualifiedName!!.asString() to it } to invalid
+
             }
+        println("VMS V:")
+        validVM.forEach {
+            println(it.first)
+        }
+        println("VMS I: ${invalidComposable.toList().size}")
+
         nodesVM.putAll(validVM)
         nodesComposable.putAll(validComposable)
         invoked = true

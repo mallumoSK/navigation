@@ -27,6 +27,7 @@ actual fun <VM : SharedViewModel> globalViewModel(
 }
 
 inline fun <reified VM : SharedViewModel> ViewModelStoreOwner.vm(key: String? = null): VM = vm(VM::class, key)
+
 fun <VM : SharedViewModel> ViewModelStoreOwner.vm(modelClass: KClass<VM>, key: String?): VM {
     val id = key ?: modelClass.qName
     return get(modelClass.java, id, null)

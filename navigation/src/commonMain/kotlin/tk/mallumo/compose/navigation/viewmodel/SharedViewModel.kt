@@ -5,7 +5,7 @@ import kotlinx.coroutines.*
 expect abstract class SharedViewModel() {
 
     protected val scope: CoroutineScope
-    internal val internalScopeRef: CoroutineScope
+    internal var internalScopeRef: CoroutineScope
 
     abstract fun onRelease()
     internal fun releaseInternal()

@@ -9,7 +9,7 @@ val toolkit by lazy {
 }
 
 group = "tk.mallumo"
-version = toolkit["version.navigation"]
+version = toolkit["version.navigation.core"]
 
 kotlin {
     jvm {

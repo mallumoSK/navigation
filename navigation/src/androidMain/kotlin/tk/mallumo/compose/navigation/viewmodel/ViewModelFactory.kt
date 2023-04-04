@@ -8,6 +8,12 @@ actual object ViewModelFactory {
 
     internal actual val initializers: MutableMap<String, () -> SharedViewModel> = mutableMapOf()
 
+    init {
+        register(NavigationHolder::class){
+            NavigationHolder()
+        }
+    }
+
     actual fun <T : SharedViewModel> register(
         clazz: KClass<T>,
         instanceCall: () -> T
@@ -20,4 +26,5 @@ actual object ViewModelFactory {
         return (initializers[clazz.qName]?.invoke() ?: clazz.createInstance()) as T
     }
 
+    actual fun <T : SharedViewModel> release(instance: T) =Unit
 }

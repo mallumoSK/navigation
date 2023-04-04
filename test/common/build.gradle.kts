@@ -27,7 +27,7 @@ kotlin {
                 api(compose.foundation)
                 api(compose.material)
 
-                api("tk.mallumo:navigation:${toolkit["version.navigation"]}")
+                api("tk.mallumo:navigation:${toolkit["version.navigation.core"]}")
             }
             kotlin.srcDirs("build/generated/ksp/common/commonMain/kotlin")
         }
