@@ -66,7 +66,7 @@ fun Navigation.navTo_${node.name}(args: $args, clearTop: Boolean = false) {
 
         val factoryContent = itemsVM.joinToString("\n") {
             val clazz = it.qualifiedName!!.asString()
-            "\t\tViewModelFactory.register($clazz::class){${clazz}()}"
+            "\tViewModelFactory.register($clazz::class){${clazz}()}"
         }
         val navigationChildren = options["child"]
             ?.split(' ')
@@ -107,10 +107,7 @@ fun NavigationRoot(
 
 @Composable
 private fun setupViewModelFactory() {
-    DisposableEffect(Unit) {
 $factoryContent
-        onDispose { }
-    }
 }
 
 @ExtNavMarker
@@ -209,6 +206,7 @@ $argsConstructor
         if (argsDestructor.isBlank()) {
             append(
                 """
+    @Suppress("UNUSED_PARAMETER")                
     private fun saveArgsItem(node: NodeInfo, argsItem: Any?) {}
 }
 """
