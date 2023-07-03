@@ -4,9 +4,9 @@
 
 #### After config changes project clean + build is required
 
-## navigation: ![https://mallumo.jfrog.io/artifactory/gradle-dev-local/tk/mallumo/navigation/](https://img.shields.io/maven-metadata/v?color=%234caf50&metadataUrl=https%3A%2F%2Fmallumo.jfrog.io%2Fartifactory%2Fgradle-dev-local%2Ftk%2Fmallumo%2Fnavigation%2Fmaven-metadata.xml&style=for-the-badge "Version")
+## navigation: !![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fmvn%2Fmallumo%2Fpublic%2Ftk%2Fmallumo%2Fnavigation%2Fmaven-metadata.xml)
 
-## navigation-ksp: ![https://mallumo.jfrog.io/artifactory/gradle-dev-local/tk/mallumo/navigation-ksp/](https://img.shields.io/maven-metadata/v?color=%234caf50&metadataUrl=https%3A%2F%2Fmallumo.jfrog.io%2Fartifactory%2Fgradle-dev-local%2Ftk%2Fmallumo%2Fnavigation-ksp%2Fmaven-metadata.xml&style=for-the-badge "Version")
+## navigation-ksp: !![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fmvn%2Fmallumo%2Fpublic%2Ftk%2Fmallumo%2Fnavigation-ksp%2Fmaven-metadata.xml)
 
 ## About
 
@@ -127,7 +127,7 @@ pluginManagement {
         gradlePluginPortal()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven("https://mallumo.jfrog.io/artifactory/gradle-dev-local")
+        maven("https://repo.repsy.io/mvn/mallumo/public")
     }
     plugins {
         kotlin("multiplatform") version extra["version.kotlin"] as String
@@ -148,7 +148,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven("https://mallumo.jfrog.io/artifactory/gradle-dev-local")
+        maven("https://repo.repsy.io/mvn/mallumo/public")
     }
 }
 ```
