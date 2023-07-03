@@ -1,7 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.*
+import java.util.*
 
 plugins {
     kotlin("jvm")
+    id("maven-publish")
 }
 
 val toolkit by lazy {
@@ -17,12 +19,38 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
+        languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "11"
 }
 
-apply("../secure-ksp.gradle")
+val prop = Properties().apply {
+    project.rootProject.file("local.properties").reader().use {
+        load(it)
+    }
+}
+
+publishing {
+    val rName = prop["repsy.name"] as String
+    val rKey = prop["repsy.key"] as String
+    repositories {
+        maven {
+            name = "repsy.io"
+            url = uri("https://repo.repsy.io/mvn/${rName}/public")
+            credentials {
+                username = rName
+                password = rKey
+            }
+        }
+    }
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "tk.mallumo"
+            artifactId = "navigation-ksp"
+            version = toolkit["version.navigation.ksp"]
+        }
+    }
+}

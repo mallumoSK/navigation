@@ -4,7 +4,7 @@ pluginManagement {
         gradlePluginPortal()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven("https://mallumo.jfrog.io/artifactory/gradle-dev-local")
+        maven("https://repo.repsy.io/mvn/mallumo/public")
     }
     plugins {
         kotlin("multiplatform") version extra["version.kotlin"] as String
@@ -25,7 +25,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven("https://mallumo.jfrog.io/artifactory/gradle-dev-local")
+        maven("https://repo.repsy.io/mvn/mallumo/public")
     }
 }
 rootProject.name = "navigation"
@@ -34,7 +34,7 @@ include(":navigation")
 include(":navigation-ksp")
 //
 //include(":test:android")
-include(":test:desktop")
-include(":test:common")
+//include(":test:desktop")
+//include(":test:common")
 //////
 //include(":test:single-android")

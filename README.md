@@ -4,29 +4,6 @@
 
 #### After config changes project clean + build is required
 
-```shell
-#                 KOTLIN-KSP-COMPOSE-LIBRARY
-version.ksp=1.7.20-1.0.8
-version.navigation=1.7.20-1.0.8-4.0.0
-
-version.kotlin=1.7.20
-version.agp=7.2.0
-version.compose.desktop=1.2.1
-version.compose.android=1.3.1
-version.compose.android.activity=1.6.1
-version.compose.android.compiller=1.3.2
-
-
-
-//Previous
-navigation =      '1.6.10-1.0.2-1.1.0-3.1.0'
-navigation_ksp =  '1.6.10-1.0.2-1.1.0-3.1.0'
-kotlin_version =  '1.6.10'
-compose_version = '1.1.0'
-ksp_version =     '1.6.10-1.0.2'
-
-```
-
 ## navigation: ![https://mallumo.jfrog.io/artifactory/gradle-dev-local/tk/mallumo/navigation/](https://img.shields.io/maven-metadata/v?color=%234caf50&metadataUrl=https%3A%2F%2Fmallumo.jfrog.io%2Fartifactory%2Fgradle-dev-local%2Ftk%2Fmallumo%2Fnavigation%2Fmaven-metadata.xml&style=for-the-badge "Version")
 
 ## navigation-ksp: ![https://mallumo.jfrog.io/artifactory/gradle-dev-local/tk/mallumo/navigation-ksp/](https://img.shields.io/maven-metadata/v?color=%234caf50&metadataUrl=https%3A%2F%2Fmallumo.jfrog.io%2Fartifactory%2Fgradle-dev-local%2Ftk%2Fmallumo%2Fnavigation-ksp%2Fmaven-metadata.xml&style=for-the-badge "Version")

@@ -1,7 +1,10 @@
+import java.util.*
+
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("org.jetbrains.compose")
+    id("maven-publish")
 }
 
 val toolkit by lazy {
@@ -14,7 +17,7 @@ version = toolkit["version.navigation.core"]
 kotlin {
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
+            kotlinOptions.jvmTarget = "11"
         }
     }
     android {
@@ -34,7 +37,7 @@ kotlin {
         }
         @Suppress("UNUSED_VARIABLE") val jsMain by getting{
             dependencies {
-                api(compose.web.core)
+                api(compose.html.core)
             }
         }
         @Suppress("UNUSED_VARIABLE") val jvmMain by getting {
@@ -53,16 +56,16 @@ kotlin {
 
 @Suppress("UnstableApiUsage", "OldTargetApi", "DEPRECATION")
 android {
-    compileSdk = 31
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 21
         targetSdk = 31
+        compileSdk = 31
         namespace = "tk.mallumo.navigation"
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     lintOptions {
@@ -81,7 +84,7 @@ android {
 }
 
 compose {
-    kotlinCompilerPlugin.set("androidx.compose.compiler:compiler:1.4.0")
+    kotlinCompilerPlugin.set("androidx.compose.compiler:compiler:1.4.6")
 }
 
 java {
@@ -90,5 +93,30 @@ java {
     }
 }
 
+val prop = Properties().apply {
+    project.rootProject.file("local.properties").reader().use {
+        load(it)
+    }
+}
 
-apply("../secure.gradle")
+publishing {
+    val rName = prop["repsy.name"] as String
+    val rKey = prop["repsy.key"] as String
+    repositories {
+        maven {
+            name = "repsy.io"
+            url = uri("https://repo.repsy.io/mvn/${rName}/public")
+            credentials {
+                username = rName
+                password = rKey
+            }
+        }
+    }
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "tk.mallumo"
+            artifactId = "navigation-ksp"
+            version = toolkit["version.navigation.core"]
+        }
+    }
+}
