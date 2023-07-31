@@ -35,7 +35,6 @@ class NavNode(
                 ?.plusElement(args)
                 ?.map { property ->
                     property.getDeclaredProperties() // find all properties of class
-                        .asSequence()
                         .filter { !it.isAbstract() }
                         .filter { it.getter != null }
                         .filter { it.setter != null }

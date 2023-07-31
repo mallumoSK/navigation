@@ -1,5 +1,3 @@
-import java.util.*
-
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
@@ -7,48 +5,42 @@ plugins {
     id("maven-publish")
 }
 
-val toolkit by lazy {
-    Toolkit.get(extensions = extensions.extraProperties)
-}
 
-group = "tk.mallumo"
-version = toolkit["version.navigation.core"]
+group = Deps.group
+version = Deps.core.version
+
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(11))
 
 kotlin {
-    jvm {
+    jvm("desktop") {
         compilations.all {
             kotlinOptions.jvmTarget = "11"
         }
     }
-    android {
+    androidTarget {
         publishLibraryVariants("release")
         publishLibraryVariantsGroupedByFlavor = true
     }
     js(IR)
     sourceSets {
-        @Suppress("UNUSED_VARIABLE") val commonMain by getting {
+        val commonMain by getting {
             dependencies {
                 api(compose.runtime)
                 api(compose.foundation)
                 api(compose.material)
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${toolkit["version.coroutines"]}")
-                implementation("org.jetbrains.kotlin:kotlin-reflect:${toolkit["version.kotlin"]}")
+                api(Deps.lib.coroutines)
+                api(Deps.lib.reflect)
             }
         }
-        @Suppress("UNUSED_VARIABLE") val jsMain by getting{
-            dependencies {
-                api(compose.html.core)
-            }
-        }
-        @Suppress("UNUSED_VARIABLE") val jvmMain by getting {
+        val jsMain by getting
+        val desktopMain by getting {
             dependencies {
                 api(compose.desktop.linux_x64)
             }
         }
-        @Suppress("UNUSED_VARIABLE") val androidMain by getting {
+        val androidMain by getting {
             dependencies {
-//                implementation("androidx.core:core-ktx:1.9.0")
-                implementation("androidx.activity:activity-compose:${toolkit["version.compose.android.activity"]}")
+                api(Deps.lib.composeActivity)
             }
         }
     }
@@ -61,18 +53,13 @@ android {
         minSdk = 21
         targetSdk = 31
         compileSdk = 31
-        namespace = "tk.mallumo.navigation"
+        namespace = "${Deps.group}.${Deps.core.artifact}"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    lintOptions {
-        isCheckReleaseBuilds = false
-        isAbortOnError = false
-        disable("TypographyFractions", "TypographyQuotes")
-    }
     lint {
         abortOnError = false
         checkReleaseBuilds = false
@@ -84,24 +71,13 @@ android {
 }
 
 compose {
-    kotlinCompilerPlugin.set("androidx.compose.compiler:compiler:1.4.6")
+    kotlinCompilerPlugin.set("androidx.compose.compiler:compiler:${Deps.version.compose.android}")
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
-    }
-}
-
-val prop = Properties().apply {
-    project.rootProject.file("local.properties").reader().use {
-        load(it)
-    }
-}
 
 publishing {
-    val rName = prop["repsy.name"] as String
-    val rKey = prop["repsy.key"] as String
+    val rName = propertiesLocal["repsy.name"]
+    val rKey = propertiesLocal["repsy.key"]
     repositories {
         maven {
             name = "repsy.io"
@@ -114,9 +90,9 @@ publishing {
     }
     publications {
         create<MavenPublication>("maven") {
-            groupId = "tk.mallumo"
-            artifactId = "navigation-ksp"
-            version = toolkit["version.navigation.core"]
+            groupId = Deps.group
+            artifactId = Deps.core.artifact
+            version = Deps.core.version
         }
     }
 }

@@ -2,8 +2,6 @@ package tk.mallumo.compose.navigation
 
 import android.os.*
 import androidx.activity.*
-import androidx.lifecycle.*
-import kotlinx.coroutines.flow.*
 import tk.mallumo.compose.navigation.viewmodel.*
 
 @Suppress("unused")
@@ -84,7 +82,6 @@ fun ArgumentsNavigation.toBundle(): Bundle = Bundle().also { b ->
 @Suppress("unused")
 fun Bundle.toArgumentsNavigation(): ArgumentsNavigation = keySet()
     .mapNotNull { key ->
-        @Suppress("DEPRECATION")
         get(key)?.let { key to it }
     }
     .toTypedArray()

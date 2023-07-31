@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package tk.mallumo.compose.navigation.viewmodel
 
 import androidx.lifecycle.*

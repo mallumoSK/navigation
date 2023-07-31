@@ -22,7 +22,7 @@ interface Navigation {
     val testing: ImplNavTesting
 
     companion object {
-        @Suppress("unused")
+        @Suppress("unused", "FunctionName")
         @Composable
         fun Preview(
             startupNode: Node = Node(navRootKey),

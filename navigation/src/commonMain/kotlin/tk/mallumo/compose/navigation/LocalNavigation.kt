@@ -5,6 +5,7 @@ import kotlin.reflect.*
 
 val LocalNavigation = staticCompositionLocalOf<Navigation> { error("Unexpected error") }
 
+@Suppress("unused")
 val LocalNavigationArgs = staticCompositionLocalOf<NavigationArgs> {
     error("arguments are not defined for furrent node")
 }

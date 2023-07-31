@@ -1,6 +1,5 @@
 package tk.mallumo.compose.navigation
 
-import kotlinx.coroutines.flow.*
 import tk.mallumo.compose.navigation.viewmodel.*
 
 @Suppress("unused")

@@ -3,7 +3,6 @@ package tk.mallumo.compose.navigation.viewmodel
 import androidx.compose.runtime.*
 import tk.mallumo.compose.navigation.*
 import kotlin.reflect.*
-import kotlin.reflect.full.*
 
 @Composable
 actual fun <VM : SharedViewModel> globalViewModel(

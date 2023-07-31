@@ -11,7 +11,7 @@ import com.google.devtools.ksp.symbol.*
 fun KSClassDeclaration.getAllSuperTypes(): Sequence<KSType> {
 
     fun KSTypeParameter.getTypesUpperBound(): Sequence<KSClassDeclaration> =
-        this.bounds.asSequence().flatMap {
+        this.bounds.flatMap {
             when (val resolvedDeclaration = it.resolve().declaration) {
                 is KSClassDeclaration -> sequenceOf(resolvedDeclaration)
                 is KSTypeAlias -> sequenceOf(resolvedDeclaration.findActualType())
@@ -21,11 +21,9 @@ fun KSClassDeclaration.getAllSuperTypes(): Sequence<KSType> {
         }
 
     return this.superTypes
-        .asSequence()
         .map { it.resolve() }
         .plus(
             this.superTypes
-                .asSequence()
                 .map { it.resolve().declaration }
                 .flatMap { ksDeclaration ->
                     when (ksDeclaration) {
