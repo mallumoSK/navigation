@@ -3,13 +3,13 @@ plugins {
     id("maven-publish")
 }
 
-group = Deps.group
-version = Deps.ksp.version
+group = "tk.mallumo"
+version = Deps.version.navigation.ksp
 
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(11))
 
 dependencies {
-    api(Deps.lib.ksp)
+    api(Deps.dependency.ksp)
 }
 
 publishing {
@@ -27,9 +27,9 @@ publishing {
     }
     publications {
         create<MavenPublication>("maven") {
-            groupId = Deps.group
-            artifactId = Deps.ksp.artifact
-            version = Deps.ksp.version
+            groupId = "tk.mallumo"
+//            artifactId = Deps.ksp.artifact
+            version = Deps.version.navigation.ksp
         }
     }
 }
