@@ -7,7 +7,7 @@ plugins {
 
 
 group = Deps.group
-version = Deps.core.version
+version = Deps.version.navigation.core
 
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(11))
 
@@ -53,7 +53,7 @@ android {
         minSdk = 21
         targetSdk = 31
         compileSdk = 31
-        namespace = "${Deps.group}.${Deps.core.artifact}"
+        namespace = "${Deps.group}.navigation"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -91,8 +91,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = Deps.group
-            artifactId = Deps.core.artifact
-            version = Deps.core.version
+            version = Deps.version.navigation.core
         }
     }
 }

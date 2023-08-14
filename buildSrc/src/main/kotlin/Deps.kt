@@ -19,16 +19,10 @@ object Deps {
             const val material = "1.4.3"
         }
 
-    }
-
-    object core {
-        const val version = "${Deps.version.ksp}-1.0.0"
-        const val artifact = "navigation"
-    }
-
-    object ksp {
-        const val version = core.version
-        const val artifact = "navigation-ksp"
+        object navigation {
+            const val core = "${version.ksp}-1.0.0"
+            const val ksp = core
+        }
     }
 
     object lib {
