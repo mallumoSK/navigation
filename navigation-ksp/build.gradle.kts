@@ -9,7 +9,7 @@ version = Deps.version.navigation.ksp
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(11))
 
 dependencies {
-    api(Deps.lib.ksp)
+    api(Deps.dependency.ksp)
 }
 
 publishing {
