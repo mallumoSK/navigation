@@ -70,9 +70,9 @@ android {
     }
 }
 
-compose {
-    kotlinCompilerPlugin.set("androidx.compose.compiler:compiler:${Deps.version.compose.android}")
-}
+//compose {
+//    kotlinCompilerPlugin.set("androidx.compose.compiler:compiler:${Deps.version.compose.android}")
+//}
 
 
 publishing {
