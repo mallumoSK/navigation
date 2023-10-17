@@ -7,6 +7,7 @@ object Deps {
         const val kotlin = "1.9.0"
         const val agp = "8.0.2"
         const val ksp = "1.9.0-1.0.13"
+        const val log = "1.9.0-1.0.0"
 
         object compose {
             const val desktop = "1.5.0"
@@ -20,7 +21,7 @@ object Deps {
         }
 
         object navigation {
-            const val core = "${version.ksp}-1.0.1"
+            const val core = "${version.ksp}-1.0.2"
             const val ksp = core
         }
     }
@@ -32,6 +33,7 @@ object Deps {
         const val composeActivity = "androidx.activity:activity-compose:1.7.2"
     }
     object dependency {
+        const val log = "tk.mallumo:log:${version.log}"
         const val ksp = "com.google.devtools.ksp:symbol-processing-api:${version.ksp}"
     }
 }

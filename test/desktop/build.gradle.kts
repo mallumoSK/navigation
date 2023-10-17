@@ -6,10 +6,6 @@ plugins {
     id("org.jetbrains.compose")
 }
 
-val toolkit by lazy {
-    Toolkit.get(extensions = extensions.extraProperties)
-}
-
 kotlin {
 //    sourceSets.main {
 //        kotlin.srcDir("build/generated/ksp/common/commonMain/kotlin")
@@ -26,19 +22,14 @@ dependencies {
     implementation(compose.desktop.currentOs)
     testImplementation(kotlin("test"))
 
-    implementation(project(":navigation"))
+    implementation(project(":navigation-core"))
 //    ksp(project(":navigation-ksp"))
     implementation(compose.desktop.currentOs)
 
-    implementation("tk.mallumo:log:${toolkit["version.log"]}")
-//    implementation("tk.mallumo:utils:${toolkit["version.utils"]}")
+    implementation(Deps.dependency.log)
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
-    }
-}
+java.toolchain. languageVersion.set(JavaLanguageVersion.of(11))
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "11"

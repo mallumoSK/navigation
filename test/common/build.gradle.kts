@@ -8,36 +8,34 @@ plugins {
 group = "tk.mallumo"
 version = "1.0"
 
-val toolkit by lazy {
-    Toolkit.get(extensions = extensions.extraProperties)
-}
 
 kotlin {
     android()
     jvm("desktop") {
         compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
+            kotlinOptions.jvmTarget = "11"
         }
     }
 
     sourceSets {
-        @Suppress("UNUSED_VARIABLE") val commonMain by getting {
+       val commonMain by getting {
             dependencies {
                 api(compose.runtime)
                 api(compose.foundation)
                 api(compose.material)
 
-                api("tk.mallumo:navigation:${toolkit["version.navigation.core"]}")
+//                api("tk.mallumo:navigation-core:${Deps.version.navigation.core }")
+                implementation(project(":navigation-core"))
             }
             kotlin.srcDirs("build/generated/ksp/common/commonMain/kotlin")
         }
-        @Suppress("UNUSED_VARIABLE") val androidMain by getting {
+        val androidMain by getting {
             dependencies {
                 api("androidx.appcompat:appcompat:1.5.1")
                 api(compose.preview)
             }
         }
-        @Suppress("UNUSED_VARIABLE") val desktopMain by getting {
+      val desktopMain by getting {
             dependencies {
                 api(compose.preview)
             }
@@ -61,16 +59,13 @@ android {
     compileSdk = 33
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
-    @Suppress("UnstableApiUsage")
     defaultConfig {
         minSdk = 24
-        targetSdk = 33
     }
 
-    @Suppress("UnstableApiUsage")
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     namespace = "tk.mallumo.common"
@@ -82,6 +77,8 @@ ksp {
 
 }
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+java.toolchain. languageVersion.set(JavaLanguageVersion.of(11))
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = "11"
 }

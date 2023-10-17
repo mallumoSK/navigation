@@ -1,6 +1,7 @@
 package tk.mallumo.compose.navigation.viewmodel
 
 import androidx.compose.runtime.*
+import tk.mallumo.compose.navigation.*
 import kotlin.reflect.*
 
 @Composable
@@ -8,7 +9,10 @@ actual fun <VM : SharedViewModel> globalViewModel(
     modelClass: KClass<VM>,
     key: String?
 ): VM {
-    val id = key ?: modelClass.simpleName!!
+    val id =  key
+        ?.let { "${modelClass.qName}::$it" }
+        ?:modelClass.qName
+
     return remember(id) {
         getViewModel(modelClass, id)
     }

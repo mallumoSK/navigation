@@ -14,7 +14,9 @@ actual fun <VM : SharedViewModel> globalViewModel(
     val ctx = LocalContext.current
     val view = LocalView.current
 
-    val id = key ?: modelClass.qName
+    val id =  key
+        ?.let { "${modelClass.qName}::$it" }
+        ?:modelClass.qName
 
     return remember(id) {
         if (ctx is ViewModelStoreOwner) {

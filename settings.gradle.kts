@@ -14,7 +14,7 @@ include(":navigation-core")
 include(":navigation-ksp")
 //
 //include(":test:android")
-//include(":test:desktop")
-//include(":test:common")
+include(":test:desktop")
+include(":test:common")
 //
 //include(":test:single-android")

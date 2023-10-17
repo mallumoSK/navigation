@@ -7,6 +7,7 @@ fun main() = application {
     Window(onCloseRequest = ::exitApplication) {
         MaterialTheme {
             NavigationRoot(Node.AppUI)
+//            NavigationRoot(Node.ChildTestHomeUI)
         }
     }
 }
