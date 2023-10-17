@@ -4,7 +4,7 @@
 
 #### After config changes project clean + build is required
 
-## navigation: !![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fmvn%2Fmallumo%2Fpublic%2Ftk%2Fmallumo%2Fnavigation%2Fmaven-metadata.xml)
+## navigation: !![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fmvn%2Fmallumo%2Fpublic%2Ftk%2Fmallumo%2Fnavigation-core%2Fmaven-metadata.xml)
 
 ## navigation-ksp: !![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fmvn%2Fmallumo%2Fpublic%2Ftk%2Fmallumo%2Fnavigation-ksp%2Fmaven-metadata.xml)
 
@@ -88,8 +88,8 @@ ksp.arg("commonSourcesOnly", "true")
 
 ## How to implement
 
-1. add plugin (**build.gradle.kts**)
-
+### 1. add plugin (**build.gradle.kts**)
+#### 1.1. single target (android or jvm)
 ```kotlin
 plugins {
     id("com.google.devtools.ksp")
@@ -111,14 +111,47 @@ android {
 }
 
 dependencies {
-    implementation("tk.mallumo:navigation:${version_navigation}")
-    ksp("tk.mallumo:navigation-ksp:${version_navigation}")
+    implementation("tk.mallumo:navigation:${version_navigation_core}")
+    ksp("tk.mallumo:navigation-ksp:${version_navigation_ksp}")
 }
 //...
-
 ```
+#### 1.2. multiplatform or JS
+```kotlin
+plugins {
+    id("com.google.devtools.ksp")
+}
 
-2. add pluginManagement **On top** of file **settings.gradle.kts** :
+kotlin {
+    js(IR)
+    sourceSets {
+        val commonMain by getting {
+            kotlin.srcDirs("build/generated/ksp/common/commonMain/kotlin")
+        }
+        val jsMain by getting
+    }
+}
+
+dependencies {
+    implementation("tk.mallumo:navigation:${version_navigation_core}")
+}
+//...
+val kspCommonMainMetadata by configurations
+// in case of JS use `kspJs` in case of jvm use `kspJvm`, ...
+val kspJs by configurations
+
+dependencies {
+    // in case of JS use `kspJs` in case of jvm use `kspJvm`, ...
+    kspJs("tk.mallumo:navigation-ksp:${version_navigation_ksp}")
+    
+    kspCommonMainMetadata("tk.mallumo:navigation-ksp:${version_navigation_ksp}")
+}
+
+ksp.apply {
+    arg("commonSourcesOnly", "true")
+}
+```
+### 2. add pluginManagement **On top** of file **settings.gradle.kts** :
 
 ```groovy
 pluginManagement {
@@ -153,4 +186,4 @@ dependencyResolutionManagement {
 }
 ```
 
-3. JOB DONE :)
+### 3. JOB DONE :)
