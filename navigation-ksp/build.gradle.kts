@@ -27,9 +27,10 @@ publishing {
     }
     publications {
         create<MavenPublication>("maven") {
-            groupId = "tk.mallumo"
-//            artifactId = Deps.ksp.artifact
+            groupId =  Deps.group
+            artifactId = "navigation-ksp"
             version = Deps.version.navigation.ksp
+            from(components["java"])
         }
     }
 }

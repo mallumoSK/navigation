@@ -88,10 +88,4 @@ publishing {
             }
         }
     }
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = Deps.group
-            version = Deps.version.navigation.core
-        }
-    }
 }
