@@ -3259,3 +3259,14 @@ secure-android.gradle
 /navigation-core/build/libs/navigation-core-metadata-1.9.0-1.0.13-1.0.0.jar
 /navigation-core/build/outputs/aar/navigation-core-release.aar
 /navigation-core/build/tmp/kotlin-classes/release/META-INF/navigation-core_release.kotlin_module
+/navigation-core/build/libs/navigation-core-android-1.9.0-1.0.13-1.0.1-sources.jar
+/navigation-core/build/libs/navigation-core-desktop-1.9.0-1.0.13-1.0.1.jar
+/navigation-core/build/libs/navigation-core-desktop-1.9.0-1.0.13-1.0.1-sources.jar
+/navigation-core/build/libs/navigation-core-js-1.9.0-1.0.13-1.0.1.klib
+/navigation-core/build/libs/navigation-core-js-1.9.0-1.0.13-1.0.1-sources.jar
+/navigation-core/build/libs/navigation-core-kotlin-1.9.0-1.0.13-1.0.1-sources.jar
+/navigation-core/build/libs/navigation-core-metadata-1.9.0-1.0.13-1.0.1.jar
+/navigation-core/build/tmp/publishAndroidPublicationToMavenLocal/module-maven-metadata.xml
+/navigation-core/build/tmp/publishDesktopPublicationToMavenLocal/module-maven-metadata.xml
+/navigation-core/build/tmp/publishJsPublicationToMavenLocal/module-maven-metadata.xml
+/navigation-core/build/tmp/publishKotlinMultiplatformPublicationToMavenLocal/module-maven-metadata.xml
