@@ -42,9 +42,18 @@ class NavigationProcessor(
     private val nodesComposable = mutableMapOf<String, NavNode>()
     private var nodesVM = mutableMapOf<String, KSClassDeclaration>()
 
+    private val cache by lazy {
+        File("/tmp/___/test").apply {
+            if (!exists()) createNewFile()
+        }
+    }
+
+    private fun log(line: String) {
+//        cache.appendText("$line\n")
+    }
+
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if (invoked) return emptyList()
-
         val (validComposable, invalidComposable) = resolver.getSymbolsWithAnnotation(composableNavNodeNameFull)
             .let {
                 it.filterIsInstance<KSFunctionDeclaration>()
@@ -61,15 +70,11 @@ class NavigationProcessor(
                 valid.map { it.qualifiedName!!.asString() to it } to invalid
 
             }
-        println("VMS V:")
-        validVM.forEach {
-            println(it.first)
-        }
-        println("VMS I: ${invalidComposable.toList().size}")
 
         nodesVM.putAll(validVM)
         nodesComposable.putAll(validComposable)
         invoked = true
+
         return (invalidComposable + invalidVM).toList()
     }
 
@@ -181,9 +186,12 @@ ${content()}"""
     }
 
     private fun writeSources(nodes: List<NavNode>, itemsVM: List<KSClassDeclaration>) {
-        val files = nodes.map { it.files }
-            .flatten()
-            .filterNotNull()
+
+        val files = buildSet {
+            addAll(nodes.map { it.files }.flatten())
+            addAll(itemsVM.mapNotNull { it.containingFile })
+
+        }.filterNotNull()
             .distinctBy { it.filePath }
             .toTypedArray()
         val dependencies = Dependencies(true, *files)
