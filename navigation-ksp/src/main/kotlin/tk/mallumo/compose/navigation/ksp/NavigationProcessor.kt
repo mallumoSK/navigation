@@ -110,13 +110,12 @@ class NavigationProcessor(
                                 File(rootDir, "common/commonMain${suffix.substring(sourceDirPrefixIndex)}").apply {
                                     if (!parentFile.exists()) parentFile.mkdirs()
                                 }
-
                             }
                     }
             }
     }
 
-    private fun generate(        nodes: List<NavNode>) {
+    private fun generate(nodes: List<NavNode>) {
         bundled = StringBuilder()
         argsConstructor = StringBuilder()
         argsDestructor = StringBuilder()
