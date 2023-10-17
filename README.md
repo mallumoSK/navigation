@@ -4,9 +4,9 @@
 
 #### After config changes project clean + build is required
 
-## navigation: !![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fmvn%2Fmallumo%2Fpublic%2Ftk%2Fmallumo%2Fnavigation-core%2Fmaven-metadata.xml)
+## navigation: ![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fmvn%2Fmallumo%2Fpublic%2Ftk%2Fmallumo%2Fnavigation-core%2Fmaven-metadata.xml)
 
-## navigation-ksp: !![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fmvn%2Fmallumo%2Fpublic%2Ftk%2Fmallumo%2Fnavigation-ksp%2Fmaven-metadata.xml)
+## navigation-ksp: ![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fmvn%2Fmallumo%2Fpublic%2Ftk%2Fmallumo%2Fnavigation-ksp%2Fmaven-metadata.xml)
 
 ## About
 
