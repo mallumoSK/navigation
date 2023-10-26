@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
@@ -27,7 +29,6 @@ kotlin {
             dependencies {
                 api(compose.runtime)
                 api(compose.foundation)
-                api(compose.material)
                 api(Deps.lib.coroutines)
                 api(Deps.lib.reflect)
             }
@@ -46,12 +47,10 @@ kotlin {
     }
 }
 
-@Suppress("UnstableApiUsage", "OldTargetApi", "DEPRECATION")
 android {
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 21
-        targetSdk = 31
         compileSdk = 31
         namespace = "${Deps.group}.navigation"
     }
@@ -70,15 +69,11 @@ android {
     }
 }
 
-//compose {
-//    kotlinCompilerPlugin.set("androidx.compose.compiler:compiler:${Deps.version.compose.android}")
-//}
-
-
 publishing {
     val rName = propertiesLocal["repsy.name"]
     val rKey = propertiesLocal["repsy.key"]
     repositories {
+        mavenLocal()
         maven {
             name = "repsy.io"
             url = uri("https://repo.repsy.io/mvn/${rName}/public")

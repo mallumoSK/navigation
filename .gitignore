@@ -3277,3 +3277,5 @@ secure-android.gradle
 /navigation-core/build/libs/navigation-core-js-1.9.0-1.0.13-1.0.2-sources.jar
 /navigation-core/build/libs/navigation-core-kotlin-1.9.0-1.0.13-1.0.2-sources.jar
 /navigation-core/build/libs/navigation-core-metadata-1.9.0-1.0.13-1.0.2.jar
+/navigation-core/build/libs/navigation-core-desktop-1.9.10-1.0.13-1.0.0.jar
+/navigation-core/build/tmp/kotlin-classes/debug/META-INF/navigation-core_debug.kotlin_module
