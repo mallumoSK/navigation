@@ -218,8 +218,8 @@ import tk.mallumo.compose.navigation.*
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import tk.mallumo.compose.navigation.ImplNoteUtils.navNode
 import tk.mallumo.compose.navigation.viewmodel.ViewModelFactory"""

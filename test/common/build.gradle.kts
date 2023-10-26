@@ -22,6 +22,7 @@ kotlin {
             dependencies {
                 api(compose.runtime)
                 api(compose.foundation)
+                api(compose.material3)
 
 //                api("tk.mallumo:navigation-core:${Deps.version.navigation.core }")
                 implementation(project(":navigation-core"))

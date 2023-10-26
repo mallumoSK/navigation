@@ -97,7 +97,7 @@ fun NavigationRoot(
     val currentNode = navigation.currentNode.collectAsState()
 
     Crossfade(targetState = currentNode.value, animationSpec = animation) {
-        Surface(color = MaterialTheme.colors.background) {
+        Surface(color = MaterialTheme.colorScheme.background) {
             CompositionLocalProvider(LocalNavigation provides navigation) {
                 navNode(node = it)
             }
@@ -123,7 +123,7 @@ private fun NavigationChild(
     val currentNode = navigation.currentNode.collectAsState()
 
     Crossfade(targetState = currentNode.value, animationSpec = animation) {
-        Surface(color = MaterialTheme.colors.background) {
+        Surface(color = MaterialTheme.colorScheme.background) {
             CompositionLocalProvider(LocalNavigation provides navigation) {
                 navNode(node = it)
             }
