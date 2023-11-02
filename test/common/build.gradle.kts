@@ -74,6 +74,7 @@ android {
 ksp {
     arg("child", "child0 child1 child2 child3")
     arg("commonSourcesOnly", "true")
+    arg("material3", "false")
 
 }
 

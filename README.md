@@ -86,6 +86,12 @@ ksp.arg("child", "child0 child1 child2 child3")
 ksp.arg("commonSourcesOnly", "true")
 ```
 
+```kotlin
+// this is for choice material 2 or material 3,
+// default is 'true' it means material3 will be used
+ksp.arg("material3", "true")
+```
+
 ## How to implement
 
 ### 1. add plugin (**build.gradle.kts**)
