@@ -1,7 +1,7 @@
 package tk.mallumo.compose.navigation.viewmodel
 
 import tk.mallumo.compose.navigation.*
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 import kotlin.reflect.full.*
 
 actual object ViewModelFactory {
@@ -9,7 +9,7 @@ actual object ViewModelFactory {
     internal actual val initializers: MutableMap<String, () -> SharedViewModel> = mutableMapOf()
 
     init {
-        register(NavigationHolder::class){
+        register(NavigationHolder::class) {
             NavigationHolder()
         }
     }
@@ -26,5 +26,7 @@ actual object ViewModelFactory {
         return (initializers[clazz.qName]?.invoke() ?: clazz.createInstance()) as T
     }
 
-    actual fun <T : SharedViewModel> release(instance: T) =Unit
+    actual fun <T : SharedViewModel> release(instance: T) {
+        Store.release(instance)
+    }
 }

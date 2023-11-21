@@ -1,5 +1,8 @@
 package tk.mallumo.compose.navigation.viewmodel
 
+import android.app.*
+import android.content.*
+import androidx.activity.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.*
 import androidx.lifecycle.*
@@ -11,43 +14,65 @@ actual fun <VM : SharedViewModel> globalViewModel(
     modelClass: KClass<VM>,
     key: String?
 ): VM {
-    val ctx = LocalContext.current
-    val view = LocalView.current
-
-    val id =  key
+    val id = key
         ?.let { "${modelClass.qName}::$it" }
-        ?:modelClass.qName
+        ?: modelClass.qName
 
+    val ctx = LocalContext.current
     return remember(id) {
-        if (ctx is ViewModelStoreOwner) {
-            ctx.get(modelClass.java, id, null)
-        } else {
-            view.findViewTreeViewModelStoreOwner()?.get(modelClass.java, id, null)
-                ?: throw Exception("View model store owner not found")
+        ctx.getViewModel(modelClass, id)
+    }
+}
+
+internal fun <VM : SharedViewModel> Context.getViewModel(modelClass: KClass<VM>, key: String): VM {
+    @Suppress("UNCHECKED_CAST")
+    return Store.get(this).viewModels.getOrPut(key) {
+        ViewModelFactory.instanceOf(modelClass)
+    } as VM
+}
+
+internal class Store private constructor(context: Context) :
+    AndroidViewModel(context.applicationContext as Application) {
+    val viewModels = mutableMapOf<String, SharedViewModel>()
+
+    companion object {
+        private lateinit var instance: Store
+        fun get(context: Context): Store {
+            if (!::instance.isInitialized) {
+                instance = Store(context)
+            }
+            return instance
+        }
+
+        fun <T : SharedViewModel> release(entry: T) {
+            if (::instance.isInitialized) {
+                instance.release(entry)
+            }
+        }
+
+        fun release(entry: String) {
+            if (::instance.isInitialized) {
+                instance.release(entry)
+            }
+        }
+
+        fun root(componentActivity: ComponentActivity): NavigationHolder {
+            return get(componentActivity.applicationContext)
+                .viewModels.getOrPut(navRootKey) {
+                    NavigationHolder()
+                } as NavigationHolder
         }
     }
-}
 
-inline fun <reified VM : SharedViewModel> ViewModelStoreOwner.vm(key: String? = null): VM = vm(VM::class, key)
-
-fun <VM : SharedViewModel> ViewModelStoreOwner.vm(modelClass: KClass<VM>, key: String?): VM {
-    val id = key ?: modelClass.qName
-    return get(modelClass.java, id, null)
-}
-
-internal fun <VM : ViewModel> ViewModelStoreOwner.get(
-    javaClass: Class<VM>,
-    key: String? = null,
-    factory: ViewModelProvider.Factory? = null
-): VM {
-    val provider = if (factory != null) {
-        ViewModelProvider(this, factory)
-    } else {
-        ViewModelProvider(this)
+    private fun <T : SharedViewModel> release(entry: T) {
+        viewModels.entries.firstOrNull { it.value == entry }
+            ?.also {
+                viewModels.remove(it.key)?.releaseInternal()
+            }
     }
-    return if (key != null) {
-        provider[key, javaClass]
-    } else {
-        provider[javaClass]
+
+    private fun release(key: String) {
+        viewModels.remove(key)?.releaseInternal()
+
     }
 }

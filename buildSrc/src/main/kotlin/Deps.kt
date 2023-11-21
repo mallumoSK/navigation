@@ -21,7 +21,7 @@ object Deps {
         }
 
         object navigation {
-            const val core = "${version.ksp}-1.0.2"
+            const val core = "${version.ksp}-1.0.5"
             const val ksp = core
         }
     }
@@ -32,6 +32,7 @@ object Deps {
         const val ksp = "com.google.devtools.ksp:symbol-processing-api:${version.ksp}"
         const val composeActivity = "androidx.activity:activity-compose:1.8.0"
     }
+
     object dependency {
         const val log = "tk.mallumo:log:${version.log}"
         const val ksp = "com.google.devtools.ksp:symbol-processing-api:${version.ksp}"

@@ -7,7 +7,7 @@ import tk.mallumo.compose.navigation.viewmodel.*
 @Suppress("unused")
 val ComponentActivity.composeNavigationRoot: Navigation
     get() {
-        val vm = vm<NavigationHolder>(navRootKey)
+        val vm = Store.root(this)
 
         return object : NavigationWrapper() {
 

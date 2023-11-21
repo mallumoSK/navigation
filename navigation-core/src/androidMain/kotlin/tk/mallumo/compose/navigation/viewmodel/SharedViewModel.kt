@@ -2,12 +2,12 @@
 
 package tk.mallumo.compose.navigation.viewmodel
 
-import androidx.lifecycle.*
 import kotlinx.coroutines.*
 
 
-actual abstract class SharedViewModel : ViewModel() {
+actual abstract class SharedViewModel {
 
+    @Suppress("unused")
     protected actual val scope: CoroutineScope get() = internalScopeRef
 
     internal actual var internalScopeRef: CoroutineScope = createViewModelScope(this::class)
@@ -18,10 +18,4 @@ actual abstract class SharedViewModel : ViewModel() {
         onRelease()
         releaseScope()
     }
-
-    @Deprecated("use onRelease", ReplaceWith("onRelease"))
-    override fun onCleared() {
-        releaseInternal()
-    }
-
 }
