@@ -1,6 +1,5 @@
-import androidx.compose.material.MaterialTheme
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
+import androidx.compose.material.*
+import androidx.compose.ui.window.*
 import tk.mallumo.compose.navigation.*
 
 fun main() = application {
