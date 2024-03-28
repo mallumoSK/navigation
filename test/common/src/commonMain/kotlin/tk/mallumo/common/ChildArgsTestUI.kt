@@ -25,24 +25,21 @@ fun ChildTestHomeInnerUI() {
     }
 }
 
-
 @Composable
 @ComposableNavNode(ChildTestArgs::class)
 fun ChildTestTargetHome2() {
-    val args = LocalNavigationArgs.current.rememberArgs<ChildTestArgs>()
+    val args = LocalNavigationArgs.current.rememberArgs(ChildTestArgs::class)
 
     Column {
         Text("current: ChildTestTargetHome2 :: {${args.mapId}}")
         NavigationChildChild2(Node.ChildTestTargetHomeChild, args.asBundle())
     }
-
 }
-
 
 @Composable
 @ComposableNavNode(ChildTestArgs::class)
 fun ChildTestTargetHomeChild() {
-    val args = LocalNavigationArgs.current.rememberArgs<ChildTestArgs>()
+    val args = LocalNavigationArgs.current.rememberArgs(ChildTestArgs::class)
     Text("current: ChildTestTargetHomeChild :: {${args.mapId}}")
 //    NavigationChildChild0()
 }

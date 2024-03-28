@@ -24,8 +24,7 @@ class Screen1VM : NavigationViewModel() {
 @Composable
 fun Screen1UI() {
     val nav = LocalNavigation.current
-//    val vm =
-    nav.viewModel<Screen1VM>()
+    nav.viewModel(Screen1VM::class)
     LazyColumn(Modifier.fillMaxSize()) {
         item {
             ContentWrapper("Screen1UI", Color.Blue) {
@@ -62,7 +61,7 @@ fun Screen1UI() {
 @Composable
 private fun ChildDefinition() {
     val navArgs = LocalNavigationArgs.current
-    val args = navArgs.rememberArgs<ArgsScreen1UI>()
+    val args = navArgs.rememberArgs(ArgsScreen1UI::class)
     var showChild by remember { mutableStateOf(args.showChildNavigation) }
 
     Button({

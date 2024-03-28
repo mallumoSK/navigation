@@ -14,15 +14,6 @@ class EmptyNavigationViewModel : NavigationViewModel() {
     override fun onRelease() = Unit
 }
 
-@Suppress("unused")
-@Composable
-inline fun <reified VM : SharedViewModel> globalViewModel(key: String? = null): VM = globalViewModel(VM::class, key)
-
-@Suppress("unused")
-@Composable
-inline fun <reified VM : NavigationViewModel> Navigation.viewModel(key: String? = null): VM =
-    viewModel(VM::class, key)
-
 @Composable
 fun <VM : NavigationViewModel> Navigation.viewModel(modelClass: KClass<VM>, key: String? = null): VM =
     viewModelInternal(modelClass, key)
@@ -34,7 +25,7 @@ expect fun <VM : SharedViewModel> globalViewModel(modelClass: KClass<VM>, key: S
 internal fun <VM : NavigationViewModel> Navigation.viewModelInternal(modelClass: KClass<VM>, key: String?): VM {
 
     return if (isPreviewMode) {
-        remember {ViewModelFactory.instanceOf(modelClass) }
+        remember { ViewModelFactory.instanceOf(modelClass) }
     } else {
         val viewModelKey = remember(nodeIdentifier) {
             buildViewModelKeyFull(key, modelClass).also {

@@ -37,7 +37,7 @@ internal fun Navigation.Companion.rememberNavigationPreview(
     startupNode: Node,
     startupArgs: ArgumentsNavigation?
 ): Navigation {
-    val vm = globalViewModel<NavigationHolder>(navRootKey).init(navRootKey, startupNode, startupArgs) {
+    val vm = globalViewModel(NavigationHolder::class, navRootKey).init(navRootKey, startupNode, startupArgs) {
         //NOTHING
     }
 
@@ -72,7 +72,7 @@ private fun createChildNavigation(
         val releaseTask = SharedPlatform.rememberViewModelRelease()
 
 
-        val vm = viewModel<NavigationHolder>(key)
+        val vm = viewModel(NavigationHolder::class, key)
 
         remember(key) {
             childNavigation
@@ -85,10 +85,11 @@ private fun createChildNavigation(
                         viewModelReleaseCallback = releaseTask
                     )
 
-                    val newChildNavigation =  NavigationWrapperInstance(
+                    val newChildNavigation = NavigationWrapperInstance(
                         viewModelHolder = vm,
                         navigationId = key,
-                        isPreviewMode = parentNavigation.isPreviewMode) { stack ->
+                        isPreviewMode = parentNavigation.isPreviewMode
+                    ) { stack ->
                         if (vm.stackSize <= stack) {
                             val parentWrapper = (vm.parentNavigation as NavigationWrapper)
                             parentWrapper.up((stack + 1) - vm.stackSize)
@@ -114,7 +115,7 @@ private fun createRootNavigation(
 
     val releaseTask = SharedPlatform.rememberViewModelRelease()
 
-    val vm = globalViewModel<NavigationHolder>(key)
+    val vm = globalViewModel(NavigationHolder::class, key)
 
     val backPressDispatcher = BackPressDispatcher.rememberBackPressDispatcher(vm)
 
@@ -133,7 +134,8 @@ private fun createRootNavigation(
         NavigationWrapperInstance(
             viewModelHolder = vm,
             navigationId = key,
-            isPreviewMode = false) { stack ->
+            isPreviewMode = false
+        ) { stack ->
             if (vm.stackSize < stack + 1) {
                 backPressDispatcher.isEnabled = false
                 backPressDispatcher.onBackPressed()

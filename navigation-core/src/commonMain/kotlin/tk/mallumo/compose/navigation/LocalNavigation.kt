@@ -20,11 +20,11 @@ abstract class NavigationArgs(
         @Suppress("UNCHECKED_CAST")
         return local as T
     }
+
+    @Composable
+    inline fun <reified T : Any> rememberArgs(clazz: KClass<T>): T = remember {
+        args(clazz)
+    }
 }
 
 inline fun <reified T : Any> NavigationArgs.args() = args(T::class)
-
-@Composable
-inline fun <reified T : Any> NavigationArgs.rememberArgs() = remember {
-    args(T::class)
-}

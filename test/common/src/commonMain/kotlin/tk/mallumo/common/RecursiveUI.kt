@@ -25,8 +25,8 @@ class RecursiveVM : NavigationViewModel() {
 fun RecursiveUI() {
     val nav = LocalNavigation.current
     val navArgs = LocalNavigationArgs.current
-    val args = navArgs.rememberArgs<ArgsRecursiveUI>()
-    val vm = nav.viewModel<RecursiveVM>()
+    val args = navArgs.rememberArgs(ArgsRecursiveUI::class)
+    val vm = nav.viewModel(RecursiveVM::class)
 
     ContentWrapper("RecursiveUI:${args.recursion}", Color.Magenta) {
         Text("recursion: ${args.recursion}")
