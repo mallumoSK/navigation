@@ -11,7 +11,7 @@ object Deps {
 
         object compose {
             const val desktop = "1.6.1"
-            const val android = "1.6.1"
+            const val android = "1.6.3"
 
 //            const val compiller = "1.5.0"
 //            const val runtime = "1.5.0"
