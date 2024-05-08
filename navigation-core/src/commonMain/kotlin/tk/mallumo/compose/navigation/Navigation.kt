@@ -41,6 +41,8 @@ interface Navigation {
 
     fun up(stack: Int = 1): Boolean
 
+    fun canGoUp():Boolean
+
     fun navigateTo(node: Node, args: ArgumentsNavigation = ArgumentsNavigation(), clearTop: Boolean)
 
     @ExtNavMarker

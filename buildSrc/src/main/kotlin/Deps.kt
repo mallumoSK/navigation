@@ -21,8 +21,8 @@ object Deps {
         }
 
         object navigation {
-            const val core = "${version.ksp}-1.2.0"
-            const val ksp = "${version.ksp}-1.2.0"
+            const val core = "${version.ksp}-1.2.1"
+            const val ksp = "${version.ksp}-1.2.1"
         }
     }
 

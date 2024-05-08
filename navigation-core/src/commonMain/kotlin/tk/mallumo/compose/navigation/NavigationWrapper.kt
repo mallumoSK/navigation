@@ -31,6 +31,8 @@ internal abstract class NavigationWrapper : Navigation {
         viewModelHolder.navigateTo(node, args, clearTop)
     }
 
+    override fun canGoUp(): Boolean = backStack.size() > 0 || (parentNavigation?.canGoUp()?:false)
+
     @Composable
     override fun onBackPress(consume: () -> Boolean) {
         DisposableEffect(Unit) {
@@ -53,6 +55,8 @@ internal abstract class NavigationWrapper : Navigation {
             override fun clearAll() = clear()
 
             override fun clear(startOffset: Int, endOffset: Int) = viewModelHolder.backStackClear(0, 0)
+
+            override fun size(): Int = viewModelHolder.stackSize -1
         }
     }
 }
