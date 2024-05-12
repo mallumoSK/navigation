@@ -1,8 +1,9 @@
 package tk.mallumo.compose.navigation
 
 open class Graph(val id: String) {
+
     companion object{
-        object ROOT:Graph("root")
+        object ROOT:Graph(navRootKey)
     }
 
     override fun equals(other: Any?): Boolean {

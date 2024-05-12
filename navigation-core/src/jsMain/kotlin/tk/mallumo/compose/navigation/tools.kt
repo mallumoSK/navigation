@@ -12,6 +12,9 @@ val composeNavigationRoot: Navigation
             override val navigationId: String
                 get() = navRootKey
 
+            override val graph: Graph
+                get() = Graph.Companion.ROOT
+
             override val viewModelHolder: NavigationHolder
                 get() = vm
 

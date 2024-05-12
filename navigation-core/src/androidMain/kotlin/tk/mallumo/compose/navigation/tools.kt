@@ -19,6 +19,9 @@ val ComponentActivity.composeNavigationRoot: Navigation
 
             override val isPreviewMode: Boolean
                 get() = false
+
+            override val graph: Graph
+                get() = Graph.Companion.ROOT
         }
     }
 
