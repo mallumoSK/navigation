@@ -7,6 +7,8 @@ interface Navigation {
 
     val navigationId: String
 
+    val graph: Graph
+
     val isPreviewMode: Boolean
 
     val nodeIdentifier: String
@@ -20,6 +22,16 @@ interface Navigation {
     val backStack: ImplBackStack
 
     val testing: ImplNavTesting
+
+    fun findChildNavigation(graph: Graph): Navigation? {
+        childNavigation.forEach {
+            if (it.graph == graph) return it
+            it.findChildNavigation(graph)?.also {
+                return it
+            }
+        }
+        return null
+    }
 
     companion object {
         @Suppress("unused", "FunctionName")
@@ -41,7 +53,7 @@ interface Navigation {
 
     fun up(stack: Int = 1): Boolean
 
-    fun canGoUp():Boolean
+    fun canGoUp(): Boolean
 
     fun navigateTo(node: Node, args: ArgumentsNavigation = ArgumentsNavigation(), clearTop: Boolean)
 

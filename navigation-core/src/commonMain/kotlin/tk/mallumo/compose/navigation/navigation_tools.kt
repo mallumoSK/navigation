@@ -9,7 +9,8 @@ internal const val navRootKey = "root"
 fun Navigation.Companion.rememberNavigationComposite(
     startupNode: Node,
     startupArgs: ArgumentsNavigation?,
-    navigationHost: String = navRootKey
+    navigationHost: String = navRootKey,
+    graph: Graph
 ): Navigation {
     val isRootNavigation = remember(navigationHost) {
         navigationHost == navRootKey
@@ -19,14 +20,16 @@ fun Navigation.Companion.rememberNavigationComposite(
         createRootNavigation(
             startupNode = startupNode,
             startupArgs = startupArgs,
-            key = navRootKey
+            key = navRootKey,
+            graph = graph
         )
     } else {
         createChildNavigation(
             parentNavigation = LocalNavigation.current,
             startupNode = startupNode,
             startupArgs = startupArgs,
-            key = navigationHost
+            key = navigationHost,
+            graph = graph
         )
     }
 }
@@ -48,6 +51,9 @@ internal fun Navigation.Companion.rememberNavigationPreview(
             override val navigationId: String
                 get() = navRootKey
 
+            override val graph: Graph
+                get() = Graph.Companion.ROOT
+
             override val viewModelHolder: NavigationHolder
                 get() = vm
 
@@ -64,7 +70,8 @@ private fun createChildNavigation(
     parentNavigation: Navigation,
     startupNode: Node,
     startupArgs: ArgumentsNavigation?,
-    key: String
+    key: String,
+    graph:Graph
 ): Navigation {
 
     return with(parentNavigation as NavigationWrapper) {
@@ -88,7 +95,8 @@ private fun createChildNavigation(
                     val newChildNavigation = NavigationWrapperInstance(
                         viewModelHolder = vm,
                         navigationId = key,
-                        isPreviewMode = parentNavigation.isPreviewMode
+                        isPreviewMode = parentNavigation.isPreviewMode,
+                        graph = graph,
                     ) { stack ->
                         if (vm.stackSize <= stack) {
                             val parentWrapper = (vm.parentNavigation as NavigationWrapper)
@@ -110,7 +118,8 @@ private fun createChildNavigation(
 private fun createRootNavigation(
     startupNode: Node,
     startupArgs: ArgumentsNavigation?,
-    @Suppress("SameParameterValue") key: String
+    @Suppress("SameParameterValue") key: String,
+    graph: Graph
 ): Navigation {
 
     val releaseTask = SharedPlatform.rememberViewModelRelease()
@@ -134,7 +143,8 @@ private fun createRootNavigation(
         NavigationWrapperInstance(
             viewModelHolder = vm,
             navigationId = key,
-            isPreviewMode = false
+            isPreviewMode = false,
+            graph = graph
         ) { stack ->
             if (vm.stackSize < stack + 1) {
                 backPressDispatcher.isEnabled = false
@@ -155,7 +165,8 @@ private class NavigationWrapperInstance(
     override val viewModelHolder: NavigationHolder,
     override val navigationId: String,
     override val isPreviewMode: Boolean,
-    private val onUp: (stack: Int) -> Boolean
+    override val graph: Graph,
+    private val onUp: (stack: Int) -> Boolean,
 ) : NavigationWrapper() {
 
 

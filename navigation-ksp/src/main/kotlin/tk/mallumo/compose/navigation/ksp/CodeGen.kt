@@ -100,7 +100,7 @@ fun NavigationRoot(
     
     setupViewModelFactory()
 
-    val navigation = Navigation.rememberNavigationComposite(startupNode, startupArgs)
+    val navigation = Navigation.rememberNavigationComposite(startupNode, startupArgs, graph = Graph.Companion.ROOT)
     val currentNode = navigation.currentNode.collectAsState()
 
     Crossfade(targetState = currentNode.value, animationSpec = animation) {
@@ -123,10 +123,11 @@ private fun NavigationChild(
     startupNode: Node,
     startupArgs: ArgumentsNavigation? ,
     animation: FiniteAnimationSpec<Float>,
-    childKey:String
+    childKey:String,
+    graph:Graph
 ) {
 
-    val navigation = Navigation.rememberNavigationComposite(startupNode, startupArgs, childKey)
+    val navigation = Navigation.rememberNavigationComposite(startupNode, startupArgs, childKey, graph)
     val currentNode = navigation.currentNode.collectAsState()
 
     Crossfade(targetState = currentNode.value, animationSpec = animation) {
@@ -139,9 +140,12 @@ private fun NavigationChild(
 }"""
         )
 
+
         navigationChildren.forEach { id ->
             append(
                 """
+
+val Graph.Companion.$id get()= Graph("$id") 
 
 @ExtNavMarker
 @Composable
@@ -156,7 +160,7 @@ fun NavigationChild$id(
         "${'$'}{parentNavigation.navigationId}[${'$'}{parentNavigation.nodeIdentifier}][${'$'}navChildKey.${id}]"
     }
     
-    NavigationChild(startupNode, startupArgs, animation, childKey)
+    NavigationChild(startupNode, startupArgs, animation, childKey, Graph.$id)
 }"""
             )
         }
