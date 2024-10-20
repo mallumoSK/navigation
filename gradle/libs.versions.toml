@@ -41,6 +41,8 @@ me-utils = { module = "tk.mallumo:utils", version.ref = "me_utils" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 #
 compose_runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose_core" }
+compose_foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose_core" }
+compose_desktop_jvm_linux_x64 = { module = "org.jetbrains.compose.desktop:desktop-jvm-linux-x64", version.ref = "compose_core" }
 #
 androidx_core = { module = "androidx.core:core-ktx", version.ref = "androidx_core" }
 androidx_compose_activity = { module = "androidx.activity:activity-compose", version.ref = "androidx_compose_activity" }

@@ -7,7 +7,7 @@ import java.util.*
 
 
 plugins {
-    alias(libs.plugins.compose.core)
+//    alias(libs.plugins.compose.core)
     alias(libs.plugins.compose.kotlin)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.lib)
@@ -18,8 +18,6 @@ val current = libs.me.nav.core.get()
 
 group = current.group
 version = current.version!!
-
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(11))
 
 kotlin {
     jvmToolchain(17)
@@ -34,18 +32,14 @@ kotlin {
         publishLibraryVariants("release")
         publishLibraryVariantsGroupedByFlavor = true
     }
-    js(IR) {
-        browser()
-    }
-    wasmJs {
-        browser()
-    }
+    js()
+    wasmJs()
 
     sourceSets {
 
         commonMain.dependencies {
-            api(compose.runtime)
-            api(compose.foundation)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
             api(libs.kotlin.coroutines)
             api(libs.kotlin.reflect)
         }
@@ -61,9 +55,6 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.browser)
             }
-        }
-        jvmMain.dependencies {
-            api(compose.desktop.linux_x64)
         }
         androidMain.dependencies {
             api(libs.androidx.compose.activity)
