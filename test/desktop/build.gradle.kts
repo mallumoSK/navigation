@@ -1,9 +1,9 @@
 plugins {
-//    kotlin("multiplatform")
-    kotlin("jvm")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.compose.core)
+    alias(libs.plugins.compose.kotlin)
     application
-//    id("com.google.devtools.ksp")
-    id("org.jetbrains.compose")
 }
 
 kotlin {
@@ -19,21 +19,18 @@ kotlin {
 
 dependencies {
     implementation(project(":test:common"))
-    implementation(compose.desktop.currentOs)
     testImplementation(kotlin("test"))
 
     implementation(project(":navigation-core"))
 //    ksp(project(":navigation-ksp"))
     implementation(compose.desktop.currentOs)
     implementation(compose.runtime)
+    implementation(compose.desktop.currentOs)
 
-    implementation(Deps.dependency.log)
+    implementation(libs.me.log)
 }
-
-java.toolchain. languageVersion.set(JavaLanguageVersion.of(11))
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 application {

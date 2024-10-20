@@ -1,8 +1,9 @@
 plugins {
-    kotlin("multiplatform")
-    id("org.jetbrains.compose")
-    id("com.android.library")
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.compose.core)
+    alias(libs.plugins.compose.kotlin)
+    alias(libs.plugins.android.lib)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 group = "tk.mallumo"
@@ -10,36 +11,32 @@ version = "1.0"
 
 
 kotlin {
-    android()
-    jvm("desktop") {
-        compilations.all {
-            kotlinOptions.jvmTarget = "11"
-        }
-    }
+    jvmToolchain(17)
+
+    jvm()
+
+    androidTarget()
 
     sourceSets {
-       val commonMain by getting {
+        commonMain{
+            kotlin.srcDirs("build/generated/ksp/common/commonMain/kotlin")
             dependencies {
                 api(compose.runtime)
                 api(compose.foundation)
                 api(compose.material3)
 
-//                api("tk.mallumo:navigation-core:${Deps.version.navigation.core }")
                 implementation(project(":navigation-core"))
             }
-            kotlin.srcDirs("build/generated/ksp/common/commonMain/kotlin")
         }
-        val androidMain by getting {
-            dependencies {
-                api("androidx.appcompat:appcompat:1.6.1")
-                api(compose.preview)
-            }
-        }
-      val desktopMain by getting {
-            dependencies {
-                api(compose.preview)
-            }
 
+
+        androidMain.dependencies {
+            api("androidx.appcompat:appcompat:1.6.1")
+            api(compose.preview)
+        }
+
+        jvmMain.dependencies {
+            api(compose.preview)
         }
     }
 }
@@ -50,25 +47,24 @@ dependencies {
         println(it.name)
     }
     add("kspAndroid", project(":navigation-ksp"))
-    add("kspDesktop", project(":navigation-ksp"))
+    add("kspJvm", project(":navigation-ksp"))
 }
 
 
 
 android {
-    compileSdk = 33
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+//    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
     defaultConfig {
-        minSdk = 24
+        namespace = "tk.mallumo.common"
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        compileSdk = libs.versions.android.targetSdk.get().toInt()
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
-    namespace = "tk.mallumo.common"
 }
 
 ksp {
@@ -76,10 +72,4 @@ ksp {
     arg("commonSourcesOnly", "true")
     arg("material3", "false")
 
-}
-
-java.toolchain. languageVersion.set(JavaLanguageVersion.of(11))
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "11"
 }

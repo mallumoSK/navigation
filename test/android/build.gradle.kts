@@ -4,10 +4,6 @@ plugins {
     kotlin("android")
 }
 
-val toolkit by lazy {
-    Toolkit.get(extensions = extensions.extraProperties)
-}
-
 
 group = "tk.mallumo"
 version = "1.0"

@@ -1,7 +1,7 @@
 package tk.mallumo.compose.navigation
 
 import androidx.compose.runtime.*
-import kotlinx.browser.*
+import kotlin.system.*
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 internal actual class BackPressDispatcher {
@@ -11,7 +11,7 @@ internal actual class BackPressDispatcher {
         set(_) {}
 
     actual fun onBackPressed() {
-        window.history.back()
+        exitProcess(0)
     }
 
     actual companion object {

@@ -1,15 +1,24 @@
+import java.util.*
+
 plugins {
-    kotlin("jvm")
+    alias(libs.plugins.kotlin.jvm)
     id("maven-publish")
 }
 
-group = "tk.mallumo"
-version = Deps.version.navigation.ksp
+val current = libs.me.nav.ksp.get()
 
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+group = current.group
+version = current.version!!
+
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 
 dependencies {
-    api(Deps.dependency.ksp)
+    api(libs.kotlin.ksp)
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 publishing {
@@ -28,10 +37,33 @@ publishing {
     }
     publications {
         create<MavenPublication>("maven") {
-            groupId =  Deps.group
-            artifactId = "navigation-ksp"
-            version = Deps.version.navigation.ksp
+            groupId = current.group
+            artifactId = current.name
+            version = current.version
             from(components["java"])
         }
     }
+}
+
+
+val Project.propertiesLocal: LocalProperties get() = LocalProperties.get(this)
+
+class LocalProperties private constructor(private val project: Project) {
+    val prop = Properties().apply {
+        project.rootProject.file("local.properties").reader().use {
+            load(it)
+        }
+    }
+
+    companion object {
+        private lateinit var instance: LocalProperties
+        internal fun get(project: Project): LocalProperties {
+            if (!::instance.isInitialized) {
+                instance = LocalProperties(project)
+            }
+            return instance
+        }
+    }
+
+    operator fun get(key: String): String? = prop[key] as? String
 }

@@ -1,3 +1,5 @@
+@file:Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
+
 package tk.mallumo.compose.navigation.viewmodel
 
 import tk.mallumo.compose.navigation.*
