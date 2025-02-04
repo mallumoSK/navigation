@@ -25,7 +25,6 @@ dependencies {
 //    ksp(project(":navigation-ksp"))
     implementation(compose.desktop.currentOs)
     implementation(compose.runtime)
-    implementation(compose.desktop.currentOs)
 
     implementation(libs.me.log)
 }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
@@ -125,7 +126,7 @@ fun ScreenTitle(name: String, onReload: () -> Unit) {
         }
         Text(
             text = "Screen of $name",
-            style = MaterialTheme.typography.h5,
+            style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
@@ -138,7 +139,7 @@ fun ScreenTitle(name: String, onReload: () -> Unit) {
 @Composable
 fun ScreenAction(title: String, description: String? = null, onAction: Navigation.() -> Unit) {
     val nav = LocalNavigation.current
-    Divider(modifier = Modifier.fillMaxWidth())
+    HorizontalDivider(modifier = Modifier.fillMaxWidth())
     Row(
         Modifier
             .fillMaxWidth()
@@ -147,12 +148,12 @@ fun ScreenAction(title: String, description: String? = null, onAction: Navigatio
         Column(Modifier.weight(1F)) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.titleLarge
             )
             if (description != null) {
                 Text(
                     text = description,
-                    style = MaterialTheme.typography.body1,
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 8.dp)
                 )
             }

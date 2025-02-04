@@ -32,7 +32,7 @@ kotlin {
         publishLibraryVariants("release")
         publishLibraryVariantsGroupedByFlavor = true
     }
-    js()
+    js(IR)
     wasmJs()
 
     sourceSets {

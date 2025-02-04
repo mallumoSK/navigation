@@ -1,6 +1,7 @@
 package tk.mallumo.common
 
 import androidx.compose.material.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.*
 import kotlinx.coroutines.*
