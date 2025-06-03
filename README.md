@@ -30,7 +30,7 @@
 import android.os.*
 import androidx.activity.*
 import androidx.activity.compose.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import tk.mallumo.compose.navigation.*
 
 class MainActivity : AppCompatActivity() {
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
 // DESKTOP
 
-import androidx.compose.material.MaterialTheme 
+import androidx.compose.material3.MaterialTheme 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import tk.mallumo.compose.navigation.*
@@ -84,12 +84,6 @@ ksp.arg("child", "child0 child1 child2 child3")
 
 // in build.gradle.kts
 ksp.arg("commonSourcesOnly", "true")
-```
-
-```kotlin
-// this is for choice material 2 or material 3,
-// default is 'true' it means material3 will be used
-ksp.arg("material3", "true")
 ```
 
 ## How to implement

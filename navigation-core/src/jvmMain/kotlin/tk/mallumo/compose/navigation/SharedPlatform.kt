@@ -2,6 +2,7 @@ package tk.mallumo.compose.navigation
 
 import androidx.compose.runtime.*
 import tk.mallumo.compose.navigation.viewmodel.*
+import kotlin.printStackTrace
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 internal actual class SharedPlatform {
@@ -10,7 +11,12 @@ internal actual class SharedPlatform {
         actual fun rememberViewModelRelease(): (key: String) -> Unit {
             return remember {
                 { key ->
-                    viewModels.remove(key)?.releaseInternal()
+                    runCatching {
+                        viewModels.remove(key)?.releaseInternal()
+                    }.onFailure {
+                        println("viewmodel release error: [$key]")
+                        it.printStackTrace()
+                    }
                 }
             }
         }

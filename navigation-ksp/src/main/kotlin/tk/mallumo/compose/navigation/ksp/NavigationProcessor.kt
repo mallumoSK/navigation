@@ -38,7 +38,6 @@ class NavigationProcessor(
     private lateinit var navCompositeDeclaration: StringBuilder
 
     private val commonSourcesOnly get() = environment.options["commonSourcesOnly"] == "true"
-    private val useMaterial3 get() = (environment.options["material3"]?:"true").toBoolean()
 
     private val nodesComposable = mutableMapOf<String, NavNode>()
     private var nodesVM = mutableMapOf<String, KSClassDeclaration>()
@@ -210,15 +209,7 @@ ${content()}"""
         ) {
             navFunExt.toString()
         }
-        val materialImporst = buildString {
-            if(useMaterial3){
-                appendLine("import androidx.compose.material3.MaterialTheme")
-                appendLine("import androidx.compose.material3.Surface")
-            }else{
-                appendLine("import androidx.compose.material.MaterialTheme")
-                appendLine("import androidx.compose.material.Surface")
-            }
-        }
+
         output(
             name = "GeneratedNavigationContent",
             dependencies = dependencies,
@@ -227,12 +218,13 @@ import tk.mallumo.compose.navigation.*
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween
-$materialImporst
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import tk.mallumo.compose.navigation.ImplNoteUtils.navNode
 import tk.mallumo.compose.navigation.viewmodel.ViewModelFactory"""
         ) {
-            CodeGen.generateNavigationContent(useMaterial3, environment.options, itemsVM)
+            CodeGen.generateNavigationContent( environment.options, itemsVM)
         }
 
         output(

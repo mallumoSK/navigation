@@ -62,8 +62,7 @@ fun Navigation.navTo_${node.name}(args: $args, clearTop: Boolean = false) {
         )
     }
 
-    fun generateNavigationContent(useMaterial3:Boolean,
-                                  options: Map<String, String>,
+    fun generateNavigationContent(options: Map<String, String>,
                                   itemsVM: List<KSClassDeclaration>) = buildString {
 
         val factoryContent = itemsVM.joinToString("\n") {
@@ -79,11 +78,6 @@ fun Navigation.navTo_${node.name}(args: $args, clearTop: Boolean = false) {
             ?.map { it[0].uppercaseChar() + it.substring(1) }
             ?.toSortedSet()
             ?: setOf()
-
-        val materialColors = buildString {
-            if(useMaterial3)append("colorScheme")
-            else append("colors")
-        }
 
         @Suppress("SpellCheckingInspection")
         append(
@@ -104,7 +98,7 @@ fun NavigationRoot(
     val currentNode = navigation.currentNode.collectAsState()
 
     Crossfade(targetState = currentNode.value, animationSpec = animation) {
-        Surface(color = MaterialTheme.${materialColors}.background) {
+        Surface(color = MaterialTheme.colorScheme.background) {
             CompositionLocalProvider(LocalNavigation provides navigation) {
                 navNode(node = it)
             }
@@ -131,7 +125,7 @@ private fun NavigationChild(
     val currentNode = navigation.currentNode.collectAsState()
 
     Crossfade(targetState = currentNode.value, animationSpec = animation) {
-        Surface(color = MaterialTheme.${materialColors}.background) {
+        Surface(color = MaterialTheme.colorScheme.background) {
             CompositionLocalProvider(LocalNavigation provides navigation) {
                 navNode(node = it)
             }

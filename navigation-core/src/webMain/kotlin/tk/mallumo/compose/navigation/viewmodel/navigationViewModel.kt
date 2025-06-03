@@ -9,10 +9,7 @@ actual fun <VM : SharedViewModel> globalViewModel(
     modelClass: KClass<VM>,
     key: String?
 ): VM {
-    val id =  key
-        ?.let { "${modelClass.qName}::$it" }
-        ?:modelClass.qName
-
+    val id = key?: modelClass.qName
     return remember(id) {
         getViewModel(modelClass, id)
     }

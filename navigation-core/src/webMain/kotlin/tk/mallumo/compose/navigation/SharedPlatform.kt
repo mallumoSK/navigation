@@ -10,7 +10,12 @@ internal actual class SharedPlatform {
         actual fun rememberViewModelRelease(): (key: String) -> Unit {
             return remember {
                 { key ->
-                    viewModels.remove(key)?.releaseInternal()
+                   runCatching {
+                       viewModels.remove(key)?.releaseInternal()
+                   }.onFailure {
+                       println("viewmodel release error: [$key]")
+                       it.printStackTrace()
+                   }
                 }
             }
         }
