@@ -10,7 +10,8 @@ fun Navigation.Companion.rememberNavigationComposite(
     startupNode: Node,
     startupArgs: ArgumentsNavigation?,
     navigationHost: String = navRootKey,
-    graph: Graph
+    graph: Graph,
+    appQuitEnabled: Boolean
 ): Navigation {
     val isRootNavigation = remember(navigationHost) {
         navigationHost == navRootKey
@@ -21,7 +22,8 @@ fun Navigation.Companion.rememberNavigationComposite(
             startupNode = startupNode,
             startupArgs = startupArgs,
             key = navRootKey,
-            graph = graph
+            graph = graph,
+            appQuitEnabled = appQuitEnabled
         )
     } else {
         createChildNavigation(
@@ -119,14 +121,15 @@ private fun createRootNavigation(
     startupNode: Node,
     startupArgs: ArgumentsNavigation?,
     @Suppress("SameParameterValue") key: String,
-    graph: Graph
+    graph: Graph,
+    appQuitEnabled: Boolean,
 ): Navigation {
 
     val releaseTask = SharedPlatform.rememberViewModelRelease()
 
     val vm = globalViewModel(NavigationHolder::class, key)
 
-    val backPressDispatcher = BackPressDispatcher.rememberBackPressDispatcher(vm)
+    val backPressDispatcher = BackPressDispatcher.rememberBackPressDispatcher(vm, appQuitEnabled)
 
     DisposableEffect(Unit) {
         onDispose {

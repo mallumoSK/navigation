@@ -6,7 +6,8 @@ import androidx.compose.ui.platform.*
 
 internal actual class BackPressDispatcher(
     activity: ComponentActivity,
-    private val holder: NavigationHolder
+    private val holder: NavigationHolder,
+    private val appQuitEnabled: Boolean
 ) {
 
     actual var wrapper: NavigationWrapper? = null
@@ -32,16 +33,16 @@ internal actual class BackPressDispatcher(
         }
 
     actual fun onBackPressed() {
-        dispatcher.onBackPressed()
+        if(appQuitEnabled) dispatcher.onBackPressed()
     }
 
     actual companion object {
         @Composable
-        actual fun rememberBackPressDispatcher(holder: NavigationHolder): BackPressDispatcher {
+        actual fun rememberBackPressDispatcher(holder: NavigationHolder, appQuitEnabled: Boolean): BackPressDispatcher {
             val ctx = LocalContext.current
 
             return remember {
-                BackPressDispatcher(ctx as ComponentActivity, holder)
+                BackPressDispatcher(ctx as ComponentActivity, holder, appQuitEnabled)
             }
         }
 

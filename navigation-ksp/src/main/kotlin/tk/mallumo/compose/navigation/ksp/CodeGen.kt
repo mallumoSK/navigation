@@ -79,7 +79,7 @@ fun Navigation.navTo_${node.name}(args: $args, clearTop: Boolean = false) {
             ?.toSortedSet()
             ?: setOf()
 
-        @Suppress("SpellCheckingInspection")
+
         append(
             """
 private const val navChildKey = "child"
@@ -89,12 +89,18 @@ private const val navChildKey = "child"
 fun NavigationRoot(
     startupNode: Node,
     startupArgs: ArgumentsNavigation? = null,
+    appQuitEnabled: Boolean = true,
     animation: FiniteAnimationSpec<Float> = tween()
 ) {
     
     setupViewModelFactory()
 
-    val navigation = Navigation.rememberNavigationComposite(startupNode, startupArgs, graph = Graph.Companion.ROOT)
+    val navigation = Navigation.rememberNavigationComposite(
+        startupNode = startupNode, 
+        startupArgs = startupArgs,
+        graph = Graph.Companion.ROOT,
+        appQuitEnabled = appQuitEnabled)
+     
     val currentNode = navigation.currentNode.collectAsState()
 
     Crossfade(targetState = currentNode.value, animationSpec = animation) {
@@ -115,13 +121,13 @@ $factoryContent
 @Composable
 private fun NavigationChild(
     startupNode: Node,
-    startupArgs: ArgumentsNavigation? ,
+    startupArgs: ArgumentsNavigation?,
     animation: FiniteAnimationSpec<Float>,
     childKey:String,
     graph:Graph
 ) {
 
-    val navigation = Navigation.rememberNavigationComposite(startupNode, startupArgs, childKey, graph)
+    val navigation = Navigation.rememberNavigationComposite(startupNode, startupArgs, childKey, graph, false)
     val currentNode = navigation.currentNode.collectAsState()
 
     Crossfade(targetState = currentNode.value, animationSpec = animation) {
