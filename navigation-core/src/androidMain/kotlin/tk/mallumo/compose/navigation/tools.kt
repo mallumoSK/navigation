@@ -14,6 +14,9 @@ val ComponentActivity.composeNavigationRoot: Navigation
             override val navigationId: String
                 get() = navRootKey
 
+            override val rootNodeId: String
+                get() = navRootKey
+
             override val viewModelHolder: NavigationHolder
                 get() = vm
 

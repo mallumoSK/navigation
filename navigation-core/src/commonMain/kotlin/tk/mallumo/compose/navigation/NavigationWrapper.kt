@@ -1,7 +1,8 @@
 package tk.mallumo.compose.navigation
 
-import androidx.compose.runtime.*
-import kotlinx.coroutines.flow.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import kotlinx.coroutines.flow.StateFlow
 
 internal abstract class NavigationWrapper : Navigation {
 
@@ -10,6 +11,7 @@ internal abstract class NavigationWrapper : Navigation {
             override val navigation: Navigation
                 get() = this@NavigationWrapper
         }
+    abstract val rootNodeId: String
 
     abstract val viewModelHolder: NavigationHolder
 
@@ -31,7 +33,7 @@ internal abstract class NavigationWrapper : Navigation {
         viewModelHolder.navigateTo(node, args, clearTop)
     }
 
-    override fun canGoUp(): Boolean = backStack.size() > 0 || (parentNavigation?.canGoUp()?:false)
+    override fun canGoUp(): Boolean = backStack.size() > 0 || (parentNavigation?.canGoUp() ?: false)
 
     @Composable
     override fun onBackPress(consume: () -> Boolean) {
@@ -56,7 +58,7 @@ internal abstract class NavigationWrapper : Navigation {
 
             override fun clear(startOffset: Int, endOffset: Int) = viewModelHolder.backStackClear(0, 0)
 
-            override fun size(): Int = viewModelHolder.stackSize -1
+            override fun size(): Int = viewModelHolder.stackSize - 1
         }
     }
 }

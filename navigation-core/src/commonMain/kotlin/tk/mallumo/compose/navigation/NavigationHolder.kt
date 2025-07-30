@@ -1,9 +1,10 @@
 package tk.mallumo.compose.navigation
 
 
-import kotlinx.coroutines.flow.*
-import tk.mallumo.compose.navigation.viewmodel.*
-import kotlin.math.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import tk.mallumo.compose.navigation.viewmodel.NavigationViewModel
+import kotlin.math.max
 
 internal class NavigationHolder : NavigationViewModel() {
 
@@ -151,18 +152,15 @@ internal class NavigationHolder : NavigationViewModel() {
         //release backPress
         unregisterOnBackPressHandler(buildBackPressKey(false, node.identifier))
 
-        val childNavigationPairs = childNavigation
-            .map { it.parentNavigation?.buildViewModelKeyFull(it.navigationId, NavigationHolder::class) to it }
+        val childGraphsToRemove = childNavigation.filterIsInstance<NavigationWrapper>()
+            .filter { it.rootNodeId == node.identifier }
 
-        //release viewModel
-        vmIds.forEach { key ->
-            viewModelReleaseCallback(key)
-            childNavigationPairs.firstOrNull { it.first == key }
-                ?.second
-                ?.also {
-                    childNavigation.remove(it)
-                }
+        childGraphsToRemove.forEach {
+            it.backStack.clearAll()
         }
+
+        vmIds.forEach { viewModelReleaseCallback(it) }
+        childNavigation.removeAll(childGraphsToRemove)
     }
 
     override fun onRelease() {

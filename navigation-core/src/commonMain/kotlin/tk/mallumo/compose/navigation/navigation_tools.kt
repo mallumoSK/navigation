@@ -1,7 +1,10 @@
 package tk.mallumo.compose.navigation
 
-import androidx.compose.runtime.*
-import tk.mallumo.compose.navigation.viewmodel.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import tk.mallumo.compose.navigation.viewmodel.globalViewModel
+import tk.mallumo.compose.navigation.viewmodel.viewModel
 
 internal const val navRootKey = "root"
 
@@ -56,6 +59,9 @@ internal fun Navigation.Companion.rememberNavigationPreview(
             override val graph: Graph
                 get() = Graph.Companion.ROOT
 
+            override val rootNodeId: String
+                get() = Graph.Companion.ROOT.id
+
             override val viewModelHolder: NavigationHolder
                 get() = vm
 
@@ -73,7 +79,7 @@ private fun createChildNavigation(
     startupNode: Node,
     startupArgs: ArgumentsNavigation?,
     key: String,
-    graph:Graph
+    graph: Graph
 ): Navigation {
 
     return with(parentNavigation as NavigationWrapper) {
@@ -99,6 +105,7 @@ private fun createChildNavigation(
                         navigationId = key,
                         isPreviewMode = parentNavigation.isPreviewMode,
                         graph = graph,
+                        rootNodeId = parentNavigation.currentNode.value.identifier
                     ) { stack ->
                         if (vm.stackSize <= stack) {
                             val parentWrapper = (vm.parentNavigation as NavigationWrapper)
@@ -147,7 +154,8 @@ private fun createRootNavigation(
             viewModelHolder = vm,
             navigationId = key,
             isPreviewMode = false,
-            graph = graph
+            graph = graph,
+            rootNodeId = Graph.Companion.ROOT.id,
         ) { stack ->
             if (vm.stackSize < stack + 1) {
                 backPressDispatcher.isEnabled = false
@@ -169,6 +177,7 @@ private class NavigationWrapperInstance(
     override val navigationId: String,
     override val isPreviewMode: Boolean,
     override val graph: Graph,
+    override val rootNodeId: String,
     private val onUp: (stack: Int) -> Boolean,
 ) : NavigationWrapper() {
 
