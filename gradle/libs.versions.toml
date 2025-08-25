@@ -1,19 +1,19 @@
 [versions]
-kotlin_core = "2.1.10"
-kotlin_ksp = "2.1.10-1.0.29"
+kotlin_core = "2.2.10"
+kotlin_ksp = "2.2.10-2.0.2"
 kotlin_coroutines = "1.10.1"
-kotlin_browser = "0.3"
+kotlin_browser = "0.5.0"
 android_agp = "8.2.2"
 #
-me_log = "2.1.10-1.0.0"
+me_log = "2.2.10-1.1.0"
 #
-me_nav_core = "2.1.10-1.0.29-1.0.6"
-me_nav_ksp = "2.1.10-1.0.29-1.0.5"
+me_nav_core = "2.2.10-2.0.2-1.1.0"
+me_nav_ksp = "2.2.10-2.0.2-1.1.0"
 #
 android-minSdk = "21"
 android-targetSdk = "34"
 #
-compose_core = "1.8.1"
+compose_core = "1.8.2"
 androidx_compose_activity = "1.8.0"
 #
 [libraries]

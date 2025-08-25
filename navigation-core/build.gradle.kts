@@ -40,7 +40,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
-            api(libs.kotlin.coroutines)
+            implementation(libs.kotlin.coroutines)
             api(libs.kotlin.reflect)
         }
 
