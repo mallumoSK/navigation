@@ -38,7 +38,7 @@ class NavigationProcessor(
     private lateinit var navFunExt: StringBuilder
     private lateinit var navCompositeDeclaration: StringBuilder
 
-    private val commonSourcesOnly get() = environment.options["commonSourcesOnly"] == "true"
+    private val singleSourceSet get() = environment.options["navSourceSet"] ?:""
 
     private val nodesComposable = mutableMapOf<String, NavNode>()
     private var nodesVM = mutableMapOf<String, KSClassDeclaration>()
@@ -86,6 +86,7 @@ class NavigationProcessor(
         }
     }
 
+
     @Suppress("SpellCheckingInspection")
     private fun generateCommonFile(
         pckg: String,
@@ -106,7 +107,7 @@ class NavigationProcessor(
                         suffix.indexOf(sourceDirPrefix)
                             .takeIf { it > 0 }
                             ?.let { sourceDirPrefixIndex ->
-                                File(rootDir, "common/commonMain${suffix.substring(sourceDirPrefixIndex)}").apply {
+                                File(rootDir, "$singleSourceSet/${singleSourceSet}Main${suffix.substring(sourceDirPrefixIndex)}").apply {
                                     if (!parentFile.exists()) parentFile.mkdirs()
                                 }
                             }
@@ -177,10 +178,10 @@ ${content()}"""
             fileName = name,
             extensionName = ext
         ).bufferedWriter().use {
-            it.write(data.commented(commonSourcesOnly))
+            it.write(data.commented(singleSourceSet.isNotEmpty()))
             it.flush()
         }
-        if (commonSourcesOnly) {
+        if (singleSourceSet.isNotEmpty()) {
             generateCommonFile(basePackage, name, ext)
                 ?.writeText(data)
         }

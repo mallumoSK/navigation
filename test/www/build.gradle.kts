@@ -28,23 +28,25 @@ kotlin {
 
             implementation(projects.navigationCore)
         }
-        webMain.dependencies {
-            implementation(projects.navigationCore)
+        webMain{
+            kotlin.srcDirs("build/generated/ksp/metadata/webMain/kotlin")
+
+            dependencies {
+                implementation(projects.navigationCore)
+            }
         }
 
     }
 }
 
 dependencies {
-    println("config names:")
-    configurations.filter { it.name.lowercase().contains("ksp") }.forEach {
-        println(it.name)
-    }
-    kspCommonMainMetadata(projects.navigationKsp)
-//    ksp(projects.navigation)
-    add("kspJs", projects.navigationKsp)
+//    println("config names:")
+//    configurations.filter { it.name.lowercase().contains("ksp") }.forEach {
+//        println(it.name)
+//    }
+    add("ksp", projects.navigationKsp)
+}
 
-//    add(ksp<webMain>, projects.navigation)
-//    add("kspWebMainMetadata", projects.navigation)
-//    kspJs(catalog.me.nav.ksp)
+ksp{
+    arg("navSourceSet", "web")
 }
