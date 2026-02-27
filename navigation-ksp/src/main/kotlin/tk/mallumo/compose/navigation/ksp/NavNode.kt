@@ -36,6 +36,7 @@ class NavNode(
                 ?.map { property ->
                     property.getDeclaredProperties() // find all properties of class
                         .filter { !it.isAbstract() }
+                        .filter { it.simpleName.asString() != "_hashCode" }
                         .filter { it.getter != null }
                         .filter { it.setter != null }
                         .filter { it.extensionReceiver == null }

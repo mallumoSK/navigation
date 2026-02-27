@@ -7,8 +7,8 @@ android_agp = "8.2.2"
 #
 me_log = "2.2.10-1.1.0"
 #
-me_nav_core = "2.3.10-2.3.6-1.2.1"
-me_nav_ksp = "2.3.10-2.3.6-1.2.1"
+me_nav_core = "2.3.10-2.3.6-1.2.2"
+me_nav_ksp = "2.3.10-2.3.6-1.2.2"
 #
 android-minSdk = "21"
 android-targetSdk = "34"
