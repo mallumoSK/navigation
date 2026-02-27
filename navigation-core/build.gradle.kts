@@ -32,30 +32,26 @@ kotlin {
         publishLibraryVariants("release")
         publishLibraryVariantsGroupedByFlavor = true
     }
-    js(IR)
-    wasmJs()
+    js{
+        browser()
+    }
+    wasmJs{
+        browser()
+    }
 
     sourceSets {
-
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.kotlin.coroutines)
             api(libs.kotlin.reflect)
         }
+        jsMain
+        wasmJsMain
+        webMain.dependencies {
+            implementation(libs.kotlin.browser)
+        }
 
-        val webMain by creating {
-            dependsOn(commonMain.get())
-        }
-        jsMain{
-            dependsOn(webMain)
-        }
-        wasmJsMain{
-            dependsOn(webMain)
-            dependencies {
-                implementation(libs.kotlin.browser)
-            }
-        }
         androidMain.dependencies {
             api(libs.androidx.compose.activity)
         }

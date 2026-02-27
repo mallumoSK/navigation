@@ -29,6 +29,7 @@ class NavigationProcessor(
         private const val vmNameFull = "$vmPackage.$vmName"
     }
 
+    private lateinit var argsInRoot: Sequence<KSClassDeclaration>
     private lateinit var bundled: StringBuilder
     private lateinit var argsConstructor: StringBuilder
     private lateinit var argsDestructor: StringBuilder
@@ -54,20 +55,18 @@ class NavigationProcessor(
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         if (invoked) return emptyList()
+
         val (validComposable, invalidComposable) = resolver.getSymbolsWithAnnotation(composableNavNodeNameFull)
             .let {
                 it.filterIsInstance<KSFunctionDeclaration>()
-                    .map { it.qualifiedName!!.asString() to NavNode(it) } to it.filterNot { it is KSFunctionDeclaration }
+                    .map { it.qname to NavNode(it) } to it.filterNot { it is KSFunctionDeclaration }
             }
 
         val (validVM, invalidVM) = resolver.getSymbolsWithAnnotation(vmNameFull)
-            .let {
-                val valid = it.filterIsInstance<KSClassDeclaration>()
-
-
-                val invalid = it - valid
-
-                valid.map { it.qualifiedName!!.asString() to it } to invalid
+            .let { sequence ->
+                val valid = sequence.filterIsInstance<KSClassDeclaration>()
+                val invalid = sequence - valid.toSet()
+                valid.map { it.qname to it } to invalid
 
             }
 
@@ -132,18 +131,21 @@ class NavigationProcessor(
             CodeGen.generateArgsConstructor(argsConstructor, node)
 
         }
-        nodes.distinctBy { it.args?.qualifiedName?.asString() }
+        nodes.distinctBy { it.args?.qname }
             .forEach { node ->
                 CodeGen.generateArgsDestructor(argsDestructor, node)
             }
 
+        val args =  nodes.asSequence()
+            .filterNot { it.args == null }
+            .map { it.args!! to it.argsProperties!! }
+            .distinctBy { it.first.qname }
+
+        argsInRoot = args.map { it.first }
+            .filterNot { it.qname.contains(".") }
 
         bundled.apply {
-            nodes.asSequence()
-                .filterNot { it.args == null }
-                .map { it.args!! to it.argsProperties!! }
-                .distinctBy { it.first.qualifiedName!!.asString() }
-                .forEach {
+            args.forEach {
                     CodeGen.generateBundleFill(it, this)
                     CodeGen.generateAsBundle(it, this)
                 }
@@ -186,6 +188,11 @@ ${content()}"""
 
     private fun writeSources(nodes: List<NavNode>, itemsVM: List<KSClassDeclaration>) {
 
+        val nodesInRoot = nodes.filterNot { it.fullName.contains(".") }
+            .joinToString("\n") { "import ${it.fullName}" }
+
+        val vmsInRoot = argsInRoot.joinToString("\n") { "import ${it.qname}" }
+
         val files = buildSet {
             addAll(nodes.map { it.files }.flatten())
             addAll(itemsVM.mapNotNull { it.containingFile })
@@ -205,7 +212,9 @@ ${content()}"""
         output(
             name = "GeneratedNavFunExt",
             dependencies = dependencies,
-            imports = "import tk.mallumo.compose.navigation.ArgumentsNavigation"
+            imports = """
+import tk.mallumo.compose.navigation.ArgumentsNavigation
+$vmsInRoot"""
         ) {
             navFunExt.toString()
         }
@@ -224,7 +233,7 @@ import androidx.compose.runtime.*
 import tk.mallumo.compose.navigation.ImplNoteUtils.navNode
 import tk.mallumo.compose.navigation.viewmodel.ViewModelFactory"""
         ) {
-            CodeGen.generateNavigationContent( environment.options, itemsVM)
+            CodeGen.generateNavigationContent(environment.options, itemsVM)
         }
 
         output(
@@ -234,7 +243,9 @@ import tk.mallumo.compose.navigation.viewmodel.ViewModelFactory"""
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.DisposableEffect"""
+import androidx.compose.runtime.DisposableEffect
+$nodesInRoot
+$vmsInRoot"""
         ) {
             CodeGen.generateComposite(
                 navCompositeDeclaration,
@@ -247,7 +258,8 @@ import androidx.compose.runtime.DisposableEffect"""
             name = "GeneratedBundled",
             dependencies = dependencies,
             imports = """
-import tk.mallumo.compose.navigation.ArgumentsNavigation"""
+import tk.mallumo.compose.navigation.ArgumentsNavigation
+$vmsInRoot"""
         ) {
             bundled.toString()
         }

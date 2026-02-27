@@ -3,7 +3,6 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 @Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
     repositories {
-        mavenLocal()
         google {
             mavenContent {
                 includeGroupAndSubgroups("androidx")
@@ -13,13 +12,13 @@ dependencyResolutionManagement {
         }
         mavenCentral()
         maven("https://repo.repsy.io/mvn/mallumo/public")
+        mavenLocal()
     }
 }
 
 @Suppress("UnstableApiUsage")
 pluginManagement {
     repositories {
-        mavenLocal()
         google {
             mavenContent {
                 includeGroupAndSubgroups("androidx")
@@ -30,6 +29,7 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         maven("https://repo.repsy.io/mvn/mallumo/public")
+        mavenLocal()
     }
 }
 
@@ -39,7 +39,9 @@ include(":navigation-core")
 include(":navigation-ksp")
 //
 //include(":test:android")
-include(":test:desktop")
-include(":test:common")
+//include(":test:desktop")
+//include(":test:common")
 //
 //include(":test:single-android")
+
+include("test:www")

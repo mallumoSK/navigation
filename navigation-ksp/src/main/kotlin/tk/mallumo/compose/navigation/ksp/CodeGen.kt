@@ -8,7 +8,7 @@ object CodeGen {
         navNodeExt: StringBuilder,
         node: NavNode
     ) {
-        val seeArgs = node.args?.qualifiedName?.asString()?.let {
+        val seeArgs = node.args?.qname?.let {
             "@see $it"
         } ?: ""
         navNodeExt.append(
@@ -17,7 +17,7 @@ object CodeGen {
  * @see ${node.fullName}
  * $seeArgs
  */
-val Node.Companion.${node.name} get() = Node("${node.fullName}") //args: ${node.args?.qualifiedName?.asString()}
+val Node.Companion.${node.name} get() = Node("${node.fullName}") //args: ${node.args?.qname}
 """
         )
     }
@@ -36,7 +36,7 @@ fun Navigation.navTo_${node.name}(args: ArgumentsNavigation = ArgumentsNavigatio
     navigateTo(Node.${node.name}, args, clearTop)
 }
 """
-        node.args?.qualifiedName?.asString()?.also { args ->
+        node.args?.qname?.also { args ->
             navFunExt += """
 /**
  * @see ${node.fullName}
@@ -66,7 +66,7 @@ fun Navigation.navTo_${node.name}(args: $args, clearTop: Boolean = false) {
                                   itemsVM: List<KSClassDeclaration>) = buildString {
 
         val factoryContent = itemsVM.joinToString("\n") {
-            val clazz = it.qualifiedName!!.asString()
+            val clazz = it.qname
             "\tViewModelFactory.register($clazz::class){${clazz}()}"
         }
         val navigationChildren = options["child"]
@@ -247,7 +247,7 @@ $argsDestructor
         builder: StringBuilder
     ) {
         builder.apply {
-            val fullName = entry.first.qualifiedName!!.asString()
+            val fullName = entry.first.qname
             append("fun $fullName.fill(bundle: ArgumentsNavigation): $fullName {\n")
             entry.second.forEach {
                 val fieldName = it.propertyName
@@ -286,7 +286,7 @@ $argsDestructor
         builder: StringBuilder
     ) {
         builder.apply {
-            append("\nfun ${entry.first.qualifiedName!!.asString()}.asBundle() = ArgumentsNavigation().apply{\n")
+            append("\nfun ${entry.first.qname}.asBundle() = ArgumentsNavigation().apply{\n")
             entry.second.forEach {
                 val fieldName = it.propertyName
                 appendLine(
@@ -320,13 +320,13 @@ $argsDestructor
         node.args
             ?.takeIf { it.simpleName.asString() != "Unit" }
             ?.also {
-                builder += """        "${node.fullName}" -> ${it.qualifiedName!!.asString()}().fill(node.args)"""
+                builder += """        "${node.fullName}" -> ${it.qname}().fill(node.args)"""
             }
     }
 
     fun generateArgsDestructor(builder: StringBuilder, node: NavNode) {
         node.args?.also {
-            builder += """            is ${it.qualifiedName!!.asString()} -> node.args = argsItem.asBundle()"""
+            builder += """            is ${it.qname} -> node.args = argsItem.asBundle()"""
         }
     }
 }

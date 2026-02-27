@@ -6,7 +6,7 @@ import com.google.devtools.ksp.symbol.*
 class NavNode(
     declaration: KSFunctionDeclaration,
     val name: String = declaration.simpleName.asString(),
-    val fullName: String = declaration.qualifiedName!!.asString(),
+    val fullName: String = declaration.qname,
     val args: KSClassDeclaration? = extractArgs(declaration),
     val files: List<KSFile?> = listOf(declaration.containingFile, args?.containingFile),
     val argsProperties: Sequence<PropertyTypeHolder>? = extractArgsProperties(args)
@@ -17,12 +17,12 @@ class NavNode(
             return declaration.annotations
                 .first { it.shortName.asString() == NavigationProcessor.composableNavNodeName }
                 .arguments
-                .first { it.name!!.asString() == "args" }
-                .value
-                .let {
+                .firstOrNull { it.name?.asString() == "args" }
+                ?.value
+                ?.let {
                     if (it is KSType
                         && it.declaration is KSClassDeclaration
-                        && it.declaration.qualifiedName?.asString() != "kotlin.Unit"
+                        && it.declaration.qname != "kotlin.Unit"
                     ) it.declaration as KSClassDeclaration
                     else null
                 }
@@ -47,6 +47,6 @@ class NavNode(
     }
 
     override fun toString(): String {
-        return "$fullName-${args?.qualifiedName?.asString()}-${argsProperties?.joinToString { it.toString() }}"
+        return "$fullName-${args?.qname}-${argsProperties?.joinToString { it.toString() }}"
     }
 }

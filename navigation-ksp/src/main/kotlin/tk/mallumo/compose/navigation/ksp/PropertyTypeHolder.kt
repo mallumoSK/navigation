@@ -50,7 +50,7 @@ data class PropertyTypeHolder(
 
             val name = prop.simpleName.asString()
             val declaration = prop.type.resolve().declaration
-            val typeName = declaration.qualifiedName?.asString() ?: return null
+            val typeName = declaration.qname
 
             return if (typeName !in directTypes) null
             else PropertyTypeHolder(name, typeName)

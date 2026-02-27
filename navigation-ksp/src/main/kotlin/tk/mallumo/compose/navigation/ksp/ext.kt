@@ -3,6 +3,9 @@ package tk.mallumo.compose.navigation.ksp
 import com.google.devtools.ksp.*
 import com.google.devtools.ksp.symbol.*
 
+val KSDeclaration.qname: String get() {
+    return qualifiedName?.asString()?:simpleName.asString()
+}
 
 /**
  * get all super types for a class declaration
