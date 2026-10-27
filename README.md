@@ -4,9 +4,17 @@
 
 #### After config changes project clean + build is required
 
-## navigation: ![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fmvn%2Fmallumo%2Fpublic%2Ftk%2Fmallumo%2Fnavigation-core%2Fmaven-metadata.xml)
+## navigation: ![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fuser42380946%2Fmaven%2Ftk%2Fmallumo%2Fnavigation-core%2Fmaven-metadata.xml)
 
-## navigation-ksp: ![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fmvn%2Fmallumo%2Fpublic%2Ftk%2Fmallumo%2Fnavigation-ksp%2Fmaven-metadata.xml)
+## navigation-ksp: ![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.repsy.io%2Fuser42380946%2Fmaven%2Ftk%2Fmallumo%2Fnavigation-ksp%2Fmaven-metadata.xml)
+
+```bash
+clear && tools/commit-llama.sh  "$(pwd)"
+```
+
+```bash
+clear && tools/commit-report-llama-ui.sh "$(pwd)"
+```
 
 ## About
 
@@ -89,7 +97,9 @@ ksp.arg("commonSourcesOnly", "true")
 ## How to implement
 
 ### 1. add plugin (**build.gradle.kts**)
+
 #### 1.1. single target (android or jvm)
+
 ```kotlin
 plugins {
     id("com.google.devtools.ksp")
@@ -116,7 +126,9 @@ dependencies {
 }
 //...
 ```
+
 #### 1.2. multiplatform or JS
+
 ```kotlin
 plugins {
     id("com.google.devtools.ksp")
@@ -151,6 +163,7 @@ ksp.apply {
     arg("commonSourcesOnly", "true")
 }
 ```
+
 ### 2. add pluginManagement **On top** of file **settings.gradle.kts** :
 
 ```groovy

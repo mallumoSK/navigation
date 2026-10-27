@@ -22,16 +22,17 @@ java {
 }
 
 publishing {
-    val rName = propertiesLocal["repsy.name"]
-    val rKey = propertiesLocal["repsy.key"]
+    val rUrl = propertiesLocal["repsy.url"] ?: return@publishing
+    val rUser = propertiesLocal["repsy.user"] ?: return@publishing
+    val rToken = propertiesLocal["repsy.token"] ?: return@publishing
     repositories {
         mavenLocal()
         maven {
             name = "repsy.io"
-            url = uri("https://repo.repsy.io/mvn/${rName}/public")
+            url = uri(rUrl)
             credentials {
-                username = rName
-                password = rKey
+                username = rUser
+                password = rToken
             }
         }
     }
