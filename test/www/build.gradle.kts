@@ -40,13 +40,15 @@ kotlin {
 }
 
 dependencies {
-//    println("config names:")
-//    configurations.filter { it.name.lowercase().contains("ksp") }.forEach {
-//        println(it.name)
-//    }
-    add("ksp", projects.navigationKsp)
+    add("kspCommonMainMetadata", projects.navigationKsp)
 }
 
-ksp{
+ksp {
     arg("navSourceSet", "web")
+}
+
+tasks.matching {
+    it.name in listOf("compileKotlinJs", "compileKotlinWasmJs", "kspKotlinJs", "kspKotlinWasmJs")
+}.configureEach {
+    dependsOn("kspWebMainKotlinMetadata")
 }

@@ -1,8 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 @file:OptIn(ExperimentalWasmDsl::class)
 
-import org.jetbrains.kotlin.gradle.*
-import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.*
 
 
@@ -24,13 +24,14 @@ kotlin {
 
     jvm()
 
-    androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    android {
+        namespace = "${current.group}.${current.name.replace("-", ".")}"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
-        publishLibraryVariants("release")
-        publishLibraryVariantsGroupedByFlavor = true
     }
     js {
         browser()
@@ -58,33 +59,6 @@ kotlin {
     }
 }
 
-android {
-//    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    defaultConfig {
-        namespace = "${current.group}.${current.name.replace("-", ".")}"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        compileSdk = libs.versions.android.targetSdk.get().toInt()
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    lint {
-        abortOnError = false
-        checkReleaseBuilds = false
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
-        disable += setOf("TypographyFractions", "TypographyQuotes")
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildFeatures {
-        buildConfig = false
-    }
-}
 
 publishing {
     val rUrl = propertiesLocal["repsy.url"] ?: return@publishing

@@ -1,20 +1,20 @@
 [versions]
-kotlin_core = "2.3.10"
-kotlin_ksp = "2.3.6"
-kotlin_coroutines = "1.10.2"
+kotlin_core = "2.4.21"
+kotlin_ksp = "2.3.13"
+kotlin_coroutines = "1.11.0"
 kotlin_browser = "0.5.0"
-android_agp = "8.2.2"
+android_agp = "9.1.1"
 #
-me_log = "2.2.10-1.1.0"
+me_log = "2.4.21-1.1.0"
 #
-me_nav_core = "2.3.10-2.3.6-1.2.2"
-me_nav_ksp = "2.3.10-2.3.6-1.2.2"
+me_nav_core = "2.4.21-2.3.13-1.2.2"
+me_nav_ksp = "2.4.21-2.3.13-1.2.2"
 #
 android-minSdk = "21"
-android-targetSdk = "34"
+android-compileSdk = "37"
 #
-compose_core = "1.10.1"
-androidx_compose_activity = "1.8.0"
+compose_core = "1.12.2"
+androidx_compose_activity = "1.13.0"
 #
 [libraries]
 #
@@ -33,7 +33,7 @@ kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref =
 kotlin-browser = { module = "org.jetbrains.kotlinx:kotlinx-browser", version.ref = "kotlin_browser" }
 #
 [plugins]
-android-lib = { id = "com.android.library", version.ref = "android_agp" }
+android-lib = { id = "com.android.kotlin.multiplatform.library", version.ref = "android_agp" }
 android-app = { id = "com.android.application", version.ref = "android_agp" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin_ksp" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin_core" }

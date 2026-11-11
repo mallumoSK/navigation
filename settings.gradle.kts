@@ -38,10 +38,8 @@ rootProject.name = "navigation"
 include(":navigation-core")
 include(":navigation-ksp")
 //
-//include(":test:android")
-//include(":test:desktop")
-//include(":test:common")
-//
-//include(":test:single-android")
+include(":test:android")
+include(":test:desktop")
+include(":test:common")
 
 include("test:www")
